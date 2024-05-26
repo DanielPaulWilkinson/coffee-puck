@@ -1,0 +1,78 @@
+<script setup lang="ts">
+import { useCoffeeStore } from '@/stores/coffeeStore';
+import { getbrews } from '../data/brew'
+import { onMounted, reactive, watch } from 'vue';
+import Hero from '../components/Hero.vue';
+import Stats from '../components/Stats.vue';
+const store = useCoffeeStore()
+
+//populate store
+onMounted(async () => {
+  callData(1)
+})
+
+async function callData(page: number){
+  const result = await getbrews(page, 1, "id", "DESC");
+  store.data = result.data;
+  store.pagination = result.pagination;
+}
+</script>
+<template>
+  <main>
+    <div class="container">
+      <div class="row margin-top-20">
+        <div class="col-12">
+            <Hero />
+        </div>
+      </div>
+      <div class="row margin-top-20">
+        <div class="col-12">
+            <Stats />
+        </div>
+      </div>
+      <div class="row margin-top-20">
+        <div class="col-12">
+            <Variety/>
+        </div>
+      </div>
+      <div class="row margin-top-20">
+        <div class="col-12">
+                  Recent blogs
+        </div>
+      </div>
+      <div class="row margin-top-20">
+        <div class="col-12">
+                  Want to hear more? Sign up!
+        </div>
+      </div>
+      <div class="row rowMargin">
+        <div class="col-6" v-for="(brew, index) in store.data">
+          <div class="card">
+            <img src="https://howdencoffee.co.uk/wp-content/uploads/2022/08/HC-116.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Coffee at {{ brew.acidity }}</h5>
+              <a href="#" class="btn btn-primary">View Experience</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" :class="store.pagination.current_page === 1 ? 'disabled' : ''" href="#"
+            @click="callData(store.pagination.prev_page)">
+            Previous
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#" :class="store.pagination.current_page >= store.pagination.total_pages ? 'disabled' : ''"
+            @click="callData(store.pagination.next_page)">Next</a></li>
+      </ul>
+    </nav>
+  </main>
+</template>
+<style>
+.margin-top-20 {
+  margin-top: 20px;
+}
+</style>
