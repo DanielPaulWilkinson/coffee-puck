@@ -1,3 +1,7 @@
+dev:
+	npm run dev
+
+
 new_migration:
 	echo "migration name=whatever must be provided"
 	dbmate -e -d ./db/coffee/migrations -s ./db/coffee/schema.sql new ${name}

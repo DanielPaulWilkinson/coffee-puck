@@ -1,6 +1,6 @@
 import axios from "axios"
 
-export interface Brew {
+export type brew = {
    id: number | null,
    preGrindAroma: string,
    postGrindAroma: string,
@@ -11,9 +11,10 @@ export interface Brew {
    flavour: string,
    coffeeId: number | null,
    coffeeTypeId: number | null,
+   rating: number | null,
 }
 
-interface Pagination {
+type pagination = {
    current_page: number,
    next_page: number,
    offset: number,
@@ -22,9 +23,9 @@ interface Pagination {
    total_records: number,
 }
 
-export interface BrewPaginationResponse {
-   data: Brew[],
-   pagination: Pagination,
+export type BrewPaginationResponse = {
+   data: brew[],
+   pagination: pagination,
 }
 
 
@@ -37,7 +38,7 @@ export const getbrews = async (page: number, limit: number, sortBy: string, sort
 }
 
 
-export const createBrew = async (brew: Brew): Promise<boolean> => {
+export const createBrew = async (brew: brew): Promise<boolean> => {
    try {
       const response = await axios.post(`http://localhost:3000/brew/create`, brew);
       if (response.status === 200) {

@@ -1,4 +1,4 @@
-import { defineStore } from "pinia"
+import { defineStore } from "pinia";
 import type { Brew } from "./coffeeStore";
 
 export type BrewStore = {
@@ -21,6 +21,7 @@ export const useBrewStore = defineStore('brewStore', {
         flavour: "",
         coffeeId: null,
         coffeeTypeId: null,
+        rating: 0,
       },
       coffee: "",
       coffeeType: ""

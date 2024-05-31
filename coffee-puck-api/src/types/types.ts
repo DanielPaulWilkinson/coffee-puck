@@ -8,6 +8,7 @@ export interface Brew {
     flavour: string,
     coffeeId: number,
     coffeeTypeId: number,
+    rating: number,
 }
 
 export interface Bean {

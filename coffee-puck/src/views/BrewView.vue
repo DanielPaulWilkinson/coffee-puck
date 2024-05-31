@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BrewForm from '../components/BrewForm.vue'
+import BrewForm from '../components/AddBrewForm.vue'
 </script>
 <template>
     <div class="container">

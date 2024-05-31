@@ -1,7 +1,7 @@
 import axios from "axios";
 import { z } from "zod";
 
-interface Pagination {
+export type Pagination = {
      current_page: number,
      next_page: number,
      offset: number,
@@ -10,7 +10,7 @@ interface Pagination {
      total_records: number,
   }
 
-export interface CoffeeTypePaginationResponse {
+export type CoffeeTypePaginationResponse ={
      data: CoffeeType[],
      pagination: Pagination,
   }

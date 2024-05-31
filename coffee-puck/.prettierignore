@@ -1,0 +1,15 @@
+package-lock.json
+**/*.js
+**/*.jsx
+**/*.ts
+**/*.tsx
+
+**/*.scss
+**/*.css
+**/*.vue
+**/*.ico
+
+**/*.woff
+**/*.woff2
+coverage
+dist

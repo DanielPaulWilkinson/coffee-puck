@@ -3,7 +3,7 @@ import { pool } from "./database";
 
 const getBrewQuery = "select * from `brew` where id = ?";
 const getBrewPageQuery = "SELECT * FROM `brew` ORDER BY ? ? LIMIT ? OFFSET ?"
-const createBrewQuery = `insert into brew (preGrindAroma, postGrindAroma, acidity, sweetness, body, finish, flavour, coffeeId, coffeeTypeId) values ( ? , ? , ? , ? , ? , ? , ? , ? , ?)`
+const createBrewQuery = `insert into brew (preGrindAroma, postGrindAroma, acidity, sweetness, body, finish, flavour, coffeeId, coffeeTypeId, rating) values ( ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)`
 const brewLengthQuery = "select count(id) as total_records from `brew`"
 
 export const getBrewRowCount = async () => {
@@ -22,7 +22,7 @@ export const getBrewPage = async (offset: number, limit: number, sortBy: string,
 }
 
 export const createNewBrew = async(brew: Brew) => {
-    const [rows] = await pool.query(createBrewQuery, [brew.preGrindAroma, brew.postGrindAroma, brew.acidity, brew.sweetness, brew.body, brew.finish, brew.flavour, brew.coffeeId, brew.coffeeTypeId])
+    const [rows] = await pool.query(createBrewQuery, [brew.preGrindAroma, brew.postGrindAroma, brew.acidity, brew.sweetness, brew.body, brew.finish, brew.flavour, brew.coffeeId, brew.coffeeTypeId, brew.rating])
     return rows;
 }
 

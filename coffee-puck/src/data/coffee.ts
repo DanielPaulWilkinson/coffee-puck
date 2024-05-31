@@ -1,6 +1,5 @@
-import type { Coffee } from "@/stores/coffeeStore";
 import axios from "axios";
-export interface Content {
+export type Content = {
      varieties: string[],
      region: string,
      country: string, 
@@ -10,19 +9,19 @@ export interface Content {
      roastLevel: string,
    }
    
-   export interface Purchase {
+   export type Purchase = {
      cost: string,
      size: string,
      image: string,
    }
    
-   export interface Social {
+   export type Social = {
      url: string,
      name: string,
      icon: string,
    }
    
-   export interface Roaster {
+   export type Roaster = {
      name: string,
      logo: string,
      url: string,
@@ -31,7 +30,7 @@ export interface Content {
      socials: Social[],
    }
    
-   export interface Coffee {
+   export type Coffee = {
     id: number,
      name: string,
      createdOn: string,
@@ -58,8 +57,9 @@ export interface Content {
      roasterInformation: Roaster,
      purchaseInformation: Purchase;
      contentInformation: Content[],
+     isSelected: boolean,
    }
-  interface Pagination {
+  type Pagination = {
      current_page: number,
      next_page: number,
      offset: number,
@@ -68,7 +68,7 @@ export interface Content {
      total_records: number,
   }
   
-  export interface CoffeePaginationResponse {
+  export type CoffeePaginationResponse = {
      data: Coffee[],
      pagination: Pagination,
   }

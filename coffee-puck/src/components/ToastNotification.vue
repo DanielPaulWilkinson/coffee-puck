@@ -28,7 +28,7 @@ const emit = defineEmits<{
 }>();
 
 // some reactive values to manage the notification
-const timer = ref(-1);
+const timer = ref<any>(-1);
 const startedAt = ref<number>(0);
 const delay = ref<number>(0);
 

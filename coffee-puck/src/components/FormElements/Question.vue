@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<{
                 </legend>
             </div>
             <div class="col-12 col-md-12 col-lg-12">
-                <slot name="input" />
+                <slot />
             </div>
             <p>{{ tooltip }}</p>
         </fieldset>

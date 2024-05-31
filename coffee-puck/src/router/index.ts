@@ -1,8 +1,10 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '../views/AdminDashboard.vue';
 import brew from '../views/BrewView.vue';
 
 const router = createRouter({
+  linkActiveClass: "selected",
+  linkExactActiveClass: "selected",
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
@@ -29,6 +31,6 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     }
   ]
-})
+});
 
-export default router
+export default router;

@@ -8,7 +8,7 @@ import Text from './../components/FormElements/Text.vue';
 import FillCoffee from '../components/FillCoffee.vue'
 import { createBrew } from '../data/brew'
 import type { CreateNotification } from '../services/notifications';
-import StarRating from '../components/FormElements/StarRating.vue';
+import StarRating from './FormElements/StarRating.vue';
 import { getCoffee, getCoffeePage, type CoffeePaginationResponse } from '../data/coffee';
 import { useRoute } from 'vue-router'
 import  { getTypePage, type CoffeeType, type CoffeeTypePaginationResponse } from '../data/coffeeTypes';
@@ -36,11 +36,6 @@ const state = reactive<BrewViewState>({
     suggestionMoreInformation: null,
     submitSuccess: false,
     hasSubmitted: false,
-})
-
-onMounted(async () => {
-    const id = route.params.coffeeId
-
 })
 
 onBeforeMount(async () => {
@@ -79,7 +74,6 @@ const runCoffeeSearch = async () => {
 const runCoffeeTypeSearch = async () => {
     state.coffeeTypeSuggestions = await getTypePage(1, 3, "id", "DESC", store.coffeeType);
 }
-
 
 const selectCoffeeType = async (type: CoffeeType, index: number) => {
     state.coffeeTypeSuggestions?.data.forEach((card: CoffeeType) => {
@@ -126,56 +120,38 @@ const submit = async () => {
                     <h2>Smell</h2>
                     <Question name="preGrindAroma" tooltip="" label="How does it smell pregrind?"
                         class="" :form-group="false" error="">
-                        <template #input>
                             <Text id="preGrindAroma" type="text" v-model="store.brew.preGrindAroma" />
-                        </template>
                     </Question>
                     <Question name="postGrindAroma" tooltip="" label="How does it smell postgrind?"
                         class="" :form-group="false" error="">
-                        <template #input>
                             <Text id="postGrindAroma" type="text" v-model="store.brew.postGrindAroma" />
-                        </template>
                     </Question>
-
                     <h2>Taste</h2>
                     <Question name="acidity" tooltip="" label="How acidic was it?" class=""
                         :form-group="false" error="">
-                        <template #input>
                             <Text id="acidity" type="text" v-model="store.brew.acidity" />
-                        </template>
                     </Question>
                     <Question name="sweet" tooltip="" label="How sweet was it?" class="" :form-group="false"
                         error="">
-                        <template #input>
                             <Text id="sweet" type="text" v-model="store.brew.sweetness" />
-                        </template>
                     </Question>
                     <Question name="flavour" tooltip="" label="How did it taste?" class="" :form-group="false"
                         error="">
-                        <template #input>
                             <Text id="flavour" type="text" v-model="store.brew.flavour" />
-                        </template>
                     </Question>
                     <Question name="finish" tooltip="" label="How was the aftertaste?" class=""
                         :form-group="false" error="">
-                        <template #input>
                             <Text id="sweet" type="text" v-model="store.brew.finish" />
-                        </template>
                     </Question>
-
                     <h2>Texture</h2>
                     <Question name="body" tooltip="" label="How was the texture?" class=""
                         :form-group="false" error="">
-                        <template #input>
                             <Text id="body" type="text" v-model="store.brew.body" />
-                        </template>
                     </Question>
                     <Question name="coffee" tooltip="" label="What coffee was this?" class="" :form-group="true"
                         error="">
-                        <template #input>
                             <Text prepend="Search" input-mode="text" id="coffee" type="text" v-model="store.coffee"
                                 placeholder="search..." error="" @input="runCoffeeSearch"/>
-                        </template>
                     </Question>
 
                     <div class="row" v-if="state.coffeeSuggestions">
@@ -186,7 +162,6 @@ const submit = async () => {
                                     class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ coffee.name }}</h5>
-                                    <StarRating id="stars" :fill-percentage="50" :star-count="5" />
                                     <a href="#" class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal"
                                         @click.prevent="$event.stopPropagation(); state.suggestionMoreInformation = coffee;">View</a>
@@ -199,11 +174,9 @@ const submit = async () => {
                     </div>
                     <Question name="coffeeType" tooltip="" label="What type of coffee did you brew?" class="" :form-group="true"
                         error="">
-                        <template #input>
                             <Text prepend="Search" input-mode="text" id="coffeeType" type="text" v-model="store.coffeeType"
                                 placeholder="search..." error="" @blur="state.coffeeTypeSearchIsOpen = false"
                                 @input="runCoffeeTypeSearch" />
-                        </template>
                     </Question>
 
                     <div class="row" v-if="state.coffeeTypeSuggestions">
@@ -255,9 +228,13 @@ const submit = async () => {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <StarRating id="stars" :fill-percentage="10" :star-count="5"/>
-                    </div>
+                    <Question name="coffee" tooltip="" label="Rate your coffee out of 5?" class="" :form-group="true"
+                        error="">
+                        <StarRating id="stars" 
+                        :star-count="5" 
+                        :model-value="store.brew.rating"
+                        @update:model-value="store.brew.rating = $event"/>
+                    </Question>
                     <button type="submit" class="btn btn-primary margin-top-10 right">
                         Submit
                     </button>
@@ -311,13 +288,5 @@ const submit = async () => {
         </div>
 </template>
 <style>
-.background {
-    background-image: url('https://mdbcdn.b-cdn.net/img/new/slides/041.webp');
-    ;
-}
 
-.mask {
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 20px;
-}
 </style>

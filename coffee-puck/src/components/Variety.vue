@@ -1,10 +1,5 @@
 
 <script setup lang="ts">
-
-const props = defineProps({
-    images: []
-})
-
 </script>
 <template>
    <div class="container">

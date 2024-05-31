@@ -1,14 +1,6 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 
-type fill = {
-    milkDelay: number,
-    coffeeDelay: number,
-}
-
-const state = reactive({
-
-})
 const props = withDefaults(defineProps<{
         id: string,
         milkDelay?: number | null,
@@ -198,8 +190,4 @@ $coffee: #cfb495;
         border-radius: 70%;
     }
 }
-
-
-
-
 </style>

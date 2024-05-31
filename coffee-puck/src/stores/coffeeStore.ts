@@ -1,8 +1,7 @@
-import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 
-export interface Content {
+export type Content = {
   varieties: string[],
   region: string,
   country: string, 
@@ -12,19 +11,19 @@ export interface Content {
   roastLevel: string,
 }
 
-export interface Purchase {
+export type Purchase = {
   cost: string,
   size: string,
   image: string,
 }
 
-export interface Social {
+export type Social = {
   url: string,
   name: string,
   icon: string,
 }
 
-export interface Roaster {
+export type Roaster = {
   name: string,
   logo: string,
   url: string,
@@ -33,7 +32,7 @@ export interface Roaster {
   socials: Social[],
 }
 
-export interface Coffee {
+export type Coffee = {
   id: number,
   name: string,
   createdOn: string,
@@ -63,7 +62,7 @@ export interface Coffee {
   isSelected?: boolean;
 }
 
-export interface Brew {
+export type Brew = {
   id: number | null,
   preGrindAroma: string,
   postGrindAroma: string,
@@ -74,6 +73,7 @@ export interface Brew {
   flavour: string,
   coffeeId: number | null,
   coffeeTypeId: number | null,
+  rating: number,
 }
 
 export const useCoffeeStore = defineStore('coffeeStore', () => {
