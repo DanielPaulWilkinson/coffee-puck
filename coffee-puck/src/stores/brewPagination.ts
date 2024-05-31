@@ -40,22 +40,7 @@ export type Coffee = {
   isDecaf: boolean,
   rating: number,  
   recipe: string[]
-  coffeeType: string | "Black" |
-  "White Coffee" |
-  "Latte" |
-  "Cappuccino" |
-  "Americano"|
-  "Espresso"|
-  "Doppio"|
-  "Red Eye"|
-  "Galao"|
-  "Macchiato"|
-  "Mocha"|
-  "Ristretto"|
-  "Flat White"|
-  "Affogato"|
-  "Irish"|
-  "Other",
+  coffeeTypeId: number | null,
   roasterInformation: Roaster,
   purchaseInformation: Purchase;
   contentInformation: Content[],
@@ -76,7 +61,7 @@ export type Brew = {
   rating: number,
 }
 
-export const useCoffeeStore = defineStore('coffeeStore', () => {
+export const useBrewPagination = defineStore('brewPagination', () => {
   return { 
     data: [] as Brew[],
     pagination: {

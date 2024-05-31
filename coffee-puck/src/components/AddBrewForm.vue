@@ -1,15 +1,15 @@
 
 <script setup lang="ts">
 import { inject, onBeforeMount, onMounted, reactive, watch } from 'vue';
-import { useBrewStore } from '../stores/brew'
-import { type Brew, type Coffee } from '../stores/coffeeStore';
+import { useBrewStore } from '../stores/addBrew'
+import { type Brew, type Coffee } from '../stores/brewPagination';
 import Question from './../components/FormElements/Question.vue';
 import Text from './../components/FormElements/Text.vue';
 import FillCoffee from '../components/FillCoffee.vue'
 import { createBrew } from '../data/brew'
 import type { CreateNotification } from '../services/notifications';
 import StarRating from './FormElements/StarRating.vue';
-import { getCoffee, getCoffeePage, type CoffeePaginationResponse } from '../data/coffee';
+import { getCoffee, getCoffees, type CoffeePaginationResponse } from '../data/coffee';
 import { useRoute } from 'vue-router'
 import  { getTypePage, type CoffeeType, type CoffeeTypePaginationResponse } from '../data/coffeeTypes';
 const store = useBrewStore();
@@ -46,11 +46,11 @@ onBeforeMount(async () => {
         if(coffee){
             store.coffee = coffee.name;
             store.brew.coffeeId = coffee.id;
-            state.coffeeSuggestions = await getCoffeePage(1, 3, "id", "DESC", store.coffee);
+            state.coffeeSuggestions = await getCoffees(1, 3, "id", "DESC", store.coffee);
             await selectCoffee(coffee, 0);
         }
     } else {
-        state.coffeeSuggestions = await getCoffeePage(1, 3, "id", "DESC", store.coffee);
+        state.coffeeSuggestions = await getCoffees(1, 3, "id", "DESC", store.coffee);
     }
 
     state.coffeeTypeSuggestions = await getTypePage(1, 3, "id", "DESC", store.coffeeType);
@@ -68,7 +68,7 @@ const selectCoffee = async (coffee: Coffee, index: number) => {
 }
 
 const runCoffeeSearch = async () => {
-    state.coffeeSuggestions = await getCoffeePage(1, 3, "id", "DESC", store.coffee);
+    state.coffeeSuggestions = await getCoffees(1, 3, "id", "DESC", store.coffee);
 }
 
 const runCoffeeTypeSearch = async () => {

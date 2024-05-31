@@ -4,7 +4,10 @@ import { pool } from "./database";
 
 //all coffee
 const getCoffeeQuery = "SELECT * FROM `coffee` WHERE id = ?";
-const getCoffeePageQuery = "SELECT * FROM `coffee` WHERE name LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?"
+const getCoffeePageQuerySearch = "SELECT * FROM `coffee` WHERE name LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?"
+const getCoffeePageQuery = "SELECT * FROM `coffee` ORDER BY ? ? LIMIT ? OFFSET ?"
+
+
 const createCoffeeQuery = "INSERT INTO `coffee` (name, isDecaf, rating, roasterId, recipe, cost, size, image, createdOn, updatedOn) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
 const coffeeLengthQuery = "select count(id) as total_records from `coffee`"
 
@@ -25,10 +28,13 @@ export const getCoffeeRowCount = async () => {
 }
 
 export const getCoffeePage = async (offset: number, limit: number, sortBy: string, sortOrder: string, search: string) => {
-    console.log(search, sortBy, sortOrder, limit, offset)
-    const [rows, fields] = await pool.query(getCoffeePageQuery, ['%' + search + '%', sortBy, sortOrder, Number(limit), Number(offset)]);
-    console.log(rows, fields);
-    return rows;
+    if(search){
+        const [rows, fields] = await pool.query(getCoffeePageQuerySearch, ['%' + search + '%', sortBy, sortOrder, Number(limit), Number(offset)]);
+        return rows;
+    } else {
+        const [rows, fields] = await pool.query(getCoffeePageQuery, [sortBy, sortOrder, Number(limit), Number(offset)]);
+        return rows;
+    }
 }
 
 export const createNewCoffee = async (brew: Coffee): Promise<Number> => {

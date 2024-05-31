@@ -37,23 +37,8 @@ export type Content = {
      updatedOn: string,
      isDecaf: boolean,
      rating: number,  
-     recipe: string[]
-     coffeeType: string | "Black" |
-     "White Coffee" |
-     "Latte" |
-     "Cappuccino" |
-     "Americano"|
-     "Espresso"|
-     "Doppio"|
-     "Red Eye"|
-     "Galao"|
-     "Macchiato"|
-     "Mocha"|
-     "Ristretto"|
-     "Flat White"|
-     "Affogato"|
-     "Irish"|
-     "Other",
+     recipe: string[],
+     coffeeTypeId: number,
      roasterInformation: Roaster,
      purchaseInformation: Purchase;
      contentInformation: Content[],
@@ -73,8 +58,8 @@ export type Content = {
      pagination: Pagination,
   }
   
-export const getCoffeePage = async (page: number, limit: number, sortBy: string, sortOrder: string, search: string): Promise<CoffeePaginationResponse> => {
-    const response = await axios.get(`http://localhost:3000/coffee/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`);
+export const getCoffees = async (page: number, limit: number, sortBy: string, sortOrder: string, search?: string): Promise<CoffeePaginationResponse> => {
+    const response = await axios.get(`http://localhost:3000/coffee/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` + `${search ? `&search=${search}` : ''}`);
     if(response.status === 200){
          return response.data;
     }

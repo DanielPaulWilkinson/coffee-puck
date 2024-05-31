@@ -1,9 +1,9 @@
 
 <script setup lang="ts">
-import { useCoffeeStore } from '../stores/coffeeStore';
+import { useBrewPagination } from '../stores/brewPagination';
 import { getbrews } from '../data/brew'
 import { onMounted, reactive, watch } from 'vue';
-const store = useCoffeeStore()
+const store = useBrewPagination()
 
 //populate store
 onMounted(async () => {
@@ -17,7 +17,7 @@ async function callData(page: number) {
 }
 </script>
 <template>
-        <div class="row rowMargin">
+      <div class="row rowMargin">
       <div class="col-3" v-for="(brew) in store.data">
         <div class="card">
           <img src="https://howdencoffee.co.uk/wp-content/uploads/2022/08/HC-116.jpg" class="card-img-top" alt="...">
