@@ -1,37 +1,49 @@
 <script setup lang="ts">
+import { computed } from 'vue';
+
 export interface Options {
-    value: string,
+    value: string | number,
     name: string,
 }
     
-withDefaults(defineProps<{
-        id: string,
-        type: "select",
-        modelValue: string | null,
-        options?: Options[],
-        placeholder: string | null,
-        class?: string,
+const props = withDefaults(defineProps<{
+        modelValue: string | number | null,
+        options: (string | {value: string | number, label: string}) []
+        placeholder: string | undefined
+        percentage?: boolean
+        col?: string,
+        id?: string
     }>(), {
         
     });
 
 const emit = defineEmits<{
-    (on: "update:modelValue", value: string): void
-    (on: "selectedSuggestion", value: string): void
-    (on: "blur", value: string): void
+    (on: "update:modelValue", value: string | number): void
 }>();
 
 </script>
 <template>
-    <select 
-        :id="id"
-        :type="type"
-        :value="modelValue"
-        class="form-select" aria-label="Default select example"
-        :class="class"
-        @change="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
-    >
-        <option v-if="placeholder" value="" disabled="true" hidden="true" selected="true"> {{ placeholder }}</option>
-        <option v-for="(option, index) in options" :value="option.value">{{ option.name }}</option>
-    </select>
+            <select
+                :id="id"
+                :value="modelValue"
+                :class="['form-select form-control']"
+                @input="[$emit('update:modelValue', ($event.target as HTMLInputElement).value)]"
+            >
+                <option
+                    v-if="(typeof placeholder !== 'undefined')"
+                    value=""
+                    disabled="true"
+                    selected="true"
+                    hidden="true"
+                >
+                    {{ placeholder }}
+                </option>
+                <option
+                    v-for="option in options"
+                    :key="typeof option === 'string' ? option : option.label"
+                    :value="typeof option === 'string' ? option : option.value"
+                >
+                    {{ typeof option === 'string' ? option : option.label }}
+                </option>
+            </select>
 </template>

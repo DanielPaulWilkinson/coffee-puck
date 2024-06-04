@@ -1,6 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/AdminDashboard.vue';
 import brew from '../views/BrewView.vue';
+import ManageCoffee from '@/views/ManageCoffee.vue';
+import ManageBrew from '@/views/ManageBrew.vue';
+import ManageRoasters from '@/views/ManageRoasters.vue';
+import ManageVarieties from '@/views/ManageVarieties.vue';
 
 const router = createRouter({
   linkActiveClass: "selected",
@@ -16,6 +20,26 @@ const router = createRouter({
       path: '/brew',
       name: 'brew',
       component: brew
+    },    
+    {
+      path: '/manage-coffee',
+      name: 'manage-coffee',
+      component: ManageCoffee
+    },    
+    {
+      path: '/manage-brew',
+      name: 'manage-brew',
+      component: ManageBrew
+    },
+    {
+      path: '/manage-roasters',
+      name: 'manage-roasters',
+      component: ManageRoasters
+    },
+    {
+      path: '/manage-varieties',
+      name: 'manage-varieties',
+      component: ManageVarieties
     },
     {
       path: '/brew/:coffeeId',

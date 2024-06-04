@@ -4,7 +4,7 @@ import { Bean, Brew, Coffee } from '../types/types';
 
 export const pool = mysql.createPool({
     user: "root",
-    password: "root",
+    password: "rootroot",
     database: "coffee"
 }).promise()
 

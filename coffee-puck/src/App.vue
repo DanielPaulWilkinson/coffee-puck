@@ -20,7 +20,6 @@ provide("create-notification", createNotification);
 </script>
 <template>
   <SideBar />
-  <DashboardHeader />
   <main>
     <RouterView />
   </main>
@@ -59,10 +58,9 @@ provide("create-notification", createNotification);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   display: grid;
-  grid-template-columns: 1fr 6fr;
-  grid-template-rows: 1fr auto;
+  grid-template-columns: 1fr 3fr;
+    grid-template-rows: 1fr auto;
   grid-template-areas:
-    'sidebar header'
     'sidebar main'
     'footer footer';
   margin: 0;
@@ -101,5 +99,15 @@ footer {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+main {
+  display: grid;
+  grid-area: main;
+}
+
+@font-face {
+    font-family: marker;
+    src: url('./assets/marker.ttf');
 }
 </style>

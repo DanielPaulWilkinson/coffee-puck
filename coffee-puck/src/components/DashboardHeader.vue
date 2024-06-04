@@ -3,26 +3,12 @@
 </script>
 <template>
      <header>
-    <div class="search">
-      <span class="material-symbols-rounded"> search </span>
-      <input type="search" placeholder="Search for projects" />
-    </div>
-    <div class="notification-area">
-      <span class="material-symbols-rounded"> notifications_active </span>
-      <img class="profile-picture" src="" alt="profile picture" />
-      <p>Emuel Vassallo</p>
-    </div>
     <div class="greeting">
       <img class="user-profile-picture" src="" alt="profile picture" />
       <div>
         <p>Hi there,</p>
         <p>Emuel Vassallo (@emuel)</p>
       </div>
-    </div>
-    <div class="buttons">
-      <button>New</button>
-      <button>Upload</button>
-      <button>Share</button>
     </div>
   </header>
 </template>
@@ -31,7 +17,6 @@
 .buttons {
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: repeat(3, minmax(76px, 1fr));
   grid-area: buttons;
   column-gap: 22px;
   align-items: center;
@@ -77,11 +62,6 @@
 header {
   display: grid;
   grid-area: header;
-  grid-template-rows: repeat(2, auto);
-  grid-template-columns: 2fr 1fr;
-  grid-template-areas:
-    'search notification-area'
-    'greeting buttons';
   background-color: var(--header-background-color);
   padding: 18px 42px;
   gap: 28px 16px;

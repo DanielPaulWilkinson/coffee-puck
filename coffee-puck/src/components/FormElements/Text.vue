@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useSlots } from 'vue';
+
+    useSlots();
     const props = withDefaults(defineProps<{
         id: string,
         type: "text",
@@ -10,6 +13,7 @@
         error: string,
         class?: string,
         append?: string,
+        prependClass?: string,
         prepend?: string,
         filter?: (e: KeyboardEvent) => boolean | undefined;
         suggestions?: string[]
@@ -32,11 +36,12 @@ const emit = defineEmits<{
 
 </script>
 <template>
-    <div :class="(prepend || append) ? 'input-group' : ''">
-    <span v-if="prepend" 
-    class="input-group-text">
+    <div :class="(prepend || append || $slots.append) ? 'input-group' : ''">
+    <span v-if="prepend || $slots.append" class="input-group-text" :class="prependClass">
         {{ prepend }}
+        <slot name="append" />
     </span>
+   
     <input 
         :id="id"
         :type="type"

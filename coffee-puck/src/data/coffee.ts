@@ -1,3 +1,4 @@
+import type { Coffee } from "@/stores/brewPagination";
 import axios from "axios";
 export type Content = {
      varieties: string[],
@@ -30,20 +31,6 @@ export type Content = {
      socials: Social[],
    }
    
-   export type Coffee = {
-    id: number,
-     name: string,
-     createdOn: string,
-     updatedOn: string,
-     isDecaf: boolean,
-     rating: number,  
-     recipe: string[],
-     coffeeTypeId: number,
-     roasterInformation: Roaster,
-     purchaseInformation: Purchase;
-     contentInformation: Content[],
-     isSelected: boolean,
-   }
   type Pagination = {
      current_page: number,
      next_page: number,
@@ -59,6 +46,7 @@ export type Content = {
   }
   
 export const getCoffees = async (page: number, limit: number, sortBy: string, sortOrder: string, search?: string): Promise<CoffeePaginationResponse> => {
+  console.log(limit);
     const response = await axios.get(`http://localhost:3000/coffee/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` + `${search ? `&search=${search}` : ''}`);
     if(response.status === 200){
          return response.data;
@@ -75,13 +63,16 @@ export const getCoffees = async (page: number, limit: number, sortBy: string, so
      return {} as Coffee;
   }
 
-  export const createCoffee = async (Id: number): Promise<Coffee> => {
-     const response = await axios.get(`http://localhost:3000/coffee/get/${Id}`);
+  export const createCoffee = async (coffee: Coffee): Promise<Coffee> => {
+     const response = await axios.post(`http://localhost:3000/coffee/create`, coffee);
      if(response.status === 200){
           return response.data;
      }
 
      return {} as Coffee;
   }
-     
+
+  export const updateCoffee = async (c: Coffee) => {
+      return (await axios.post(`http://localhost:3000/coffee/update/${c.id}`, c)).data;
+ }
      

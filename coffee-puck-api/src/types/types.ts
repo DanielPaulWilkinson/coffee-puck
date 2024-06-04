@@ -1,4 +1,5 @@
 export interface Brew {
+  id?: number,
     preGrindAroma: string,
     postGrindAroma: string,
     acidity: string,
@@ -7,6 +8,8 @@ export interface Brew {
     finish: string,
     flavour: string,
     coffeeId: number,
+    createdOn: string,
+    updatedOn: string,
     coffeeTypeId: number,
     rating: number,
 }

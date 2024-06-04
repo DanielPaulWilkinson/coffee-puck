@@ -9,9 +9,9 @@ import router from './router';
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faStar, faHome, faCoffee, faChartPie} from "@fortawesome/free-solid-svg-icons";
+import { faStar, faHome, faCoffee, faChartPie, faPenToSquare, faTrash, faSave,faCancel, faTable, faTableCellsLarge, faSearch, faEye} from "@fortawesome/free-solid-svg-icons";
 
-library.add([faStar, faHome, faCoffee, faChartPie]);
+library.add([faStar, faHome, faCoffee, faChartPie, faPenToSquare, faTrash, faSave,faCancel,faTable, faTableCellsLarge, faSearch, faEye]);
 
 const app = createApp(App);
 app.component('font-awesome-icon', FontAwesomeIcon);

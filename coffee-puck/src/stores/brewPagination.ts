@@ -32,19 +32,28 @@ export type Roaster = {
   socials: Social[],
 }
 
+export type Bean = {
+  id?: number,
+  varietyId: number,
+  process: string,
+  producers: string,
+  altitude: string,
+  roast: string,
+}
+
 export type Coffee = {
-  id: number,
+  id?: number,
   name: string,
   createdOn: string,
   updatedOn: string,
   isDecaf: boolean,
   rating: number,  
-  recipe: string[]
-  coffeeTypeId: number | null,
-  roasterInformation: Roaster,
-  purchaseInformation: Purchase;
-  contentInformation: Content[],
-  isSelected?: boolean;
+  size: string,
+  image: string,
+  cost: string,
+  recipe: string,
+  roasterId: number,
+  beans?: Bean[]
 }
 
 export type Brew = {

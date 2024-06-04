@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { getCoffeePage, getSingleCoffee, createNewCoffee, getCoffeeRowCount  } from '../data/coffeeQueries';
+import { getCoffeePage, getSingleCoffee, createNewCoffee, getCoffeeRowCount, updateCoffee  } from '../data/coffeeQueries';
 import { Bean, Coffee } from '../types/types';
-import { createNewBean, createNewCoffeeBean } from '../data/beanQueries';
+import { createNewBean, createNewCoffeeBean, getAllBeansForCoffee } from '../data/beanQueries';
 
 //used for a single brew detail
 export const GetCoffee = async (req: Request, res: Response, next: NextFunction) => {
@@ -31,8 +31,11 @@ export const GetCoffeePage = async (req: Request, res: Response, next: NextFunct
             Number(limit),
             sortBy as string,
             sortOrder as string,
-            search as string);
+            search as string) as Coffee[];
 
+            coffee.forEach(async d => {
+                d.beans = await getAllBeansForCoffee(d.id) as Bean[];
+            });
             res.json(
                 {
                     data: coffee,
@@ -55,14 +58,29 @@ export const GetCoffeePage = async (req: Request, res: Response, next: NextFunct
 export const CreateCoffee = async (req: Request, res: Response, next: NextFunction) => {
     try{
             const coffeeId = await createNewCoffee(req.body as Coffee);
-            req.body.beans.forEach(async (bean: Bean) => {
+            req.body.beans?.forEach(async (bean: Bean) => {
                const beanId = await createNewBean(bean);
                await createNewCoffeeBean({coffeeId, beanId});
             });
 
             res.json({
                 coffeeId: coffeeId,
+
             });
+        }
+     catch (err){
+        next(err);
+    }
+};
+
+export const UpdateCoffee = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        if(req.params.id){
+            const response = await updateCoffee(req.body as Coffee, req.params.id);
+            res.json({
+                sucess: response,
+            });
+        }
         }
      catch (err){
         next(err);

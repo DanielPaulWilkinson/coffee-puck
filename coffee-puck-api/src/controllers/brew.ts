@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { getBrewPage, getSingleBrew, createNewBrew, getBrewRowCount } from '../data/brewQueries';
+import { getBrewPage, getSingleBrew, createNewBrew, getBrewRowCount, updateBrew } from '../data/brewQueries';
 import { Brew } from '../types/types';
 
 //used for a single brew detail
@@ -56,6 +56,20 @@ export const CreateBrew = async (req: Request, res: Response, next: NextFunction
         res.status(200).json(result);
     }
     catch (err) {
+        next(err);
+    }
+};
+
+export const UpdateBrew = async (req: Request, res: Response, next: NextFunction) => {
+    try{
+        if(req.params.id){
+            const response = await updateBrew(req.body as Brew, req.params.id);
+            res.json({
+                sucess: response,
+            });
+        }
+        }
+     catch (err){
         next(err);
     }
 };

@@ -34,7 +34,7 @@ export const createNewCoffeeBean = async(brew: any): Promise<Number> => {
     return JSON.parse(JSON.stringify(rows)).insertId;
 }
 
-export const getAllBeansForCoffee = async (id: string) => {
-    const [rows] = await pool.query(getCoffeeBeanQuery, [Number(id)]); 
+export const getAllBeansForCoffee = async (id: number) => {
+    const [rows] = await pool.query(getCoffeeBeanQuery, [id]); 
     return rows;
 }
