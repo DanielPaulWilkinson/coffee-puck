@@ -22,8 +22,6 @@ export const Schemas = {
         post: Joi.object<Coffee>({  
             id: Joi.number(),
             name: Joi.string().required().max(200),
-            createdOn: Joi.string().required(),
-            updatedOn: Joi.string(),
             isDecaf: Joi.boolean(),
             rating: Joi.number().min(1).max(5),
             recipe: Joi.string(),
@@ -31,6 +29,8 @@ export const Schemas = {
             cost: Joi.string(),
             size: Joi.string(),
             image: Joi.string(),
+            createdOn: Joi.string().optional(),
+            updatedOn: Joi.string().optional(),
             beans: Joi.array()
             .items(
                 Joi.object<Bean>({
@@ -46,8 +46,6 @@ export const Schemas = {
         update: Joi.object({
             id: Joi.number(),
             name: Joi.string().required().max(200),
-            createdOn: Joi.string().required(),
-            updatedOn: Joi.string(),
             isDecaf: Joi.boolean(),
             rating: Joi.number().min(1).max(5),
             recipe: Joi.string(),
@@ -55,6 +53,8 @@ export const Schemas = {
             cost: Joi.string(),
             size: Joi.string(),
             image: Joi.string(),
+            createdOn: Joi.string().optional(),
+            updatedOn: Joi.string().optional(),
         })
     },
     brew: {
@@ -74,6 +74,8 @@ export const Schemas = {
             coffeeId: Joi.number().required(),
             coffeeTypeId: Joi.number().required(),
             rating: Joi.number().required(),
+            createdOn: Joi.string().optional(),
+            updatedOn: Joi.string().optional(),
         }).required(),
         update: Joi.object<Brew>({
             id: Joi.number(),
@@ -87,6 +89,8 @@ export const Schemas = {
             coffeeId: Joi.number().required(),
             coffeeTypeId: Joi.number().required(),
             rating: Joi.number().required(),
+            createdOn: Joi.string().optional(),
+            updatedOn: Joi.string().optional(),
         }).required()
     },
     types: {

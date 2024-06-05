@@ -13,22 +13,22 @@ INSERT INTO roasters (name,logo,url,blogURL,notes) VALUES ('mancoco','man.png','
 INSERT INTO roasters (name,logo,url,blogURL,notes) VALUES ('coffee compass','man.png','https://www.coffeecompass.co.uk/','','uk')
 INSERT INTO roasters (name,logo,url,blogURL,notes) VALUES ('The Source','ts.png','https://www.thesourcecoffee.co.uk/','','uk')
 
-insert into socials (icon,name,roasterId,url) values ('facebook','facebook',1,'https://www.facebook.com/squaremilecoffee/')
-insert into socials (icon,name,roasterId,url) values ('instagram','instagram',1,'https://www.instagram.com/squaremilecoffee')
-insert into socials (icon,name,roasterId,url) values ('twitter','twitter',1,'https://twitter.com/squaremile')
-insert into socials (icon,name,roasterId,url) values ('youtube','youtube',2,'https://www.youtube.com/c/BlackWhiteCoffeeRoasters')
-insert into socials (icon,name,roasterId,url) values ('instagram','instagram',2,'https://www.instagram.com/blackwhiteroasters/')
-insert into socials (icon,name,roasterId,url) values ('instagram','instagram',3,'https://www.instagram.com/onyxcoffeelab/')
-insert into socials (icon,name,roasterId,url) values ('facebook','facebook',3,'https://www.facebook.com/OnyxCoffeeLab/')
-insert into socials (icon,name,roasterId,url) values ('youtube','youtube',3,'https://www.youtube.com/user/OnyxCoffeeLab')
-insert into socials (icon,name,roasterId,url) values ('twitter','twitter',3,'https://twitter.com/OnyxCoffeeLab')
-insert into socials (icon,name,roasterId,url) values ('tiktok','tiktok',3,'https://www.tiktok.com/@onyxcoffeelab')
-insert into socials (icon,name,roasterId,url) values ('facebook','facebook',4,'https://www.facebook.com/HorshamCoffeeRoaster')
-insert into socials (icon,name,roasterId,url) values ('instagram','instagram',5,'https://www.instagram.com/YallahCoffee/')
-insert into socials (icon,name,roasterId,url) values ('facebook','facebook',5,'https://www.facebook.com/YallahCoffee/')
-insert into socials (icon,name,roasterId,url) values ('facebook','facebook',6,'https://www.facebook.com/crankhousecoffee/')
-insert into socials (icon,name,roasterId,url) values ('instagram','instagram',6,'https://www.instagram.com/crankhouseroast/')
-insert into socials (icon,name,roasterId,url) values ('twitter','twitter',6,'https://twitter.com/crankhouseroast')
+insert into socials (icon,name,roasterId,url) values ('facebook','facebook',1,'https://www.facebook.com/squaremilecoffee/');
+insert into socials (icon,name,roasterId,url) values ('instagram','instagram',1,'https://www.instagram.com/squaremilecoffee');
+insert into socials (icon,name,roasterId,url) values ('twitter','twitter',1,'https://twitter.com/squaremile');
+insert into socials (icon,name,roasterId,url) values ('youtube','youtube',2,'https://www.youtube.com/c/BlackWhiteCoffeeRoasters');
+insert into socials (icon,name,roasterId,url) values ('instagram','instagram',2,'https://www.instagram.com/blackwhiteroasters/');
+insert into socials (icon,name,roasterId,url) values ('instagram','instagram',3,'https://www.instagram.com/onyxcoffeelab/');
+insert into socials (icon,name,roasterId,url) values ('facebook','facebook',3,'https://www.facebook.com/OnyxCoffeeLab/');
+insert into socials (icon,name,roasterId,url) values ('youtube','youtube',3,'https://www.youtube.com/user/OnyxCoffeeLab');
+insert into socials (icon,name,roasterId,url) values ('twitter','twitter',3,'https://twitter.com/OnyxCoffeeLab');
+insert into socials (icon,name,roasterId,url) values ('tiktok','tiktok',3,'https://www.tiktok.com/@onyxcoffeelab');
+insert into socials (icon,name,roasterId,url) values ('facebook','facebook',4,'https://www.facebook.com/HorshamCoffeeRoaster');
+insert into socials (icon,name,roasterId,url) values ('instagram','instagram',5,'https://www.instagram.com/YallahCoffee/');
+insert into socials (icon,name,roasterId,url) values ('facebook','facebook',5,'https://www.facebook.com/YallahCoffee/');
+insert into socials (icon,name,roasterId,url) values ('facebook','facebook',6,'https://www.facebook.com/crankhousecoffee/');
+insert into socials (icon,name,roasterId,url) values ('instagram','instagram',6,'https://www.instagram.com/crankhouseroast/');
+insert into socials (icon,name,roasterId,url) values ('twitter','twitter',6,'https://twitter.com/crankhouseroast');
 
 
 INSERT INTO `varieties` (`id`, `name`, `history`, `parentId`, `dwarf`, `altitude`, `lineage`, `genetic`, `other_names`) VALUES
@@ -93,8 +93,6 @@ INSERT INTO `varieties` (`id`, `name`, `history`, `parentId`, `dwarf`, `altitude
 (65, 'Typica', 'Typica is the most famous of the Typica-descended varieties. It is a tall variety characterized by very low production, susceptibility to the major diseases, and good cup quality.The Typica group, like all Arabica coffee, is supposed to have originated in southwestern Ethiopia. Sometime in the 15th or 16th century, it was taken to Yemen. By 1700, seeds from Yemen were being cultivated in India. In 1696 and 1699, coffee seeds were sent from the Malabar coast of India to the island of Batavia (today called Java in Indonesia). These few seeds were the ones to give rise to what we now know as the distinct Typica variety. In 1706 a single Typica coffee plant was taken from Java to Amsterdam and given a home in the botanical gardens; from there, a plant was shared with France in 1714.From the Netherlands, Typica was sent in 1719 on colonial trade routes to Dutch Guiana (now Suriname) and then on to Cayenne (French Guiana) in 1722, and from there to the northern part of Brazil in 1727. It reached southern Brazil between 1760 and 1770. From Paris, plants were sent to to Martinique in the West Indies in 1723. The English introduced Typica coffee from Martinique to Jamaica in 1730. It reached Santo Domingo in 1735. From Santo Domingo, seeds were sent to Cuba in 1748. Later on, Costa Rica (1779) and El Salvador (1840) received seeds from Cuba.In the late eighteenth century, cultivation spread to the Caribbean (Cuba, Puerto Rico, Santo Domingo), Mexico and Colombia, and from there across Central America (it was grown in El Salvador as early as 1740). Until the 1940s, the majority of coffee plantations in South and Central America were planted with Typica. Because Typica is both low yielding and highly susceptible to major coffee diseases, it has gradually been replaced across much of the Americas, but is still widely planted in Peru, the Dominican Republic, and Jamaica, where it is called Jamaica Blue Mountain.', 1, 'tall', 'high', 'Also called Criollo (Creole), Indio (Indian), Arábigo (Arabica), Plume Hidalgo, Blue Mountain, and Sumatra.', 'Bourbon-Typica group (Typica related)\r\n', NULL),
 (66, 'Venecia', 'Originated from a natural mutation of a Bourbon population. Pedigree selection (selection of individual plants through successive generations) made by the Instituto del Café de Costa Rica (ICAFE).', 1, 'Dwarf/Compact\r\n', 'medium, high', 'A natural mutation of Bourbon\r\n', 'Bourbon-Typica group (Bourbon related)\r\n', NULL),
 (67, 'Villa Sarchi', 'Like Caturra and Pacas, Villa Sarchi (also called La Luisa or Villalobos Bourbon) is a natural mutation of a Bourbon population with a single-gene mutation that causes the plant to grow smaller (called “Dwarf/Compactism’). The variety was discovered in Costa Rica in the 1950s or 1960s in the northwestern region of the province of Alajuela, and has subsequently undergone pedigree selection (selection of individual plants through successive generations) there. It is not widely grown outside Costa Rica, though was introduced to Honduras in 1974 by IHCAFE.It is known for being well-adpated to the highest altitude conditions and tolerant of strong winds.Villa Sarchi is perhaps most well known as one of the namesakes of the “Sarchimor” group of coffees. In the 1970s, coffee breeders and growers in Latin America, as well as the global coffee industry that depended on coffee from the region, were extremely concerned about the recent arrival of coffee leaf rust in Latin America.In 1958 or 1959, the Centro de Investigação das Ferrugens do Cafeeiro of Portugal (CIFC), famous for its research into coffee leaf rust, received two shipments of Timor Hybrid seeds. Timor Hybrid is a natural cross between Arabica and Robusta that appeared spontaneously on the island of East Timor in 1920s. Its Robusta genetics conferred rust resistance into the variety. From the two shipments of seeds that CIFC received, breeders selected two plants for use in breeding based on their high resistance to leaf rust. In 1967, CIFC breeders began work to create new varieties of coffee that would be resistant to coffee leaf rust, but also have a compact stature that could be planted more densely. One of the rust-resistant Timor Hybrid plants, called HDT CIFC 832/2, was crossed with compact Villa Sarchi to create hybrid 361 (H361). The hybrid was dubbed “Sarchimor.” (Crosses made with compact Caturra were dubbed \"Catimor.\")', 1, 'Dwarf/Compact\r\n', 'high', 'A natural mutation of Bourbon\r\n', 'Bourbon-Typica group (Bourbon related)\r\n', NULL);
-
-
 
 INSERT INTO `coffee_types` (`id`, `name`, `icon`, `description`, `ratio`) VALUES
 (1, 'Espresso', 'espresso', 'The espresso, also known as a short black, is approximately 1 oz. of highly concentrated coffee. Although simple in appearance, it can be difficult to master.', '1 shot of espresso');

@@ -9,9 +9,9 @@ const getCoffeePageQuerySearch =
 const getCoffeePageQuery =
   "SELECT * FROM `coffee` ORDER BY ? ? LIMIT ? OFFSET ?";
 const updateCoffeeQuery =
-  "UPDATE coffee SET name = ?, isDecaf = ?, rating = ?,roasterId = ?,recipe = ?,`cost` = ?,`size` = ? ,image = ?, createdOn = ?,updatedOn = ? WHERE id = ?";
+  "UPDATE coffee SET name = ?, isDecaf = ?, rating = ?,roasterId = ?,recipe = ?,`cost` = ?,`size` = ? ,image = ?,updatedOn = ? WHERE id = ?";
 const createCoffeeQuery =
-  "INSERT INTO `coffee` (name, isDecaf, rating, roasterId, recipe, cost, size, image, createdOn, updatedOn) values ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)";
+  "INSERT INTO `coffee` (name, isDecaf, rating, roasterId, recipe, cost, size, image, createdOn, updatedOn) values ( ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
 const coffeeLengthQuery = "select count(id) as total_records from `coffee`";
 
 export const getSingleCoffee = async (id: string) => {
@@ -67,8 +67,8 @@ export const createNewCoffee = async (brew: Coffee): Promise<Number> => {
     brew.cost,
     brew.size,
     brew.image,
-    brew.createdOn,
-    brew.updatedOn,
+    new Date(),
+    new Date(),
   ]);
   return JSON.parse(JSON.stringify(rows)).insertId;
 };
@@ -83,8 +83,7 @@ export const updateCoffee = async (coffee: Coffee, id: string) => {
     coffee.cost,
     coffee.size,
     coffee.image,
-    coffee.createdOn,
-    coffee.updatedOn,
+    new Date(),
     id,
   ]);
   return JSON.parse(JSON.stringify(rows)).insertId;

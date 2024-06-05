@@ -22,7 +22,6 @@ export type BrewViewState = {
     coffeeTypeSuggestions: CoffeeTypePaginationResponse | null
     suggestionMoreInformation: Coffee | null,
     submitSuccess: boolean,
-    hasSubmitted: boolean,
     selectedCoffeeType: CoffeeType | null,
 }
 
@@ -34,7 +33,6 @@ const state = reactive<BrewViewState>({
     coffeeTypeSuggestions: null,
     suggestionMoreInformation: null,
     submitSuccess: false,
-    hasSubmitted: false,
 })
 
 onBeforeMount(async () => {
@@ -96,7 +94,6 @@ const submit = async () => {
     if (state.selectedCoffeeType) {
         store.brew.coffeeTypeId = state.selectedCoffeeType?.id;
     }
-    state.hasSubmitted = true;
     state.submitSuccess = await createBrew(store.brew);
 
     if (state.submitSuccess) {
@@ -250,34 +247,7 @@ const submit = async () => {
             Submit
         </button>
     </form>
-    <div class="table-responsive" v-if="state.submitSuccess">
-        <h1>You told us:</h1>
-        <p>You drank a {{ state.selectedCoffeeType?.name }} with beans from {{ state.selectedCoffee?.name }}</p>
-        <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col">preGrindAroma</th>
-                    <th scope="col">postGrindAroma</th>
-                    <th scope="col">Acidity</th>
-                    <th scope="col">sweet</th>
-                    <th scope="col">flavour</th>
-                    <th scope="col">finish</th>
-                    <th scope="col">body</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ store.brew.preGrindAroma }}</td>
-                    <td>{{ store.brew.postGrindAroma }}</td>
-                    <td>{{ store.brew.acidity }}</td>
-                    <td>{{ store.brew.sweetness }}</td>
-                    <td>{{ store.brew.flavour }}</td>
-                    <td>{{ store.brew.finish }}</td>
-                    <td>{{ store.brew.body }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+   
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

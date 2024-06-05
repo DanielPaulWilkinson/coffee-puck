@@ -44,8 +44,6 @@ export type Bean = {
 export type Coffee = {
   id?: number,
   name: string,
-  createdOn: string,
-  updatedOn: string,
   isDecaf: boolean,
   rating: number,  
   size: string,

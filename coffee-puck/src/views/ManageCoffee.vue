@@ -19,12 +19,14 @@ type ManageCoffee = {
     search: string | null;
     count: number | null,
     filters: boolean,
+    isTableSearch: boolean,
 };
 
 const state = reactive<ManageCoffee>({
     search: null,
     count: 5,
     filters: false,
+    isTableSearch: false,
 });
 
 onMounted(async () => {
@@ -41,28 +43,6 @@ async function callData(page: number, search?: string) {
     store.data = result.data;
     store.pagination = result.pagination;
 }
-
-const addCoffee = async () => {
-    await createCoffee({
-        name: "A new coffee",
-        createdOn: "1",
-        updatedOn: "1",
-        cost: "19.99",
-        size: "200g",
-        isDecaf: false,
-        rating: 1,
-        image: "w",
-        recipe: "1",
-        roasterId: 1,
-        beans: [{
-            varietyId: 1,
-            process: "washed",
-            producers: "el sharoon",
-            altitude: "200msl",
-            roast: "dark"
-        }]
-    });
-};
 
 const openFilters = async () => {
     state.filters = !state.filters;
@@ -91,9 +71,19 @@ const saveCoffee = async (coffee: Coffee) => {
             <div class="col-12">
                 <h1>Coffee Management</h1>
                 <i>Edit, delete & update those yummy coffee's </i>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary" :class="[{ 'active': state.isTableSearch }]"
+                        @click="state.isTableSearch = true">
+                        <font-awesome-icon :icon="['fas', 'table']" /> Table
+                    </label>
+                    <label class="btn btn-secondary" :class="[{ 'active': !state.isTableSearch }]"
+                        @click="state.isTableSearch = false">
+                        <font-awesome-icon :icon="['fas', 'table-cells-large']" /> Add
+                    </label>
+                </div>
             </div>
         </div>
-        <div class="row mt-2">
+        <div class="row mt-2" v-if="state.isTableSearch">
             <div class="col-md-6">
                 <Text id="search" class="search" v-model="state.search" type="text" placeholder="Search..."
                     @input="callData(1, $event.target.value)" inputMode="text" prepend-class="icon" error="ew">
@@ -104,11 +94,6 @@ const saveCoffee = async (coffee: Coffee) => {
             </div>
             <div class="col-md-6">
                 <div class="row">
-                    <div class="col-2">
-                        <button class="btn btn-primary" type="button" value="Add" @click="addCoffee">
-                            Add
-                        </button>
-                    </div>
                     <div class="col-1">
                         <button class="btn btn-primary" type="button" value="Add" @click.prevent="openFilters">
                             Filters
@@ -117,7 +102,7 @@ const saveCoffee = async (coffee: Coffee) => {
                 </div>
             </div>
         </div>
-        <div class="row mt-4" v-if="state.filters">
+        <div class="row mt-4" v-if="state.filters && state.isTableSearch">
             <div class="col-3">
                 <p>Table Type:</p>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -150,7 +135,7 @@ const saveCoffee = async (coffee: Coffee) => {
                         }]"/>
             </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="state.isTableSearch">
             <div class="col-md-12 mt-2">
                 <Table caption="Coffee List" v-if="store.data.length > 0" id="test" :rows="store.data" :current-page="store.pagination.current_page"
                     :totalPages="store.pagination.total_pages" @previous-page="callData($event)"

@@ -19,18 +19,6 @@ CREATE TABLE `socials` (
   CONSTRAINT `socials_ibfk_1` FOREIGN KEY (`roasterId`) REFERENCES `roasters` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
-CREATE TABLE `beans` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `process` varchar(255) NOT NULL,
-  `producers` varchar(255) NOT NULL,
-  `altitude` varchar(255) NOT NULL,
-  `roast` varchar(255) NOT NULL,
-  `varietyId` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `varietyId` (`varietyId`),
-  CONSTRAINT `beans_ibfk_1` FOREIGN KEY (`varietyId`) REFERENCES `varieties` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
-
 CREATE TABLE `varieties` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -43,6 +31,20 @@ CREATE TABLE `varieties` (
   `other_names` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `beans` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `process` varchar(255) NOT NULL,
+  `producers` varchar(255) NOT NULL,
+  `altitude` varchar(255) NOT NULL,
+  `roast` varchar(255) NOT NULL,
+  `varietyId` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `varietyId` (`varietyId`),
+  CONSTRAINT `beans_ibfk_1` FOREIGN KEY (`varietyId`) REFERENCES `varieties` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+
 
 CREATE TABLE `coffee` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -73,6 +75,8 @@ CREATE TABLE `brew` (
   `coffeeId` int NOT NULL,
   `createdOn` datetime DEFAULT NULL,
   `updatedOn` datetime DEFAULT NULL,
+  `rating` int NOT NULL,
+  `coffeeTypeId` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `coffeeId` (`coffeeId`),
   CONSTRAINT `brew_ibfk_1` FOREIGN KEY (`coffeeId`) REFERENCES `coffee` (`id`)
