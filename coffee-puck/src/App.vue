@@ -58,8 +58,8 @@ provide("create-notification", createNotification);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   display: grid;
-  grid-template-columns: 1fr 3fr;
-    grid-template-rows: 1fr auto;
+  grid-template-columns: 20% 80%;
+    grid-template-rows: 100% 10%;
   grid-template-areas:
     'sidebar main'
     'footer footer';

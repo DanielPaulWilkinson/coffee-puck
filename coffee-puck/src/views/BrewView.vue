@@ -12,6 +12,7 @@ import BrewForm from '../components/AddBrewForm.vue'
     </div>
 </template>
 <style lang="scss">
+
 .card-top{
     margin:auto;
 }

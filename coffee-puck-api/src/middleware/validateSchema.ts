@@ -86,8 +86,6 @@ export const Schemas = {
             flavour: Joi.string().required(),
             coffeeId: Joi.number().required(),
             coffeeTypeId: Joi.number().required(),
-            createdOn: Joi.string(),
-            updatedOn: Joi.string(),
             rating: Joi.number().required(),
         }).required()
     },

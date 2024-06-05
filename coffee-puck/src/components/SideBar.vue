@@ -97,18 +97,18 @@ import { RouterLink, RouterView } from 'vue-router'
 .sidebar-link {
   display: flex;
   align-items: center;
-  padding: 0 56px;
+  padding: 0 40px;
   color: var(--black-font-color);
 }
 
-.sidebar-link:hover {
+.menu .sidebar-link:hover {
   background: var(--sidebar-link-hover-background-color);
-
+  border-end-start-radius: 50px;
+  border-start-start-radius: 50px;
 }
 
-.sidebar-link:hover p, .sidebar-link:hover svg {
+.menu .sidebar-link:hover p, .menu .sidebar-link:hover svg {
   color: var(--sidebar-background-color);
-
 }
 
 .logo .sidebar-link:hover {
@@ -135,6 +135,8 @@ import { RouterLink, RouterView } from 'vue-router'
 .selected .sidebar-link {
   color: var(--sidebar-background-color);
   background: var(--sidebar-link-selected-background);
+  border-end-start-radius: 50px;
+    border-start-start-radius: 50px;
 }
 
 .selected:hover .sidebar-link {

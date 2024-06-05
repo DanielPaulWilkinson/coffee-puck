@@ -46,7 +46,6 @@ export type Content = {
   }
   
 export const getCoffees = async (page: number, limit: number, sortBy: string, sortOrder: string, search?: string): Promise<CoffeePaginationResponse> => {
-  console.log(limit);
     const response = await axios.get(`http://localhost:3000/coffee/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` + `${search ? `&search=${search}` : ''}`);
     if(response.status === 200){
          return response.data;

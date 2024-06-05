@@ -3,9 +3,10 @@ import Table from "../components/FormElements/Table.vue";
 import { inject, onMounted, reactive } from "vue";
 const store = useBrewPagination();
 import Text from "../components/FormElements/Text.vue";
-import { createBrew, getBrews, updateBrew } from "../data/brew";
+import { getBrews, updateBrew } from "../data/brew";
 import type { CreateNotification } from "../services/notifications";
 import { useBrewPagination, type Brew } from "../stores/brewPagination";
+import AddBrewForm from "../components/AddBrewForm.vue";
 const createNotification = <CreateNotification>inject("create-notification");
 
 async function callData(page: number, search?: string) {
@@ -20,26 +21,16 @@ onMounted(async () => {
 
 export type State = {
     search: string | null;
+    isTableSearch: boolean;
 };
 
 const state = reactive<State>({
     search: null,
+    isTableSearch: true,
 });
 
 const addBrew = async () => {
-    await createBrew({
-        id: null,
-        preGrindAroma: "",
-        postGrindAroma: "",
-        acidity: "",
-        sweetness: "",
-        body: "",
-        finish: "",
-        flavour: "",
-        coffeeId: null,
-        coffeeTypeId: null,
-        rating: null
-    });
+    state.isTableSearch = !state.isTableSearch;
 };
 
 const saveBrew = async (brew: Brew) => {
@@ -65,9 +56,19 @@ const saveBrew = async (brew: Brew) => {
             <div class="col-12">
                 <h1>Brew Management</h1>
                 <i>Edit, delete & update those yummy brews </i>
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-secondary" :class="[{ 'active': state.isTableSearch }]"
+                        @click="state.isTableSearch = true">
+                        <font-awesome-icon :icon="['fas', 'table']" /> Table
+                    </label>
+                    <label class="btn btn-secondary" :class="[{ 'active': !state.isTableSearch }]"
+                        @click="state.isTableSearch = false">
+                        <font-awesome-icon :icon="['fas', 'table-cells-large']" /> Add
+                    </label>
+                </div>
             </div>
         </div>
-        <div class="row mt-2">
+        <div class="row mt-2" v-if="state.isTableSearch">
             <div class="col-md-6">
                 <Text id="search" class="search" :model-value="state.search" type="text" placeholder="Search..."
                     @input="callData(1, $event.target.value)" input-mode="text" prepend-class="icon">
@@ -103,6 +104,9 @@ const saveBrew = async (brew: Brew) => {
                     :totalPages="store.pagination.total_pages" @previous-page="callData($event)"
                     @next-page="callData($event)" @save="saveBrew($event as Brew)" />
             </div>
+        </div>
+        <div class="row mt-2" v-else>
+            <AddBrewForm />
         </div>
     </div>
 </template>
