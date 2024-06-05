@@ -87,5 +87,13 @@ CREATE TABLE `coffee_bean` (
   CONSTRAINT `coffee_bean_ibfk_2` FOREIGN KEY (`beanId`) REFERENCES `beans` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
 
+CREATE TABLE `coffee_types` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `icon` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `ratio` varchar(255) DEFAULT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
