@@ -130,3 +130,12 @@ INSERT INTO `coffee_types` (`id`, `name`, `icon`, `description`, `ratio`) VALUES
 (28, 'Turkish Coffee', NULL, NULL, NULL),
 (29, 'Correto ', 'correto ', 'A Corretto is an Italian beverage that combines a shot of espresso with a shot of grappa, Sambuca, or brandy. It is typically served as a fine after dinner drink in restaurants.', NULL),
 (30, 'Babyccino ', 'babyccino ', 'I am not sure why you go to a coffee shop and order this as is just steamed milk without any coffee but stranger things have happened!', NULL);
+
+INSERT INTO `coffee` (`id`, `name`, `isDecaf`, `rating`, `roasterId`, `recipe`, `cost`, `size`, `image`, `createdOn`, `updatedOn`) VALUES
+(9, 'RED BRICK', 0, 4, 1, '1 shot of esspresso', '13', '350g', 'https://shop.squaremilecoffee.com/cdn/shop/files/Coffee-SQUARE_b8d28caf-4e38-4df6-a53e-6d98ab73974f_large@2x.jpg?v=1717140802', '1', '4'),
+(10, 'SERRA DAS CABEÇAS', 0, 3, 1, '2', '16.50', '350g', 'https://shop.squaremilecoffee.com/cdn/shop/files/Coffee-SQUARE_ed72bc13-d9a7-426f-9ad4-73bfe75d1632_large@2x.jpg?v=1717400706', '1', '1'),
+(12, 'SWEETSHOP', 0, 3, 1, '1', '20.00', '350G', '//shop.squaremilecoffee.com/cdn/shop/files/Coffee-SQUARE_15d68c5e-7148-4a77-86e0-1948ef5622d6_large.jpg?v=1712241069', '1', '1'),
+(13, 'KCRS Cooperative', 0, 2, 1, '1', '17.50', '250g', 'https://shop.squaremilecoffee.com/cdn/shop/files/Coffee-SQUARE_4caeebdf-7a2d-4f85-9d85-f443acea96e2_large@2x.jpg?v=1715071531', '1', '1'),
+(14, 'RICH ITALIAN\n', 0, 2, 3, '1', '16.95', '500g', 'w', '1', '1'),
+(15, 'SIGNATURE GOLD', 0, 4, 3, '1', '15.99', '500g', 'w', '1', '1'),
+(16, 'BLACK GOLD', 0, 3, 3, '1', '15.99', '500g', '2', '1', '1'),

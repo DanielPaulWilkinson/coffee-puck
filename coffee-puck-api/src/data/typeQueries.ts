@@ -1,6 +1,6 @@
 import { pool } from "./database";
 
-const getTypeQuery = "select * from `cpffee_types` where id = ?";
+const getTypeQuery = "select * from `coffee_types` where id = ?";
 const getTypesQuery = "SELECT * FROM `coffee_types`"
 const getTypesPageQuery = "SELECT * FROM `coffee_types` WHERE name LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?"
 const typeLengthQuery = "select count(id) as total_records from `coffee_types`"
