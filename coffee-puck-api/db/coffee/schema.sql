@@ -34,13 +34,15 @@ CREATE TABLE `beans` (
 CREATE TABLE `varieties` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `description` longtext,
+  `history` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `parentId` int NOT NULL,
-  `reigon` varchar(50) NOT NULL,
-  `country` varchar(50) NOT NULL,
-  `continent` varchar(50) NOT NULL,
+  `dwarf` text,
+  `altitude` text,
+  `lineage` text,
+  `genetic` text,
+  `other_names` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `coffee` (
   `id` int NOT NULL AUTO_INCREMENT,
