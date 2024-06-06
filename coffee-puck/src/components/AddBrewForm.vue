@@ -23,7 +23,7 @@ export type BrewViewState = {
     suggestionMoreInformation: Coffee | null,
     submitSuccess: boolean,
     selectedCoffeeType: CoffeeType | null,
-}
+};
 
 const state = reactive<BrewViewState>({
     coffeeTypeSearchIsOpen: false,
@@ -33,7 +33,7 @@ const state = reactive<BrewViewState>({
     coffeeTypeSuggestions: null,
     suggestionMoreInformation: null,
     submitSuccess: false,
-})
+});
 
 onBeforeMount(async () => {
     const id = route.params.coffeeId
