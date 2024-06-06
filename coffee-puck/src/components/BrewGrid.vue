@@ -1,7 +1,7 @@
 
 <script setup lang="ts">
+import { getBrews } from '@/data/brew';
 import { useBrewPagination } from '../stores/brewPagination';
-import { getbrews } from '../data/brew'
 import { onMounted, reactive, watch } from 'vue';
 const store = useBrewPagination()
 
@@ -11,7 +11,7 @@ onMounted(async () => {
 })
 
 async function callData(page: number) {
-  const result = await getbrews(page, 50, "id", "DESC");
+  const result = await getBrews(page, 50, "id", "DESC");
   store.data = result.data;
   store.pagination = result.pagination;
 }
