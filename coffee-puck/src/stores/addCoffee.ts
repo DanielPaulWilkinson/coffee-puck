@@ -33,6 +33,7 @@ export const useCoffeeStore = defineStore('addCoffeeStore', {
             beans: [],
         },
         varieties: [],
+        beans: [],
       };
     },
   });

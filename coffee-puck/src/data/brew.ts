@@ -1,34 +1,10 @@
-import type { Brew } from "@/stores/brewPagination"
 import axios from "axios"
-
-export type brew = {
-   id: number | null,
-   preGrindAroma: string,
-   postGrindAroma: string,
-   acidity: string,
-   sweetness: string,
-   body: string,
-   finish: string,
-   flavour: string,
-   coffeeId: number | null,
-   coffeeTypeId: number | null,
-   rating: number | null,
-}
-
-type pagination = {
-   current_page: number,
-   next_page: number,
-   offset: number,
-   prev_page: number,
-   total_pages: number,
-   total_records: number,
-}
+import type { brew, pagination } from "./Types"
 
 export type BrewPaginationResponse = {
    data: brew[],
    pagination: pagination,
 }
-
 
 export const getBrews = async (page: number, limit: number, sortBy: string, sortOrder: string, search?: string): Promise<BrewPaginationResponse> => {
    const response = await axios.get(`http://localhost:3000/brew/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` + `${search ? `&search=${search}` : ''}`);
@@ -53,6 +29,6 @@ export const createBrew = async (brew: brew): Promise<boolean> => {
 }
 
 
-export const updateBrew = async (c: Brew) => {
+export const updateBrew = async (c: brew) => {
    return (await axios.post(`http://localhost:3000/brew/update/${c.id}`, c)).data;
 }

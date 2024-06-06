@@ -5,12 +5,12 @@ import {
     getCoffees,
     updateCoffee,
 } from "@/data/coffee";
-import Table from "../components/FormElements/Table.vue";
+import Table from "../components/fields/Table.vue";
 import { computed, inject, onMounted, provide, reactive, watch } from "vue";
-import Text from "@/components/FormElements/Text.vue";
+import Text from "@/components/fields/Text.vue";
 import type { CreateNotification } from "@/services/notifications";
 import type { Coffee } from "@/stores/brewPagination";
-import Select from "@/components/FormElements/Select.vue";
+import Select from "@/components/fields/Select.vue";
 import AddCoffeeForm from "../components/AddCoffeeForm.vue";
 
 const store = useCoffeePagination();

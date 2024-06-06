@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import Table from "../components/FormElements/Table.vue";
+import Table from "../components/fields/Table.vue";
 import { inject, onMounted, reactive } from "vue";
 const store = useBrewPagination();
-import Text from "../components/FormElements/Text.vue";
+import Text from "../components/fields/Text.vue";
 import { getBrews, updateBrew } from "../data/brew";
 import type { CreateNotification } from "../services/notifications";
 import { useBrewPagination, type Brew } from "../stores/brewPagination";

@@ -1,32 +1,30 @@
 <script setup lang="ts">
-import { inject, onBeforeMount, onMounted, reactive, watch } from 'vue';
+import { inject, onBeforeMount, reactive } from 'vue';
 import { useBrewStore } from '../stores/addBrew'
-import { type Brew, type Coffee } from '../stores/brewPagination';
-import Question from './../components/FormElements/Question.vue';
-import Text from './../components/FormElements/Text.vue';
+import Question from './../components/fields/Question.vue';
+import Text from './../components/fields/Text.vue';
 import FillCoffee from '../components/FillCoffee.vue'
 import { createBrew } from '../data/brew'
 import type { CreateNotification } from '../services/notifications';
-import StarRating from './FormElements/StarRating.vue';
+import StarRating from './fields/StarRating.vue';
 import { getCoffee, getCoffees, type CoffeePaginationResponse } from '../data/coffee';
 import { useRoute } from 'vue-router'
-import { getTypePage, type CoffeeType, type CoffeeTypePaginationResponse } from '../data/coffeeTypes';
+import { getTypePage, type CoffeeTypePaginationResponse } from '../data/coffeeTypes';
+import { brew, coffee, coffeeType } from '../data/types';
 const store = useBrewStore();
 const route = useRoute()
 const createNotification = <CreateNotification>inject("create-notification");
 
 export type BrewViewState = {
-    coffeeTypeSearchIsOpen: boolean,
-    selectedCoffee: Coffee | null,
+    selectedCoffee: coffee | null,
     coffeeSuggestions: CoffeePaginationResponse | null,
     coffeeTypeSuggestions: CoffeeTypePaginationResponse | null
-    suggestionMoreInformation: Coffee | null,
+    suggestionMoreInformation: coffee | null,
     submitSuccess: boolean,
-    selectedCoffeeType: CoffeeType | null,
+    selectedCoffeeType: coffeeType | null,
 };
 
 const state = reactive<BrewViewState>({
-    coffeeTypeSearchIsOpen: false,
     selectedCoffee: null,
     selectedCoffeeType: null,
     coffeeSuggestions: null,
@@ -37,7 +35,7 @@ const state = reactive<BrewViewState>({
 
 onBeforeMount(async () => {
     const id = route.params.coffeeId
-    store.brew = {} as Brew;
+    store.brew = {} as brew;
     if (id) {
         const coffee = await getCoffee(Number(id));
         if (coffee) {
@@ -53,7 +51,7 @@ onBeforeMount(async () => {
     state.coffeeTypeSuggestions = await getTypePage(1, 3, "id", "DESC", store.coffeeType);
 })
 
-const selectCoffee = async (coffee: Coffee, index: number) => {
+const selectCoffee = async (coffee: coffee, index: number) => {
     state.coffeeSuggestions?.data.forEach(card => {
         card.isSelected = false;
     });
@@ -72,8 +70,8 @@ const runCoffeeTypeSearch = async () => {
     state.coffeeTypeSuggestions = await getTypePage(1, 3, "id", "DESC", store.coffeeType);
 }
 
-const selectCoffeeType = async (type: CoffeeType, index: number) => {
-    state.coffeeTypeSuggestions?.data.forEach((card: CoffeeType) => {
+const selectCoffeeType = async (type: coffeeType, index: number) => {
+    state.coffeeTypeSuggestions?.data.forEach((card: coffeeType) => {
         card.isSelected = false;
     });
 
@@ -208,7 +206,7 @@ const submit = async () => {
                 <Question name="coffeeType" tooltip="" label="What type of coffee did you brew?" class=""
                     :form-group="true" error="">
                     <Text input-mode="text" id="coffeeType" type="text" v-model="store.coffeeType"
-                        placeholder="search..." error="" @blur="state.coffeeTypeSearchIsOpen = false"
+                        placeholder="search..." error=""
                         @input="runCoffeeTypeSearch" class="input" prepend-class="icon">
                         <template #append>
                         <font-awesome-icon :icon="['fas', 'search']" />
