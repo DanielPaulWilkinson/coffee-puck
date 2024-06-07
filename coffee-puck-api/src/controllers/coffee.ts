@@ -1,12 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { getCoffeePage, getSingleCoffee, createNewCoffee, getCoffeeRowCount, updateCoffee  } from '../data/coffeeQueries';
-import { Bean, Coffee } from '../types/types';
-import { createNewBean, createNewCoffeeBean, getAllBeansForCoffee } from '../data/beanQueries';
+import { getCoffeePageQuery, createNewCoffeeQuery, getCoffeeRowCountQuery, updateCoffeeQuery, getCoffeeQuery} from '../data/coffeeQueries';
+import { createNewBeanQuery, createNewCoffeeBeanQuery, getAllBeansForCoffeeQuery } from '../data/beanQueries';
+import { bean, coffee } from '../types/types';
 
-//used for a single brew detail
-export const GetCoffee = async (req: Request, res: Response, next: NextFunction) => {
+export const getCoffee = async (req: Request, res: Response, next: NextFunction) => {
     try{
-        const result = await getSingleCoffee(req.params.coffee);
+        const result = await getCoffeeQuery(req.params.coffee);
         console.log(result);
         res.json(result);
     } catch (err){
@@ -14,27 +13,26 @@ export const GetCoffee = async (req: Request, res: Response, next: NextFunction)
     }
 };
 
-// used for pagination
-export const GetCoffeePage = async (req: Request, res: Response, next: NextFunction) => {
+export const getCoffeePage = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
         const { page, limit, sortBy, sortOrder, search } = req.query;
     
         const offset = (Number(page) * Number(limit)) - Number(limit);
 
-        const totalRecords = await getCoffeeRowCount();
+        const totalRecords = await getCoffeeRowCountQuery();
 
         const totalPages = totalRecords / Number(limit);
 
-        const coffee = await getCoffeePage(
+        const coffee = await getCoffeePageQuery(
             offset,
             Number(limit),
             sortBy as string,
             sortOrder as string,
-            search as string) as Coffee[];
+            search as string) as coffee[];
 
             coffee.forEach(async d => {
-                d.beans = await getAllBeansForCoffee(d.id) as Bean[];
+                d.beans = await getAllBeansForCoffeeQuery(d.id) as bean[];
             });
             res.json(
                 {
@@ -55,17 +53,18 @@ export const GetCoffeePage = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-export const CreateCoffee = async (req: Request, res: Response, next: NextFunction) => {
+export const createCoffee = async (req: Request, res: Response, next: NextFunction) => {
     try{
-            const coffeeId = await createNewCoffee(req.body as Coffee);
-            req.body.beans?.forEach(async (bean: Bean) => {
-               const beanId = await createNewBean(bean);
-               await createNewCoffeeBean({coffeeId, beanId});
+            const coffeeId = await createNewCoffeeQuery(req.body as coffee);
+            console.log(coffeeId);
+            req.body.beans?.forEach(async (bean: bean) => {
+               const beanId = await createNewBeanQuery(bean);
+               console.log(beanId);
+               await createNewCoffeeBeanQuery(coffeeId, beanId);
             });
 
             res.json({
                 coffeeId: coffeeId,
-
             });
         }
      catch (err){
@@ -73,10 +72,10 @@ export const CreateCoffee = async (req: Request, res: Response, next: NextFuncti
     }
 };
 
-export const UpdateCoffee = async (req: Request, res: Response, next: NextFunction) => {
+export const updateCoffee = async (req: Request, res: Response, next: NextFunction) => {
     try{
         if(req.params.id){
-            const response = await updateCoffee(req.body as Coffee, req.params.id);
+            const response = await updateCoffeeQuery(req.body as coffee, req.params.id);
             res.json({
                 sucess: response,
             });

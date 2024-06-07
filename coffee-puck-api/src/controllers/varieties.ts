@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { getSingleVariety, getVarietyRowCount, getVarietyPage } from '../data/varietyQueries'
+import { getSingleVarietyQuery, getVarietyRowCountQuery, getVarietyPageQuery } from '../data/varietyQueries'
 
 //used for a single brew detail
 export const GetVariety = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await getSingleVariety(req.params.brew);
+        const result = await getSingleVarietyQuery(req.params.brew);
         res.json(result);
     } catch (err) {
         next(err);
@@ -19,11 +19,11 @@ export const GetVarietyPage = async (req: Request, res: Response, next: NextFunc
     
         const offset = (Number(page) * Number(limit)) - Number(limit);
 
-        const totalRecords = await getVarietyRowCount();
+        const totalRecords = await getVarietyRowCountQuery();
 
         const totalPages = totalRecords / Number(limit);
 
-        const brews = await getVarietyPage(
+        const brews = await getVarietyPageQuery(
             offset,
             Number(limit),
             sortBy as string,

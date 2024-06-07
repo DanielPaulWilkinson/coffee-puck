@@ -1,27 +1,17 @@
 import { defineStore } from "pinia";
-import type { Coffee } from "./brewPagination";
-
-export type Variety = {
-    id: number,
-    name: string,
-    history: string,
-    parentId: number,		
-    dwarf: string,		
-    altitude: string,			
-    lineage: string,
-    genetic: string,
-    other_names: string,		
-}
+import type { coffee, variety, bean } from "../data/Types";
 
 export type CoffeeStore = {
-  coffee: Coffee,
-  varieties: Variety[],
+  coffee: coffee,
+  varieties: variety[],
+  beans: bean[],
 }
 
 export const useCoffeeStore = defineStore('addCoffeeStore', {
     state: (): CoffeeStore => {
       return {
         coffee: {
+            id: 0,
             name: "",
             isDecaf: false,
             rating: 0,

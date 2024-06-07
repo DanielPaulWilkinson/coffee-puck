@@ -17,7 +17,7 @@ export const getBeans = async (
         `http://localhost:3000/bean/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
             `${search ? `&search=${search}` : ""}`,
     );
-
+    console.log(response);
     if (response.status === 200) {
         return response.data;
     }

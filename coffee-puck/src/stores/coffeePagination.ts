@@ -1,9 +1,9 @@
 import { defineStore } from "pinia"
-import type { Coffee } from "./brewPagination"
+import type { coffee } from "../data/Types"
 
 export const useCoffeePagination = defineStore('coffeePagination', () => {
     return { 
-      data: [] as Coffee[],
+      data: [] as coffee[],
       pagination: {
         current_page: 1,
         next_page: 2,

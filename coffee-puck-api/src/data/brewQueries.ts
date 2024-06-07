@@ -1,29 +1,29 @@
-import { Brew } from "../types/types";
+import { brew } from "../types/types";
 import { pool } from "./database";
 
-const getBrewQuery = "select * from `brew` where id = ?";
-const getBrewPageQuery = "SELECT * FROM `brew` ORDER BY ? ? LIMIT ? OFFSET ?";
-const createBrewQuery = `insert into brew (preGrindAroma, postGrindAroma, acidity, sweetness, body, finish, flavour, coffeeId, coffeeTypeId, rating, createdOn, updatedOn) values (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)`;
-const brewLengthQuery = "select count(id) as total_records from `brew`";
-const updateBrewQuery =
+const getBrewSQL = "select * from `brew` where id = ?";
+const getBrewPageSQL = "SELECT * FROM `brew` ORDER BY ? ? LIMIT ? OFFSET ?";
+const createBrewSQL = `insert into brew (preGrindAroma, postGrindAroma, acidity, sweetness, body, finish, flavour, coffeeId, coffeeTypeId, rating, createdOn, updatedOn) values (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)`;
+const brewLengthSQL = "select count(id) as total_records from `brew`";
+const updateBrewSQL =
   "UPDATE brew SET preGrindAroma = ?, postGrindAroma = ?, acidity = ?,sweetness = ?,body = ?,`finish` = ?,`flavour` = ? ,coffeeId = ?, coffeeTypeId = ?,rating = ?, updatedOn = ? WHERE id = ?";
-export const getBrewRowCount = async () => {
-  const [rows] = await pool.query(brewLengthQuery);
+export const getBrewRowCountQuery = async () => {
+  const [rows] = await pool.query(brewLengthSQL);
   return JSON.parse(JSON.stringify(rows))[0].total_records;
 };
 
-export const getSingleBrew = async (id: string) => {
-  const [rows] = await pool.query(getBrewQuery, [Number(id)]);
+export const getSingleBrewQuery = async (id: string) => {
+  const [rows] = await pool.query(getBrewSQL, [Number(id)]);
   return rows;
 };
 
-export const getBrewPage = async (
+export const getBrewPageQuery = async (
   offset: number,
   limit: number,
   sortBy: string,
   sortOrder: string
 ) => {
-  const [rows] = await pool.query(getBrewPageQuery, [
+  const [rows] = await pool.query(getBrewPageSQL, [
     sortBy,
     sortOrder,
     Number(limit),
@@ -32,8 +32,8 @@ export const getBrewPage = async (
   return rows;
 };
 
-export const createNewBrew = async (brew: Brew) => {
-  const [rows] = await pool.query(createBrewQuery, [
+export const createNewBrewQuery = async (brew: brew) => {
+  const [rows] = await pool.query(createBrewSQL, [
     brew.preGrindAroma,
     brew.postGrindAroma,
     brew.acidity,
@@ -50,8 +50,8 @@ export const createNewBrew = async (brew: Brew) => {
   return rows;
 };
 
-export const updateBrew = async (coffee: Brew, id: string) => {
-  const [rows] = await pool.query(updateBrewQuery, [
+export const updateBrewQuery = async (coffee: brew, id: string) => {
+  const [rows] = await pool.query(updateBrewSQL, [
     coffee.preGrindAroma,
     coffee.postGrindAroma,
     coffee.acidity,

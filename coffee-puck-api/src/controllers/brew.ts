@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { getBrewPage, getSingleBrew, createNewBrew, getBrewRowCount, updateBrew } from '../data/brewQueries';
-import { Brew } from '../types/types';
+import { getBrewPageQuery, getSingleBrewQuery, createNewBrewQuery, getBrewRowCountQuery, updateBrewQuery } from '../data/brewQueries';
+import { brew } from '../types/types';
 
 //used for a single brew detail
 export const GetBrew = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await getSingleBrew(req.params.brew);
+        const result = await getSingleBrewQuery(req.params.brew);
         res.json(result);
     } catch (err) {
         next(err);
@@ -20,11 +20,11 @@ export const GetBrewPage = async (req: Request, res: Response, next: NextFunctio
     
         const offset = (Number(page) * Number(limit)) - Number(limit);
 
-        const totalRecords = await getBrewRowCount();
+        const totalRecords = await getBrewRowCountQuery();
 
         const totalPages = totalRecords / Number(limit);
 
-        const brews = await getBrewPage(
+        const brews = await getBrewPageQuery(
             offset,
             Number(limit),
             sortBy as string,
@@ -52,7 +52,7 @@ export const GetBrewPage = async (req: Request, res: Response, next: NextFunctio
 export const CreateBrew = async (req: Request, res: Response, next: NextFunction) => {
     try {
         console.log(req.body);
-        const result = await createNewBrew(req.body as Brew);
+        const result = await createNewBrewQuery(req.body as brew);
         res.status(200).json(result);
     }
     catch (err) {
@@ -63,7 +63,7 @@ export const CreateBrew = async (req: Request, res: Response, next: NextFunction
 export const UpdateBrew = async (req: Request, res: Response, next: NextFunction) => {
     try{
         if(req.params.id){
-            const response = await updateBrew(req.body as Brew, req.params.id);
+            const response = await updateBrewQuery(req.body as brew, req.params.id);
             res.json({
                 sucess: response,
             });

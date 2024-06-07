@@ -1,7 +1,7 @@
 import Joi, { ObjectSchema } from 'joi';
 import Logging from '../logging/logging';
 import { NextFunction, Request, Response } from 'express';
-import { Bean, Brew, Coffee } from '../types/types';
+import { bean, brew, coffee } from '../types/types';
 
 export const ValidateSchema = (schema: ObjectSchema) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +19,7 @@ export const Schemas = {
     coffee: {
         getAll: Joi.object({}),
         get: Joi.object({}),
-        post: Joi.object<Coffee>({  
+        post: Joi.object<coffee>({  
             id: Joi.number(),
             name: Joi.string().required().max(200),
             isDecaf: Joi.boolean(),
@@ -29,11 +29,9 @@ export const Schemas = {
             cost: Joi.string(),
             size: Joi.string(),
             image: Joi.string(),
-            createdOn: Joi.string().optional(),
-            updatedOn: Joi.string().optional(),
             beans: Joi.array()
             .items(
-                Joi.object<Bean>({
+                Joi.object<bean>({
                 id: Joi.number(),
                 varietyId: Joi.number(),
                 process: Joi.string(),
@@ -62,7 +60,7 @@ export const Schemas = {
             id: Joi.number(),
         }),
         getPage:Joi.object({}),
-        post: Joi.object<Brew>({
+        post: Joi.object<brew>({
             id: Joi.number(),
             preGrindAroma: Joi.string().required(),
             postGrindAroma: Joi.string().required(),
@@ -74,10 +72,8 @@ export const Schemas = {
             coffeeId: Joi.number().required(),
             coffeeTypeId: Joi.number().required(),
             rating: Joi.number().required(),
-            createdOn: Joi.string().optional(),
-            updatedOn: Joi.string().optional(),
         }).required(),
-        update: Joi.object<Brew>({
+        update: Joi.object<brew>({
             id: Joi.number(),
             preGrindAroma: Joi.string().required(),
             postGrindAroma: Joi.string().required(),
@@ -89,11 +85,17 @@ export const Schemas = {
             coffeeId: Joi.number().required(),
             coffeeTypeId: Joi.number().required(),
             rating: Joi.number().required(),
-            createdOn: Joi.string().optional(),
-            updatedOn: Joi.string().optional(),
         }).required()
     },
     types: {
         get: Joi.object({}),
+    },
+    varieties: {
+        get: Joi.object({}),
+        getPage: Joi.object({}),
+    },
+    bean: {
+        get: Joi.object({}),
+        getPage: Joi.object({}),
     }
 }

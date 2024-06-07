@@ -182,7 +182,7 @@ const submit = async () => {
                 </Question>
 
                 <div class="row mt-2" v-if="state.coffeeSuggestions">
-                    <div class="col-md-4 col-sm-6 col-xs-6" v-for="(coffee, index) in state.coffeeSuggestions.data">
+                    <div class="col-md-4 col-sm-12 col-xs-12 mt-sm-2" v-for="(coffee, index) in state.coffeeSuggestions.data">
                         <div class="card selectable" :class="{ 'selected': coffee.isSelected }"
                             @click="selectCoffee(coffee, index);">
                             <img src="https://howdencoffee.co.uk/wp-content/uploads/2022/08/HC-116.jpg"
@@ -215,7 +215,7 @@ const submit = async () => {
                 </Question>
 
                 <div class="row mt-2" v-if="state.coffeeTypeSuggestions">
-                    <div class="col-md-4 col-sm-6 col-xs-6" v-for="(type, index) in state.coffeeTypeSuggestions.data">
+                    <div class="col-md-4 col-sm-12 col-xs-12 mt-sm-2" v-for="(type, index) in state.coffeeTypeSuggestions.data">
                         <div class="card selectable" :class="{ 'selected': type.isSelected }"
                             @click="selectCoffeeType(type, index);">
                             <div class="card-top">
@@ -234,6 +234,9 @@ const submit = async () => {
                             <div class="card-body text-center">
                                 <h5 class="card-title">{{ type?.name }}</h5>
                                 <i> {{ type?.ratio }}</i>
+                            </div>
+                            <div v-if="type.isSelected" class="check">
+                                <img src="../assets/check.svg" />
                             </div>
                         </div>
                     </div>
@@ -276,5 +279,18 @@ h2 {
 
 .input {
     border: 1px solid #765;
+}
+
+.selected {
+    background-color: #765;
+}
+
+.check {
+    position: absolute;
+    top: -5px;
+    right: 2px;
+}
+.selectable {
+    cursor: pointer;
 }
 </style>

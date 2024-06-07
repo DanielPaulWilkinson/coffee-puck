@@ -16,7 +16,7 @@ import { useSlots } from 'vue';
         prependClass?: string,
         prepend?: string,
         filter?: (e: KeyboardEvent) => boolean | undefined;
-        suggestions?: string[]
+        suggestions?: string[],
     }>(), {
         filter: () => true,
         max: 999,

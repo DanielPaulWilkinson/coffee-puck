@@ -5,6 +5,8 @@ import { config } from './config/config';
 import brewRoutes from './routes/brew'
 import coffeeRoutes from './routes/coffee';
 import typeRoutes from './routes/types';
+import varietyRoutes from './routes/varieties';
+import beanRoutes from './routes/bean';
 
 const router = express();
 
@@ -35,9 +37,11 @@ const StartServer = () => {
         next();
     });
 
-    router.use('/brew', brewRoutes)
-    router.use('/coffee', coffeeRoutes)
-    router.use('/types', typeRoutes)
+    router.use('/brew', brewRoutes);
+    router.use('/coffee', coffeeRoutes);
+    router.use('/types', typeRoutes);
+    router.use('/varieties', varietyRoutes)
+    router.use('/bean', beanRoutes)
 
      /** Health check */
      router.get('/ping', (req, res, next) => {

@@ -1,34 +1,34 @@
 import axios from "axios";
-import type { bean, pagination } from "./Types";
+import type { bean, pagination, variety } from "./Types";
 
-export type BeanPaginationResponse = {
-    data: bean[];
+export type varietyPaginationResponse = {
+    data: variety[];
     pagination: pagination;
 };
 
-export const getBeans = async (
+export const getVarieties = async (
     page: number,
     limit: number,
     sortBy: string,
     sortOrder: string,
     search?: string,
-): Promise<BeanPaginationResponse> => {
+): Promise<varietyPaginationResponse> => {
     const response = await axios.get(
-        `http://localhost:3000/bean/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
+        `http://localhost:3000/variety/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
             `${search ? `&search=${search}` : ""}`,
     );
 
     if (response.status === 200) {
         return response.data;
     }
-    return {} as BeanPaginationResponse;
+    return {} as varietyPaginationResponse;
 };
 
-export const createBean = async (bean: bean): Promise<boolean> => {
+export const createVariety = async (variety: variety): Promise<boolean> => {
     try {
         const response = await axios.post(
-            `http://localhost:3000/bean/create`,
-            bean,
+            `http://localhost:3000/variety/create`,
+            variety,
         );
         if (response.status === 200) {
             return true;
@@ -39,7 +39,7 @@ export const createBean = async (bean: bean): Promise<boolean> => {
     }
 };
 
-export const updateBean = async (bean: bean) => {
-    return (await axios.post(`http://localhost:3000/bean/update/${bean.id}`, bean))
+export const updateVariety = async (variety: variety) => {
+    return (await axios.post(`http://localhost:3000/variety/update/${bean.id}`, variety))
         .data;
 };

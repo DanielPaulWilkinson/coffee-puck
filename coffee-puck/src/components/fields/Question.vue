@@ -34,7 +34,7 @@ const showTooltip = ref(false);
             <div class="row">
 
             
-            <div class="col-11 col-md-11 col-lg-11">
+            <div :class="tooltip ? 'col-11 col-md-11 col-lg-11' : 'col-12 col-md-12 col-lg-12'">
                 <slot />
             </div>
             <div
