@@ -9,9 +9,9 @@ import Table from "../components/fields/Table.vue";
 import { computed, inject, onMounted, provide, reactive, watch } from "vue";
 import Text from "@/components/fields/Text.vue";
 import type { CreateNotification } from "@/services/notifications";
-import type { Coffee } from "@/stores/brewPagination";
 import Select from "@/components/fields/Select.vue";
 import AddCoffeeForm from "../components/AddCoffeeForm.vue";
+import { coffee } from '../data/types';
 
 const store = useCoffeePagination();
 const createNotification = <CreateNotification>inject("create-notification");
@@ -35,7 +35,6 @@ onMounted(async () => {
 });
 
 watch(() => state.count, async (x) => {
-    console.log(x);
     await callData(1);
 });
 
@@ -49,7 +48,7 @@ const openFilters = async () => {
     state.filters = !state.filters;
 }
 
-const saveCoffee = async (coffee: Coffee) => {
+const saveCoffee = async (coffee: coffee) => {
     try {
         coffee.isDecaf = coffee.isDecaf ? true : false;
         await updateCoffee(coffee);
@@ -137,7 +136,7 @@ const saveCoffee = async (coffee: Coffee) => {
                 <Table caption="Coffee List" v-if="store.data.length > 0" id="test" :rows="store.data"
                     :current-page="store.pagination.current_page" :totalPages="store.pagination.total_pages"
                     @previous-page="callData($event)" @next-page="callData($event)"
-                    @save="saveCoffee($event as Coffee)" />
+                    @save="saveCoffee($event as coffee)" />
                 <p v-else>No data found for search</p>
             </div>
         </div>

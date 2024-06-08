@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { bean, pagination } from "./Types";
+import type { bean, pagination } from "./types";
 
 export type BeanPaginationResponse = {
     data: bean[];
@@ -17,7 +17,6 @@ export const getBeans = async (
         `http://localhost:3000/bean/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
             `${search ? `&search=${search}` : ""}`,
     );
-    console.log(response);
     if (response.status === 200) {
         return response.data;
     }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { coffee, pagination } from "./Types";
+import type { coffee, pagination } from "./types";
 
 export type CoffeePaginationResponse = {
     data: coffee[];

@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { bean, pagination, variety } from "./Types";
+import type { bean, pagination, variety } from "./types";
 
 export type varietyPaginationResponse = {
     data: variety[];
@@ -14,7 +14,7 @@ export const getVarieties = async (
     search?: string,
 ): Promise<varietyPaginationResponse> => {
     const response = await axios.get(
-        `http://localhost:3000/variety/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
+        `http://localhost:3000/varieties/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
             `${search ? `&search=${search}` : ""}`,
     );
 
@@ -27,7 +27,7 @@ export const getVarieties = async (
 export const createVariety = async (variety: variety): Promise<boolean> => {
     try {
         const response = await axios.post(
-            `http://localhost:3000/variety/create`,
+            `http://localhost:3000/varieties/create`,
             variety,
         );
         if (response.status === 200) {
@@ -40,6 +40,6 @@ export const createVariety = async (variety: variety): Promise<boolean> => {
 };
 
 export const updateVariety = async (variety: variety) => {
-    return (await axios.post(`http://localhost:3000/variety/update/${bean.id}`, variety))
+    return (await axios.post(`http://localhost:3000/varieties/update/${variety.id}`, variety))
         .data;
 };

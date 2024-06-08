@@ -74,7 +74,6 @@ export const createNewCoffeeQuery = async (brew: coffee): Promise<number> => {
 };
 
 export const updateCoffeeQuery = async (coffee: coffee, id: string) => {
-  console.log(coffee);
   const [rows] = await pool.query(updateCoffeeSQL, [
     coffee.name,
     coffee.isDecaf,

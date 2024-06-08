@@ -1,6 +1,6 @@
 import axios from "axios";
 import { z } from "zod";
-import type { coffeeType, pagination } from "./Types";
+import type { coffeeType, pagination } from "./types";
 
 export type CoffeeTypePaginationResponse ={
      data: coffeeType[],

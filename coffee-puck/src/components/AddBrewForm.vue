@@ -279,6 +279,7 @@ h2 {
 
 .input {
     border: 1px solid #765;
+    border-radius: 10px;
 }
 
 .selected {

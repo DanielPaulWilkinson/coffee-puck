@@ -1,5 +1,5 @@
 import axios from "axios"
-import type { brew, pagination } from "./Types"
+import type { brew, pagination } from "./types"
 
 export type BrewPaginationResponse = {
    data: brew[],

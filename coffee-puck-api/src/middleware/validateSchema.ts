@@ -97,5 +97,12 @@ export const Schemas = {
     bean: {
         get: Joi.object({}),
         getPage: Joi.object({}),
+    },
+    roaster: {
+        get: Joi.object({}),
+        getPage: Joi.object({}),
+    },
+    stats: {
+        get: Joi.object({}),
     }
 }

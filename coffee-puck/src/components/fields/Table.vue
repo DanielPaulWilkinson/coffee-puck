@@ -44,7 +44,6 @@ const updateTableData = () => {
             c.cells = [];
             const keys = Reflect.ownKeys(row);
             keys.forEach((key) => {
-                // console.log(typeof Reflect.get(row, key));
                 c.cells?.push({
                     id: key.toString(),
                     value: Reflect.get(row, key),
@@ -75,10 +74,6 @@ const reconstruct = (row: Row) => {
     });
 
     return data;
-};
-
-const deleteRecord = (index: number) => {
-    console.log(index);
 };
 
 export type State = {
@@ -147,7 +142,7 @@ const state = reactive<State>({
                         >
                             <font-awesome-icon :icon="['fas', 'edit']" />
                         </a>
-                        <a href="#" @click.prevent="deleteRecord(i)">
+                        <a href="#" @click.prevent="emit('delete',i)">
                             <font-awesome-icon :icon="['fas', 'trash']" />
                         </a>
                     </div>

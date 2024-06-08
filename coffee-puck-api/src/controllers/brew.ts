@@ -51,7 +51,6 @@ export const GetBrewPage = async (req: Request, res: Response, next: NextFunctio
 
 export const CreateBrew = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log(req.body);
         const result = await createNewBrewQuery(req.body as brew);
         res.status(200).json(result);
     }

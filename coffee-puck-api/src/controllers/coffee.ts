@@ -6,7 +6,6 @@ import { bean, coffee } from '../types/types';
 export const getCoffee = async (req: Request, res: Response, next: NextFunction) => {
     try{
         const result = await getCoffeeQuery(req.params.coffee);
-        console.log(result);
         res.json(result);
     } catch (err){
         next(err);
@@ -56,10 +55,8 @@ export const getCoffeePage = async (req: Request, res: Response, next: NextFunct
 export const createCoffee = async (req: Request, res: Response, next: NextFunction) => {
     try{
             const coffeeId = await createNewCoffeeQuery(req.body as coffee);
-            console.log(coffeeId);
             req.body.beans?.forEach(async (bean: bean) => {
                const beanId = await createNewBeanQuery(bean);
-               console.log(beanId);
                await createNewCoffeeBeanQuery(coffeeId, beanId);
             });
 

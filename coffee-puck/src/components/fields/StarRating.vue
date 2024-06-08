@@ -31,7 +31,6 @@ const state = <stars>reactive({
 });
 
 onMounted(() => {
-  console.log("reached", props.modelValue);
     if(props.modelValue > props.starCount){
       throw new Error("fill count is more than star count");
     }

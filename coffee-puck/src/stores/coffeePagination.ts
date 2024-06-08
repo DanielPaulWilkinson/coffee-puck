@@ -1,5 +1,5 @@
 import { defineStore } from "pinia"
-import type { coffee } from "../data/Types"
+import type { coffee } from "../data/types"
 
 export const useCoffeePagination = defineStore('coffeePagination', () => {
     return { 

@@ -7,6 +7,8 @@ import coffeeRoutes from './routes/coffee';
 import typeRoutes from './routes/types';
 import varietyRoutes from './routes/varieties';
 import beanRoutes from './routes/bean';
+import roasterRoutes from './routes/roaster';
+import statsRoute from './routes/stats';
 
 const router = express();
 
@@ -40,8 +42,10 @@ const StartServer = () => {
     router.use('/brew', brewRoutes);
     router.use('/coffee', coffeeRoutes);
     router.use('/types', typeRoutes);
-    router.use('/varieties', varietyRoutes)
-    router.use('/bean', beanRoutes)
+    router.use('/varieties', varietyRoutes);
+    router.use('/bean', beanRoutes);
+    router.use('/roaster', roasterRoutes);
+    router.use('/stats', statsRoute);
 
      /** Health check */
      router.get('/ping', (req, res, next) => {

@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { getSingleVarietyQuery, getVarietyRowCountQuery, getVarietyPageQuery } from '../data/varietyQueries'
+import { getRoasterRowCountQuery, getRoasterPageQuery, getSingleRoasterQuery} from '../data/roasterQueries'
 
 //used for a single brew detail
-export const GetVariety = async (req: Request, res: Response, next: NextFunction) => {
+export const GetRoaster = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await getSingleVarietyQuery(req.params.brew);
+        const result = await getSingleRoasterQuery(req.params.brew);
         res.json(result);
     } catch (err) {
         next(err);
@@ -12,18 +12,18 @@ export const GetVariety = async (req: Request, res: Response, next: NextFunction
 };
 
 // used for pagination
-export const GetVarietyPage = async (req: Request, res: Response, next: NextFunction) => {
+export const GetRoasterPage = async (req: Request, res: Response, next: NextFunction) => {
     try {
 
         const { page, limit, sortBy, sortOrder, search } = req.query;
     
         const offset = (Number(page) * Number(limit)) - Number(limit);
 
-        const totalRecords = await getVarietyRowCountQuery();
+        const totalRecords = await getRoasterRowCountQuery();
 
         const totalPages = totalRecords / Number(limit);
 
-        const brews = await getVarietyPageQuery(
+        const brews = await getRoasterPageQuery(
             offset,
             Number(limit),
             sortBy as string,

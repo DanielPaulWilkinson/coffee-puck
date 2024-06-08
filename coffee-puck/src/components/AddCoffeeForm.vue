@@ -7,21 +7,20 @@ import Text from './../components/fields/Text.vue';
 import RadioSet from './fields/RadioSet.vue';
 import Radio from './fields/Radio.vue';
 import { inject, onMounted, reactive } from 'vue';
-import type { bean } from '@/data/types';
+import { bean } from '../data/types';
 import { getBeans, type BeanPaginationResponse } from '@/data/beans';
 import Select from './fields/Select.vue';
 import type { CreateNotification } from '@/services/notifications';
-import { createCoffee } from '@/data/coffee';
 import Rating from '../components/fields/StarRating.vue';
 const createNotification = <CreateNotification>inject("create-notification");
+import VarietySearch from '../components/search/VarietySearch.vue';
+import { createCoffee } from '@/data/coffee';
 
 export type CoffeeViewState = {
     selectedBeans: bean[] | null,
     newBeans: bean[] | null,
     beanSuggestions: BeanPaginationResponse | null,
-    varietySuggestions: varietyPaginationResponse | null,
     beanSearch: string,
-    varietySearch: string,
 };
 
 const state = reactive<CoffeeViewState>({
@@ -29,11 +28,10 @@ const state = reactive<CoffeeViewState>({
     newBeans: [],
     beanSuggestions: null,
     beanSearch: "",
-    varietySuggestions: null,
-    varietySearch: "",
 });
 
 onMounted(async () => {
+    store.$reset();
     state.beanSuggestions = await getBeans(1, 3, "id", "DESC", state.beanSearch);
 });
 
@@ -122,21 +120,6 @@ const submit = async () => {
         <hr>
         <div class="row">
             <div class="col-12">
-                <Question name="bean-search" tooltip="" label="What beans are in this coffee?" class=""
-                    :form-group="false" error="">
-                    <Text id="bean-search" type="text" v-model="state.beanSearch" class="input"
-                        @input="runBeanSearch" />
-                </Question>
-            </div>
-            <div class="col-12">
-                <div class="card" v-for="(b, index) in state.beanSuggestions?.data">
-                    <p>{{ b.name }}</p>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div class="row">
-            <div class="col-12">
                 <button value="Add Bean" @click.prevent="state.newBeans?.push({} as bean)">Add Bean</button>
             </div>
             <div v-for="(bean, i) in state.newBeans" class="col-6 mt-2">
@@ -185,8 +168,7 @@ const submit = async () => {
                         </Question>
                         <Question :name="`${i}-variety`" tooltip="" label="Variety" class="" :form-group="false"
                             error="">
-                            <Text :id="`${i}-variety`" v-model.number="bean.varietyId" input-mode="text" type="text"
-                                class="input" />
+                            <VarietySearch :id="`${i}-variety-search`" :model-value="bean.varietyId" @selected="bean.varietyId = $event"/>
                         </Question>
                         <div class="form-button-group">
                             <button class="btn btn-primary mt-2" @click.prevent="store.beans.push(bean)">Save</button>
