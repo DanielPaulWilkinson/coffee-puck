@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, watch } from 'vue';
 
 const props = withDefaults(defineProps<{
     id: string,
     starCount?: number,
-    fillCount?: number,
     readonly?: boolean
     modelValue: number,
 }>(), {
@@ -30,6 +29,8 @@ const state = <stars>reactive({
   stars: [],
 });
 
+
+
 onMounted(() => {
     if(props.modelValue > props.starCount){
       throw new Error("fill count is more than star count");
@@ -41,8 +42,14 @@ onMounted(() => {
         index: i,
       });
     }
-
+    console.log(props.modelValue);
     for(let i = 0; i < props.modelValue; i++){
+      state.stars[i].active = true;
+    };
+});
+
+watch(() => props.modelValue, () => {
+  for(let i = 0; i < props.modelValue; i++){
       state.stars[i].active = true;
     };
 });

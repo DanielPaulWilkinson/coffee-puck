@@ -14,10 +14,15 @@ import type { CreateNotification } from '@/services/notifications';
 import Rating from '../components/fields/StarRating.vue';
 const createNotification = <CreateNotification>inject("create-notification");
 import VarietySearch from '../components/search/VarietySearch.vue';
-import { createCoffee } from '@/data/coffee';
+import RoasterSearch from './search/RoasterSearch.vue';
+import { createCoffee, getCoffee } from '@/data/coffee';
+import { useRoute } from 'vue-router';
+import { getRoaster, getRoasters } from '@/data/roasters';
+const route = useRoute();
 
 export type CoffeeViewState = {
     selectedBeans: bean[] | null,
+    selectedRoaster: string,
     newBeans: bean[] | null,
     beanSuggestions: BeanPaginationResponse | null,
     beanSearch: string,
@@ -28,14 +33,21 @@ const state = reactive<CoffeeViewState>({
     newBeans: [],
     beanSuggestions: null,
     beanSearch: "",
+    selectedRoaster: "",
 });
 
 onMounted(async () => {
     store.$reset();
-    state.beanSuggestions = await getBeans(1, 3, "id", "DESC", state.beanSearch);
-});
-
-const runBeanSearch = async () => state.beanSuggestions = await getBeans(1, 3, "id", "DESC", state.beanSearch);
+    const id = route.query.id;
+    if(id){
+        const coffee = await getCoffee(Number(id));
+        console.log(coffee);
+        store.coffee = coffee;
+        state.newBeans = coffee.beans;
+        const roaster = await getRoaster(coffee.roasterId);
+        state.selectedRoaster = roaster.name;
+    }
+ });
 
 const removeBean = async (index: number) => {
     if (store.beans[index]) {
@@ -45,7 +57,8 @@ const removeBean = async (index: number) => {
 
 const submit = async () => {
     store.coffee.beans = store.beans;
-    const success = await createCoffee(store.coffee);
+    console.log(store.beans);
+   const success = await createCoffee(store.coffee);
 
     if (success) {
         createNotification({
@@ -113,7 +126,7 @@ const submit = async () => {
             </div>
             <div class="col-6">
                 <Question name="roaster" tooltip="" label="Who is the roaster?" class="" :form-group="false" error="">
-                    <Text id="roaster" type="text" v-model="store.coffee.roasterId" class="input" />
+                    <RoasterSearch id="roaster-search" :model-value="state.selectedRoaster" @selected="store.coffee.roasterId = $event"/>
                 </Question>
             </div>
         </div>
@@ -142,7 +155,7 @@ const submit = async () => {
         { value: 'High Altitude', label: 'High Altitude - 4,000-5,000 Feet' },
         { value: 'Very High Altitude', label: 'Very High Altitude - 5,000 Feet and Above' },
         { value: 'Unknown', label: 'Unknown' }
-    ]" input-mode="text" type="text" class="input" />
+    ]" class="input" />
                         </Question>
                         <Question :name="`${i}-process`" tooltip="" label="Process" class="" :form-group="false"
                             error="">
@@ -151,7 +164,7 @@ const submit = async () => {
         { value: 'Washed', label: 'Washed' },
         { value: 'Honey', label: 'Honey' },
         { value: 'Unknown', label: 'Unknown' }
-    ]" input-mode="text" type="text" class="input" />
+    ]" class="input" />
                         </Question>
                         <Question :name="`${i}-producers`" tooltip="" label="Producers" class="" :form-group="false"
                             error="">
@@ -164,7 +177,7 @@ const submit = async () => {
         { value: 'Medium', label: 'Medium' },
         { value: 'Medium dark', label: 'Medium dark' },
         { value: 'Dark', label: 'Dark' }
-    ]" input-mode="text" type="text" class="input" />
+    ]" class="input" />
                         </Question>
                         <Question :name="`${i}-variety`" tooltip="" label="Variety" class="" :form-group="false"
                             error="">

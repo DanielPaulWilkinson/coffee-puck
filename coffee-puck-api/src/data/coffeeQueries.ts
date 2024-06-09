@@ -18,10 +18,8 @@ export const getCoffeeQuery = async (id: string) => {
   const [rows] = await pool.query(getCoffeeSQL, [Number(id)]);
   const beans = await getAllBeansForCoffeeQuery(Number(id));
   return {
-    coffee: {
-      info: JSON.parse(JSON.stringify(rows))[0],
+      ...JSON.parse(JSON.stringify(rows))[0],
       beans: beans,
-    },
   };
 };
 

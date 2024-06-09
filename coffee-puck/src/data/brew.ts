@@ -32,3 +32,7 @@ export const createBrew = async (brew: brew): Promise<boolean> => {
 export const updateBrew = async (c: brew) => {
    return (await axios.post(`http://localhost:3000/brew/update/${c.id}`, c)).data;
 }
+
+export const getBrew =  async (id: number) => {
+   return (await axios.get(`http://localhost:3000/brew/get/${id}`)).data[0];
+}

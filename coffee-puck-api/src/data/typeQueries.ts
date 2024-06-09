@@ -14,7 +14,7 @@ export const getTypeRowCount = async () => {
 
 export const getSingleType = async (id: string) => {
     const [rows] = await pool.query(getTypeQuery, [Number(id)]); 
-    return rows;
+    return JSON.parse(JSON.stringify(rows));
 }
 
 export const getTypes = async () => {

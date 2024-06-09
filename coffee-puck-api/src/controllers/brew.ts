@@ -5,7 +5,7 @@ import { brew } from '../types/types';
 //used for a single brew detail
 export const GetBrew = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await getSingleBrewQuery(req.params.brew);
+        const result = await getSingleBrewQuery(req.params.id);
         res.json(result);
     } catch (err) {
         next(err);

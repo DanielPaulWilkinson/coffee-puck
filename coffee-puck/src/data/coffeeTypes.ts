@@ -15,4 +15,11 @@ export const getTypePage = async (page: number, limit: number, sortBy: string, s
      return {} as CoffeeTypePaginationResponse;
   }
  
+  export const getCoffeeType = async (id: number): Promise<coffeeType> => {
+     const response = await axios.get(`http://localhost:3000/types/get/${id}`);
+     if (response.status === 200) {
+         return response.data;
+     }
  
+     return {} as coffeeType;
+ };

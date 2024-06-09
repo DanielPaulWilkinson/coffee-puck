@@ -1,10 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { getRoasterRowCountQuery, getRoasterPageQuery, getSingleRoasterQuery} from '../data/roasterQueries'
 
-//used for a single brew detail
 export const GetRoaster = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await getSingleRoasterQuery(req.params.brew);
+        console.log(req.params.id);
+        const result = await getSingleRoasterQuery(req.params.id);
+        console.log(result);
         res.json(result);
     } catch (err) {
         next(err);

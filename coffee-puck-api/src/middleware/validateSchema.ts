@@ -61,7 +61,7 @@ export const Schemas = {
         }),
         getPage:Joi.object({}),
         post: Joi.object<brew>({
-            id: Joi.number(),
+            id: null,
             preGrindAroma: Joi.string().required(),
             postGrindAroma: Joi.string().required(),
             acidity: Joi.string().required(),
@@ -85,6 +85,8 @@ export const Schemas = {
             coffeeId: Joi.number().required(),
             coffeeTypeId: Joi.number().required(),
             rating: Joi.number().required(),
+            createdOn: Joi.string(),
+            updatedOn: Joi.string(),
         }).required()
     },
     types: {

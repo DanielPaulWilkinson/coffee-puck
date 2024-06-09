@@ -49,7 +49,7 @@ export const variety = z.object({
 });
 
 export const brew = z.object({
-    id: z.number().optional(),
+    id: z.number().optional().nullable(),
     preGrindAroma: z.string(),
     postGrindAroma: z.string(),
     acidity: z.string(),
@@ -60,6 +60,8 @@ export const brew = z.object({
     coffeeId: z.number(),
     coffeeTypeId: z.number(),
     rating: z.number(),
+    createdOn: z.string().optional().nullable(),
+    updatedOn: z.string().optional().nullable(),
 });
 
 export const coffeeType = z.object({

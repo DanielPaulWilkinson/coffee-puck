@@ -4,13 +4,13 @@ import { useBrewStore } from '../stores/addBrew'
 import Question from './../components/fields/Question.vue';
 import Text from './../components/fields/Text.vue';
 import FillCoffee from '../components/FillCoffee.vue'
-import { createBrew } from '../data/brew'
+import { createBrew, getBrew, updateBrew } from '../data/brew'
 import type { CreateNotification } from '../services/notifications';
 import StarRating from './fields/StarRating.vue';
 import { getCoffee, getCoffees, type CoffeePaginationResponse } from '../data/coffee';
 import { useRoute } from 'vue-router'
-import { getTypePage, type CoffeeTypePaginationResponse } from '../data/coffeeTypes';
-import { brew, coffee, coffeeType } from '../data/types';
+import { getTypePage, type CoffeeTypePaginationResponse, getCoffeeType } from '../data/coffeeTypes';
+import { coffee, coffeeType } from '../data/types';
 const store = useBrewStore();
 const route = useRoute()
 const createNotification = <CreateNotification>inject("create-notification");
@@ -34,21 +34,31 @@ const state = reactive<BrewViewState>({
 });
 
 onBeforeMount(async () => {
-    const id = route.params.coffeeId
-    store.brew = {} as brew;
-    if (id) {
-        const coffee = await getCoffee(Number(id));
-        if (coffee) {
+    store.$reset();
+    const brewId = route.query.id;
+    if (brewId) {
+        store.brew = await getBrew(Number(brewId));
+        if (store.brew.coffeeId) {
+            const coffee = await getCoffee(store.brew.coffeeId);
             store.coffee = coffee.name;
-            store.brew.coffeeId = coffee.id;
-            state.coffeeSuggestions = await getCoffees(1, 3, "id", "DESC", store.coffee);
-            await selectCoffee(coffee, 0);
+            await runCoffeeSearch();
+            selectCoffee(coffee, 0);
+        } else {
+            await runCoffeeSearch();
+        }
+        if (store.brew.coffeeTypeId) {
+            const type = await getCoffeeType(store.brew.coffeeTypeId);
+            store.coffeeType = type.name;
+            await runCoffeeTypeSearch();
+            selectCoffeeType(type, 0);
+        } else {
+            await runCoffeeTypeSearch();
         }
     } else {
-        state.coffeeSuggestions = await getCoffees(1, 3, "id", "DESC", store.coffee);
+        runCoffeeSearch();
+        runCoffeeTypeSearch();
     }
 
-    state.coffeeTypeSuggestions = await getTypePage(1, 3, "id", "DESC", store.coffeeType);
 })
 
 const selectCoffee = async (coffee: coffee, index: number) => {
@@ -84,14 +94,16 @@ const selectCoffeeType = async (type: coffeeType, index: number) => {
 const submit = async () => {
     if (state.selectedCoffee) {
         store.brew.coffeeId = state.selectedCoffee.id;
-    } else {
-        store.brew.coffeeId = Number(route.params.coffeeId);
     }
 
-    store.brew.coffeeTypeId =1;
     if (state.selectedCoffeeType) {
-        store.brew.coffeeTypeId = state.selectedCoffeeType?.id;
+        store.brew.coffeeTypeId = state.selectedCoffeeType?.id ?? 0;
     }
+    if(route.query.id){
+        await updateBrew(store.brew);
+        return;
+    }
+
     state.submitSuccess = await createBrew(store.brew);
 
     if (state.submitSuccess) {
@@ -110,18 +122,20 @@ const submit = async () => {
 </script>
 <template>
 
-    <form @submit.prevent="submit" v-if="!state.submitSuccess">
+    <form @submit.prevent="submit">
         <h2>Add Brew Form</h2>
         <hr>
         <div class="row">
             <h2>How does the coffee smell?</h2>
             <div class="col-6">
-                <Question name="preGrindAroma" tooltip="Before grinding the coffee beans, how do they smell?" label="Pre-Grind?" class="" :form-group="false" error="">
+                <Question name="preGrindAroma" tooltip="Before grinding the coffee beans, how do they smell?"
+                    label="Pre-Grind?" class="" :form-group="false" error="">
                     <Text id="preGrindAroma" type="text" v-model="store.brew.preGrindAroma" class="input" />
                 </Question>
             </div>
             <div class="col-6">
-                <Question name="postGrindAroma" tooltip="After grinding the coffee beans, how do they smell?" label="Post-Grind?" class="" :form-group="false" error="">
+                <Question name="postGrindAroma" tooltip="After grinding the coffee beans, how do they smell?"
+                    label="Post-Grind?" class="" :form-group="false" error="">
                     <Text id="postGrindAroma" type="text" v-model="store.brew.postGrindAroma" class="input" />
                 </Question>
             </div>
@@ -173,16 +187,17 @@ const submit = async () => {
             <div class="col-6">
                 <h2>Which Coffee did you use?</h2>
                 <Question name="coffee" tooltip="" label="Search for a coffee..." class="" :form-group="true" error="">
-                    <Text pre input-mode="text" id="coffee" type="text" v-model="store.coffee"
-                        placeholder="search..." error="" @input="runCoffeeSearch" class="input" prepend-class="icon">
+                    <Text pre input-mode="text" id="coffee" type="text" v-model="store.coffee" placeholder="search..."
+                        error="" @input="runCoffeeSearch" class="input" prepend-class="icon">
                         <template #append>
-                        <font-awesome-icon :icon="['fas', 'search']" />
-                    </template>
+                            <font-awesome-icon :icon="['fas', 'search']" />
+                        </template>
                     </Text>
                 </Question>
 
                 <div class="row mt-2" v-if="state.coffeeSuggestions">
-                    <div class="col-md-4 col-sm-12 col-xs-12 mt-sm-2" v-for="(coffee, index) in state.coffeeSuggestions.data">
+                    <div class="col-md-4 col-sm-12 col-xs-12 mt-sm-2"
+                        v-for="(coffee, index) in state.coffeeSuggestions.data">
                         <div class="card selectable" :class="{ 'selected': coffee.isSelected }"
                             @click="selectCoffee(coffee, index);">
                             <img src="https://howdencoffee.co.uk/wp-content/uploads/2022/08/HC-116.jpg"
@@ -206,16 +221,17 @@ const submit = async () => {
                 <Question name="coffeeType" tooltip="" label="What type of coffee did you brew?" class=""
                     :form-group="true" error="">
                     <Text input-mode="text" id="coffeeType" type="text" v-model="store.coffeeType"
-                        placeholder="search..." error=""
-                        @input="runCoffeeTypeSearch" class="input" prepend-class="icon">
+                        placeholder="search..." error="" @input="runCoffeeTypeSearch" class="input"
+                        prepend-class="icon">
                         <template #append>
-                        <font-awesome-icon :icon="['fas', 'search']" />
-                    </template>
+                            <font-awesome-icon :icon="['fas', 'search']" />
+                        </template>
                     </Text>
                 </Question>
 
                 <div class="row mt-2" v-if="state.coffeeTypeSuggestions">
-                    <div class="col-md-4 col-sm-12 col-xs-12 mt-sm-2" v-for="(type, index) in state.coffeeTypeSuggestions.data">
+                    <div class="col-md-4 col-sm-12 col-xs-12 mt-sm-2"
+                        v-for="(type, index) in state.coffeeTypeSuggestions.data">
                         <div class="card selectable" :class="{ 'selected': type.isSelected }"
                             @click="selectCoffeeType(type, index);">
                             <div class="card-top">
@@ -245,10 +261,10 @@ const submit = async () => {
         </div>
         <hr>
         <button type="submit" class="btn btn-primary margin-top-10 right">
-            Submit
+            {{ route.query.id ? "Update Brew" : "Add Brew" }}
         </button>
     </form>
-   
+
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -291,7 +307,12 @@ h2 {
     top: -5px;
     right: 2px;
 }
+
 .selectable {
     cursor: pointer;
+}
+
+.card-top {
+    margin: auto;
 }
 </style>

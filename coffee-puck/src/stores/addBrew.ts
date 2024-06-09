@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
-import type { Brew } from "./brewPagination";
+import type { brew } from "../data/types";
 
 export type BrewStore = {
-  brew: Brew,
+  brew: brew,
   coffee: string,
   coffeeType: string,
 }

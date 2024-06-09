@@ -51,7 +51,7 @@ export const variety = z.object({
 });
 
 export const brew = z.object({
-    id: z.number().optional(),
+    id: z.number().nullable().optional(),
     preGrindAroma: z.string(),
     postGrindAroma: z.string(),
     acidity: z.string(),
@@ -59,8 +59,8 @@ export const brew = z.object({
     body: z.string(),
     finish: z.string(),
     flavour: z.string(),
-    coffeeId: z.number(),
-    coffeeTypeId: z.number(),
+    coffeeId: z.number().nullable(),
+    coffeeTypeId: z.number().nullable(),
     rating: z.number(),
 });
 
@@ -95,20 +95,16 @@ export const coffee = z.object({
     beans: z.array(bean),
 });
 
+export const statistic = z.object({ value: z.number(), name: z.string() });
+
 export const statistics = z.object({
-    coffee: z.object({
-        total: z.object({
-            name: z.string(),
-            value: z.number(),
-        }),
-        decaf: z.number(),
-        caffeinated: z.number()
-    }),
-    brew: z.object({ total: z.number() }),
-    variety: z.object({ total: z.number() }),
-    roaster: z.object({ total: z.number() }),
+    coffee: z.array(statistic),
+    brew: z.array(statistic),
+    variety: z.array(statistic),
+    roaster: z.array(statistic),
 });
 
+export type statistic = z.infer<typeof statistic>;
 export type statistics = z.infer<typeof statistics>;
 export type purchase = z.infer<typeof purchase>;
 export type social = z.infer<typeof social>;

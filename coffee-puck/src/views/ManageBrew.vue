@@ -5,9 +5,10 @@ const store = useBrewPagination();
 import Text from "../components/fields/Text.vue";
 import { getBrews, updateBrew } from "../data/brew";
 import type { CreateNotification } from "../services/notifications";
-import { useBrewPagination, type Brew } from "../stores/brewPagination";
-import AddBrewForm from "../components/AddBrewForm.vue";
-const createNotification = <CreateNotification>inject("create-notification");
+import { useBrewPagination } from "../stores/brewPagination";
+import BrewForm from "../components/BrewForm.vue";
+import type { brew } from '../data/types';
+ const createNotification = <CreateNotification>inject("create-notification");
 
 async function callData(page: number, search?: string) {
     const result = await getBrews(page, Number(state.count), "id", "DESC", search ?? undefined);
@@ -37,7 +38,7 @@ const openFilters = async () => {
     state.filters = !state.filters;
 }
 
-const saveBrew = async (brew: Brew) => {
+const saveBrew = async (brew: brew) => {
     try {
         brew.coffeeTypeId = Number(brew.coffeeTypeId);
         await updateBrew(brew);
@@ -128,12 +129,12 @@ const saveBrew = async (brew: Brew) => {
             <div class="col-md-12 mt-2">
                 <Table caption="Brew List" id="test" :rows="store.data" :current-page="store.pagination.current_page"
                     :totalPages="store.pagination.total_pages" @previous-page="callData($event)"
-                    @next-page="callData($event)" @save="saveBrew($event as Brew)" />
+                    @next-page="callData($event)" @save="saveBrew($event as brew)" />
             </div>
         </div>
 
         <div class="row mt-2" v-else>
-            <AddBrewForm />
+            <BrewForm />
         </div>
     </div>
 </template>

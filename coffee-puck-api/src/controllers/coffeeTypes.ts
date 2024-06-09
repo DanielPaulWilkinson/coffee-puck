@@ -4,8 +4,8 @@ import { getSingleType, getTypePage, getTypeRowCount, getTypes } from '../data/t
 //used for a single brew detail
 export const GetType = async (req: Request, res: Response, next: NextFunction) => {
     try{
-        const result = await getSingleType(req.params.type);
-        res.json(result);
+        const result = await getSingleType(req.params.id);
+        res.json(result[0]);
     } catch (err){
         next(err);
     }

@@ -2,11 +2,11 @@
 import { onMounted, reactive, watch } from "vue";
 import AutoComplete from "../fields/AutoComplete.vue";
 import { getVarieties } from "../../data/varieties";
-import type { pagination, variety } from "@/data/Types";
+import type { pagination, variety } from "@/data/types";
 const props = withDefaults(
     defineProps<{
         id: string;
-        modelValue: number | null;
+        modelValue: string | null;
     }>(),
     {},
 );
@@ -31,10 +31,15 @@ async function callData(page: number, search?: string) {
 
 const emit = defineEmits<{
     (on: "selected", value: number): void;
-    (on: "update:modelValue", value: string): void;
 }>();
 
+watch(() => props.modelValue, async () => {
+    state.search = props.modelValue ?? "";
+    await callData(1);
+});
+
 onMounted(async () => {
+    state.search = props.modelValue ?? "";
     await callData(1);
 });
 </script>

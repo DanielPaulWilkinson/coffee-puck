@@ -15,16 +15,13 @@ export const getStatistics = async (
     const varietyCount = await getVarietyRowCountQuery();
     const roasterCount = await getRoasterRowCountQuery();
     res.json({
-      coffee: { total: { value: coffeeCount, name: "Total Coffees"}, decaf: 2, caffeinated: 20 },
-      brew: {
-        total: brewCount,
-        highestRatedCommon: {
-          acidity: "very acidic",
-          sweetness: "subtle"
-        },
-      },
-      variety: { total: varietyCount },
-      roaster: { total: roasterCount },
+      coffee: [
+        { value: coffeeCount, name: "Total Coffees" },
+        { value: 2, name: "Decaf"},
+        { value: 20, name: "Not Decaf"},
+        { value: 2.99, name: "Avg Cost"},
+        { value: "Holiday Roast", name: "Fave Coffee"}
+      ],
     });
   } catch (err) {
     next(err);

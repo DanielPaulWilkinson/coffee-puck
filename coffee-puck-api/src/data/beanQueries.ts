@@ -7,9 +7,8 @@ const createBeanSQL =
   "INSERT INTO `beans` (process,producers,altitude,roast,varietyId) values (?,?,?,?,?)";
 const createCoffeeBeanSQL =
   "INSERT INTO `coffee_bean` (coffeeId,beanId) values (?,?)";
-const getCoffeeBeanSQL = `select b.*, v.* from coffee_bean cb
+const getCoffeeBeanSQL = `select b.* from coffee_bean cb
 INNER JOIN beans b on cb.beanId = b.id
-INNER JOIN varieties v on b.varietyId = v.id
 where coffeeId = ?`;
 const beanLengthSQL = "select count(id) as total_records from `varieties`";
 

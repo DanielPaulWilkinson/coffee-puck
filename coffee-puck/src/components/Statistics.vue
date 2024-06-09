@@ -18,11 +18,11 @@ onMounted(async () => {
 </script>
 <template>
     <div class="row">
-        <div class="col-2">
+        <div class="col-2" v-for="(statistic, i) in state.stats?.coffee">
             <div class="card shadow">
                 <div class="col text-center">
-                    <h1>{{ state.stats?.coffee.total.value }}</h1>
-                    <p>{{state.stats?.coffee.total.name}}</p>
+                    <h1>{{ statistic.value }}</h1>
+                    <p>{{ statistic.name }}</p>
                 </div>
             </div>
         </div>

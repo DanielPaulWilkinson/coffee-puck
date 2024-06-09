@@ -1,23 +1,23 @@
 <script lang="ts" setup>
 import { onMounted, reactive, watch } from "vue";
 import AutoComplete from "../fields/AutoComplete.vue";
-import type { pagination, variety } from "@/data/Types";
+import { getRoasters } from "../../data/roasters";
+import type { pagination, roaster } from "@/data/types";
 const props = withDefaults(
     defineProps<{
         id: string;
-        modelValue: number | null;
-        func: Function
+        modelValue: string | null;
     }>(),
     {},
 );
 
-type varietySearch = {
-    data: variety[];
+type roasterSearch = {
+    data: roaster[];
     pagination: pagination | null;
     search: string;
 };
 
-const state = reactive<varietySearch>({
+const state = reactive<roasterSearch>({
     search: "",
     data: [],
     pagination: null,
@@ -34,7 +34,13 @@ const emit = defineEmits<{
     (on: "update:modelValue", value: string): void;
 }>();
 
+watch(() => props.modelValue, async () => {
+    state.search = props.modelValue ?? "";
+    await callData(1);
+});
+
 onMounted(async () => {
+    state.search = props.modelValue ?? "";
     await callData(1);
 });
 </script>
