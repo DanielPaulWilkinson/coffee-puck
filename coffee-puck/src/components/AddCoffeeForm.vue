@@ -41,11 +41,13 @@ onMounted(async () => {
     const id = route.query.id;
     if(id){
         const coffee = await getCoffee(Number(id));
+        if(coffee){
         console.log(coffee);
         store.coffee = coffee;
         state.newBeans = coffee.beans;
         const roaster = await getRoaster(coffee.roasterId);
         state.selectedRoaster = roaster.name;
+        }
     }
  });
 

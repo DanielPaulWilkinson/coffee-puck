@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { coffee } from "../types/types";
 import { getAllBeansForCoffeeQuery } from "./beanQueries";
 import { pool } from "./database";
@@ -16,11 +17,7 @@ const coffeeLengthSQL = "select count(id) as total_records from `coffee`";
 
 export const getCoffeeQuery = async (id: string) => {
   const [rows] = await pool.query(getCoffeeSQL, [Number(id)]);
-  const beans = await getAllBeansForCoffeeQuery(Number(id));
-  return {
-      ...JSON.parse(JSON.stringify(rows))[0],
-      beans: beans,
-  };
+  return z.array(coffee).parse(rows);
 };
 
 export const getCoffeeRowCountQuery = async () => {
@@ -43,7 +40,7 @@ export const getCoffeePageQuery = async (
       Number(limit),
       Number(offset),
     ]);
-    return rows;
+    return z.array(coffee).parse(rows);
   } else {
     const [rows, fields] = await pool.query(getCoffeePageSQL, [
       sortBy,
@@ -51,7 +48,7 @@ export const getCoffeePageQuery = async (
       Number(limit),
       Number(offset),
     ]);
-    return rows;
+    return z.array(coffee).parse(rows);
   }
 };
 

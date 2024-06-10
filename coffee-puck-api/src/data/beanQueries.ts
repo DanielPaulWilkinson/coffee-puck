@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { bean } from "../types/types";
 import { pool } from "./database";
 
@@ -58,5 +59,5 @@ export const createNewCoffeeBeanQuery = async (
 
 export const getAllBeansForCoffeeQuery = async (id: number) => {
   const [rows] = await pool.query(getCoffeeBeanSQL, [id]);
-  return rows;
+  return z.array(bean).parse(rows);
 };

@@ -41,12 +41,12 @@ watch(() => props.modelValue, async () => {
 
 onMounted(async () => {
     state.search = props.modelValue ?? "";
-    await callData(1);
 });
 </script>
 <template>
     <AutoComplete
         :id="id"
+        :search="state.search"
         :clear-input-after-click="false"
         not-found-message="no found"
         :suggestions="state.data.map((e) => { return { id: e.id, name: e.name, type: null}})"

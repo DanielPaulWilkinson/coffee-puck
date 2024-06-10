@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, watch } from "vue";
+import { onMounted, reactive, watch } from "vue";
 import Text from "./Text.vue";
 
 type State = {
@@ -23,6 +23,7 @@ const state = reactive<State>({
 
 const props = defineProps<{
     suggestions: Suggestion[],
+    search: string,
     notFoundMessage: string,
     clearInputAfterClick: boolean,
     placeholder?: string,

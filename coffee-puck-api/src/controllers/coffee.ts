@@ -11,7 +11,7 @@ import {
   createNewCoffeeBeanQuery,
   getAllBeansForCoffeeQuery,
 } from "../data/beanQueries";
-import { bean, coffee } from "../types/types";
+import { bean, coffee, coffeePaginationResponse } from "../types/types";
 
 export const getCoffee = async (
   req: Request,
@@ -19,8 +19,13 @@ export const getCoffee = async (
   next: NextFunction
 ) => {
   try {
-    const result = await getCoffeeQuery(req.params.id);
-    res.json(result);
+    const coffee: coffee[] = await getCoffeeQuery(req.params.id);
+
+    for (let i = 0; i < coffee.length; i++) {
+      coffee[i].beans = await getAllBeansForCoffeeQuery(coffee[i].id);
+    }
+
+    return res.json(coffee[0]);
   } catch (err) {
     next(err);
   }
@@ -37,19 +42,18 @@ export const getCoffeePage = async (
     const totalRecords = await getCoffeeRowCountQuery();
     const totalPages = totalRecords / Number(limit);
 
-    const coffee = (await getCoffeePageQuery(
-
+    const coffee: coffee[] = await getCoffeePageQuery(
       offset,
       Number(limit),
       sortBy as string,
       sortOrder as string,
       search as string
-    )) as coffee[];
-    //TODO: get roasters for coffee
-    //TODO: get varieties for beans
-    coffee.forEach(async (d) => {
-      d.beans = (await getAllBeansForCoffeeQuery(d.id)) as bean[];
-    });
+    );
+
+    for (let i = 0; i < coffee.length; i++) {
+      coffee[i].beans = await getAllBeansForCoffeeQuery(coffee[i].id);
+    }
+
     res.json({
       data: coffee,
       pagination: {
@@ -62,6 +66,7 @@ export const getCoffeePage = async (
       },
     });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
@@ -74,7 +79,7 @@ export const createCoffee = async (
   try {
     const coffeeId = await createNewCoffeeQuery(req.body as coffee);
     req.body.beans?.forEach(async (bean: bean) => {
-        console.log(bean);
+      console.log(bean);
       const beanId = await createNewBeanQuery(bean);
       await createNewCoffeeBeanQuery(coffeeId, beanId);
     });

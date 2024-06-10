@@ -85,15 +85,15 @@ export const content = z.object({
 export const coffee = z.object({
     id: z.number(),
     name: z.string(),
-    isDecaf: z.boolean(),
+    isDecaf: z.coerce.boolean(),
     rating: z.number(),  
     size: z.string(),
     image: z.string(),
     cost: z.string(),
     recipe: z.string(),
     roasterId: z.number(),
-    beans: z.array(bean)
-})
+    beans: z.array(bean).optional().nullable(),
+});
 
 export type purchase = z.infer<typeof purchase>;
 export type social = z.infer<typeof social>;
@@ -105,3 +105,8 @@ export type pagination = z.infer<typeof pagination>;
 export type content = z.infer<typeof content>;
 export type bean = z.infer<typeof bean>;
 export type coffee = z.infer<typeof coffee>;
+
+export const coffeePaginationResponse = z.object({
+    pagination: pagination,
+    coffee: z.array(coffee),
+});

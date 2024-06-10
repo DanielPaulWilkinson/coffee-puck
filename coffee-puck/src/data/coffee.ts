@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { coffee, pagination } from "./types";
+import { coffee, type pagination } from "./types";
 
 export type CoffeePaginationResponse = {
     data: coffee[];
@@ -23,13 +23,15 @@ export const getCoffees = async (
     return {} as CoffeePaginationResponse;
 };
 
-export const getCoffee = async (Id: number): Promise<coffee> => {
-    const response = await axios.get(`http://localhost:3000/coffee/get/${Id}`);
-    if (response.status === 200) {
-        return response.data;
+export const getCoffee = async (id: number): Promise<coffee | null> => {
+    const maybeResponse = await axios.get(`http://localhost:3000/coffee/get/${id}`);
+    const maybeData = await coffee.safeParseAsync(maybeResponse.data);
+    if(maybeData.success){
+        return maybeData.data;
+    } else {
+        console.log(maybeData.error.issues);
+        return null;
     }
-
-    return {} as coffee;
 };
 
 export const createCoffee = async (coffee: coffee): Promise<coffee> => {
