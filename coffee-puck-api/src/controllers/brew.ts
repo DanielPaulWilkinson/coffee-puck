@@ -17,7 +17,7 @@ export const GetBrewPage = async (req: Request, res: Response, next: NextFunctio
     try {
 
         const { page, limit, sortBy, sortOrder } = req.query;
-    
+
         const offset = (Number(page) * Number(limit)) - Number(limit);
 
         const totalRecords = await getBrewRowCountQuery();
@@ -30,18 +30,18 @@ export const GetBrewPage = async (req: Request, res: Response, next: NextFunctio
             sortBy as string,
             sortOrder as string);
 
-            res.json(
-                {
-                    data: brews,
-                    pagination: {
-                        total_records: totalRecords,
-                        total_pages: Math.round(totalPages),
-                        current_page: Number(page),
-                        offset: offset,
-                        next_page: Number(page) + 1,
-                        prev_page:  Number(page) === 1 ? 1 : Number(page) - 1
-                    }
-                })
+        res.json(
+            {
+                data: brews,
+                pagination: {
+                    total_records: totalRecords,
+                    total_pages: Math.round(totalPages),
+                    current_page: Number(page),
+                    offset: offset,
+                    next_page: Number(page) + 1,
+                    prev_page: Number(page) === 1 ? 1 : Number(page) - 1
+                }
+            })
 
     }
     catch (err) {
@@ -60,15 +60,15 @@ export const CreateBrew = async (req: Request, res: Response, next: NextFunction
 };
 
 export const UpdateBrew = async (req: Request, res: Response, next: NextFunction) => {
-    try{
-        if(req.params.id){
+    try {
+        if (req.params.id) {
             const response = await updateBrewQuery(req.body as brew, req.params.id);
             res.json({
                 sucess: response,
             });
         }
-        }
-     catch (err){
+    }
+    catch (err) {
         next(err);
     }
 };

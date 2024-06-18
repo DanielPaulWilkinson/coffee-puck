@@ -99,24 +99,36 @@ const submit = async () => {
     if (state.selectedCoffeeType) {
         store.brew.coffeeTypeId = state.selectedCoffeeType?.id ?? 0;
     }
-    if(route.query.id){
-        await updateBrew(store.brew);
-        return;
-    }
-
-    state.submitSuccess = await createBrew(store.brew);
-
-    if (state.submitSuccess) {
-        createNotification({
-            type: 'success',
-            message: 'we have saved your brew!',
-        })
+    if (route.query.id) {
+        const success = await updateBrew(store.brew);
+        if (state.submitSuccess) {
+            createNotification({
+                type: 'success',
+                message: 'we have saved your brew!',
+            })
+        } else {
+            createNotification({
+                type: 'error',
+                message: 'we have not managed to save your brew',
+            })
+        }
     } else {
-        createNotification({
-            type: 'error',
-            message: 'we have not managed to save your brew',
-        })
+        state.submitSuccess = await createBrew(store.brew);
+
+        if (state.submitSuccess) {
+            createNotification({
+                type: 'success',
+                message: 'we have saved your brew!',
+            })
+        } else {
+            createNotification({
+                type: 'error',
+                message: 'we have not managed to save your brew',
+            })
+        }
     }
+
+
 }
 
 </script>

@@ -1,7 +1,7 @@
 import Joi, { ObjectSchema } from 'joi';
 import Logging from '../logging/logging';
 import { NextFunction, Request, Response } from 'express';
-import { bean, brew, coffee } from '../types/types';
+import { bean, brew, coffee, variety } from '../types/types';
 
 export const ValidateSchema = (schema: ObjectSchema) => {
     return async (req: Request, res: Response, next: NextFunction) => {
@@ -33,7 +33,7 @@ export const Schemas = {
             .items(
                 Joi.object<bean>({
                 id: Joi.number(),
-                varietyId: Joi.number(),
+                variety: Joi.object<variety>().optional(),
                 process: Joi.string(),
                 producers: Joi.string(),
                 altitude: Joi.string(),
@@ -53,6 +53,7 @@ export const Schemas = {
             image: Joi.string(),
             createdOn: Joi.string().optional(),
             updatedOn: Joi.string().optional(),
+            beans: Joi.array<bean>()
         })
     },
     brew: {

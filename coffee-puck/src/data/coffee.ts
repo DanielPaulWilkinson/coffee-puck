@@ -29,7 +29,6 @@ export const getCoffee = async (id: number): Promise<coffee | null> => {
     if(maybeData.success){
         return maybeData.data;
     } else {
-        console.log(maybeData.error.issues);
         return null;
     }
 };

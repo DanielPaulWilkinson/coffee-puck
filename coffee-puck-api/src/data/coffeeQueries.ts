@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { coffee } from "../types/types";
-import { getAllBeansForCoffeeQuery } from "./beanQueries";
 import { pool } from "./database";
 
 //all coffee
 const getCoffeeSQL = "SELECT * FROM `coffee` WHERE id = ?";
+const getAllCoffee = "SELECT * FROM `coffee`"
 const getCoffeePageSearchSQL =
   "SELECT * FROM `coffee` WHERE name LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?";
 const getCoffeePageSQL =
@@ -12,11 +12,16 @@ const getCoffeePageSQL =
 const updateCoffeeSQL =
   "UPDATE coffee SET name = ?, isDecaf = ?, rating = ?,roasterId = ?,recipe = ?,`cost` = ?,`size` = ? ,image = ?,updatedOn = ? WHERE id = ?";
 const createCoffeeSQL =
-  "INSERT INTO `coffee` (name, isDecaf, rating, roasterId, recipe, cost, size, image, createdOn, updatedOn) values ( ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)";
+  "INSERT INTO `coffee` (name, isDecaf, rating, roasterId, recipe, cost, size, image, createdOn, updatedOn) values (?,?,?,?,?,?,?,?,?,?)";
 const coffeeLengthSQL = "select count(id) as total_records from `coffee`";
 
 export const getCoffeeQuery = async (id: string) => {
   const [rows] = await pool.query(getCoffeeSQL, [Number(id)]);
+  return z.array(coffee).parse(rows);
+};
+
+export const getAllCoffeeQuery = async () => {
+  const [rows] = await pool.query(getAllCoffee);
   return z.array(coffee).parse(rows);
 };
 

@@ -11,7 +11,6 @@ export const GetType = async (req: Request, res: Response, next: NextFunction) =
     }
 };
 
-//used for a single brew detail
 export const GetTypes = async (req: Request, res: Response, next: NextFunction) => {
     try{
         const result = await getTypes();

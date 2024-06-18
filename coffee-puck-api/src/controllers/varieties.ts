@@ -4,7 +4,7 @@ import { getSingleVarietyQuery, getVarietyRowCountQuery, getVarietyPageQuery } f
 //used for a single brew detail
 export const GetVariety = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await getSingleVarietyQuery(req.params.brew);
+        const result = await getSingleVarietyQuery(Number(req.params.id));
         res.json(result);
     } catch (err) {
         next(err);

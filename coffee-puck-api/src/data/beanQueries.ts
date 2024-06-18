@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { bean } from "../types/types";
 import { pool } from "./database";
+import { createNewBeanVarietyQuery, getSingleVarietyQuery, getVarietyForBean } from "./varietyQueries";
 
 const getBeanSQL = "SELECT * FROM `beans` WHERE id = ?";
 const getBeanPageSQL = "SELECT * FROM `beans` ORDER BY ? ? LIMIT ? OFFSET ?";
 const createBeanSQL =
-  "INSERT INTO `beans` (process,producers,altitude,roast,varietyId) values (?,?,?,?,?)";
+  "INSERT INTO `beans` (process,producers,altitude,roast) values (?,?,?,?)";
 const createCoffeeBeanSQL =
   "INSERT INTO `coffee_bean` (coffeeId,beanId) values (?,?)";
 const getCoffeeBeanSQL = `select b.* from coffee_bean cb
@@ -38,15 +39,16 @@ export const getBeanQuery = async (id: string) => {
   return rows;
 };
 
-export const createNewBeanQuery = async (brew: bean): Promise<number> => {
+export const createNewBeanQuery = async (bean: bean): Promise<number> => {
   const [rows] = await pool.query(createBeanSQL, [
-    brew.process,
-    brew.producers,
-    brew.altitude,
-    brew.roast,
-    brew.varietyId,
+    bean.process,
+    bean.producers,
+    bean.altitude,
+    bean.roast,
   ]);
-  return JSON.parse(JSON.stringify(rows)).insertId;
+  const beanId = JSON.parse(JSON.stringify(rows)).insertId;
+  await createNewBeanVarietyQuery(beanId, Number(bean.variety?.id));
+  return beanId;
 };
 
 export const createNewCoffeeBeanQuery = async (

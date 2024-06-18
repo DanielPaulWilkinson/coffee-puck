@@ -7,7 +7,7 @@ import Text from './../components/fields/Text.vue';
 import RadioSet from './fields/RadioSet.vue';
 import Radio from './fields/Radio.vue';
 import { inject, onMounted, reactive } from 'vue';
-import { bean } from '../data/types';
+import { bean, variety } from '../data/types';
 import { getBeans, type BeanPaginationResponse } from '@/data/beans';
 import Select from './fields/Select.vue';
 import type { CreateNotification } from '@/services/notifications';
@@ -15,7 +15,7 @@ import Rating from '../components/fields/StarRating.vue';
 const createNotification = <CreateNotification>inject("create-notification");
 import VarietySearch from '../components/search/VarietySearch.vue';
 import RoasterSearch from './search/RoasterSearch.vue';
-import { createCoffee, getCoffee } from '@/data/coffee';
+import { createCoffee, getCoffee, updateCoffee } from '../data/coffee';
 import { useRoute } from 'vue-router';
 import { getRoaster, getRoasters } from '@/data/roasters';
 const route = useRoute();
@@ -39,17 +39,16 @@ const state = reactive<CoffeeViewState>({
 onMounted(async () => {
     store.$reset();
     const id = route.query.id;
-    if(id){
+    if (id) {
         const coffee = await getCoffee(Number(id));
-        if(coffee){
-        console.log(coffee);
-        store.coffee = coffee;
-        state.newBeans = coffee.beans;
-        const roaster = await getRoaster(coffee.roasterId);
-        state.selectedRoaster = roaster.name;
+        if (coffee) {
+            store.coffee = coffee;
+            state.newBeans = coffee.beans;
+            const roaster = await getRoaster(coffee.roasterId);
+            state.selectedRoaster = roaster.name;
         }
     }
- });
+});
 
 const removeBean = async (index: number) => {
     if (store.beans[index]) {
@@ -59,29 +58,50 @@ const removeBean = async (index: number) => {
 
 const submit = async () => {
     store.coffee.beans = store.beans;
-    console.log(store.beans);
-   const success = await createCoffee(store.coffee);
+    if (route.query.id) {
+        const success = await updateCoffee(store.coffee);
+        if (success) {
+            createNotification({
+                type: 'success',
+                message: 'we have updated your coffee!',
+            })
+        } else {
+            createNotification({
+                type: 'error',
+                message: 'we have not managed to update your coffee',
+            })
+        }
 
-    if (success) {
-        createNotification({
-            type: 'success',
-            message: 'we have saved your brew!',
-        })
     } else {
-        createNotification({
-            type: 'error',
-            message: 'we have not managed to save your brew',
-        })
+        const success = await createCoffee(store.coffee);
+
+        if (success) {
+            createNotification({
+                type: 'success',
+                message: 'we have saved your brew!',
+            })
+        } else {
+            createNotification({
+                type: 'error',
+                message: 'we have not managed to save your brew',
+            })
+        }
+    }
+
+
+}
+const setSelectedVariety = (i: number, v: variety) => {
+    if (state.newBeans) {
+        state.newBeans[i].variety = v;
     }
 }
-
 </script>
 <template>
     <form @submit.prevent="submit">
         <h2>Add Coffee Form</h2>
         <hr>
         <div class="row">
-            <h2>How does the coffee smell?</h2>
+            <h2>Give us some basic information about the coffee?</h2>
             <div class="col-6">
                 <Question name="name" tooltip="" label="What is the name of the coffee?" class="" :form-group="false"
                     error="">
@@ -128,7 +148,8 @@ const submit = async () => {
             </div>
             <div class="col-6">
                 <Question name="roaster" tooltip="" label="Who is the roaster?" class="" :form-group="false" error="">
-                    <RoasterSearch id="roaster-search" :model-value="state.selectedRoaster" @selected="store.coffee.roasterId = $event"/>
+                    <RoasterSearch id="roaster-search" :model-value="state.selectedRoaster"
+                        @selected="store.coffee.roasterId = $event" />
                 </Question>
             </div>
         </div>
@@ -183,7 +204,8 @@ const submit = async () => {
                         </Question>
                         <Question :name="`${i}-variety`" tooltip="" label="Variety" class="" :form-group="false"
                             error="">
-                            <VarietySearch :id="`${i}-variety-search`" :model-value="bean.varietyId" @selected="bean.varietyId = $event"/>
+                            <VarietySearch :id="`${i}-variety-search`" :model-value="bean.variety?.name"
+                                @selected="setSelectedVariety(i, $event as variety)" />
                         </Question>
                         <div class="form-button-group">
                             <button class="btn btn-primary mt-2" @click.prevent="store.beans.push(bean)">Save</button>
@@ -196,7 +218,7 @@ const submit = async () => {
         </div>
         <hr>
         <button type="submit" class="btn btn-primary margin-top-10 right">
-            Submit
+            {{ route.query.id ? "Update Coffee" : "Add Coffee" }}
         </button>
     </form>
 </template>

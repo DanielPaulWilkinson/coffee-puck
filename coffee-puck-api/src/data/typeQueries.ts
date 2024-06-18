@@ -1,3 +1,5 @@
+import { z } from "zod";
+import { coffeeType } from "../types/types";
 import { pool } from "./database";
 
 const getTypeQuery = "select * from `coffee_types` where id = ?";
@@ -19,7 +21,7 @@ export const getSingleType = async (id: string) => {
 
 export const getTypes = async () => {
     const [rows] = await pool.query(getTypesQuery); 
-    return rows;
+    return z.array(coffeeType).parse(rows);
 }
 
 export const getTypePage = async (offset: number, limit: number, sortBy: string, sortOrder: string, search: string) => {

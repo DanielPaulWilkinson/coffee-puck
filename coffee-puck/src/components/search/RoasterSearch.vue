@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { onMounted, reactive, watch } from "vue";
-import AutoComplete from "../fields/AutoComplete.vue";
+import { computed, onMounted, reactive, watch } from "vue";
+import AutoComplete, { type Suggestion } from "../fields/AutoComplete.vue";
 import { getRoasters } from "../../data/roasters";
 import type { pagination, roaster } from "@/data/types";
 const props = withDefaults(
     defineProps<{
         id: string;
-        modelValue: string | null;
+        modelValue: string | null | undefined;
     }>(),
     {},
 );
@@ -33,23 +33,16 @@ const emit = defineEmits<{
     (on: "selected", value: number): void;
     (on: "update:modelValue", value: string): void;
 }>();
+const suggestions = computed(() => state.data.map((e: roaster) => { return { id: e.id, name: e.name, type: e.name }}))
 
-watch(() => props.modelValue, async () => {
-    state.search = props.modelValue ?? "";
-    await callData(1);
-});
-
-onMounted(async () => {
-    state.search = props.modelValue ?? "";
-});
 </script>
 <template>
     <AutoComplete
         :id="id"
         :search="state.search"
-        :clear-input-after-click="false"
-        not-found-message="no found"
-        :suggestions="state.data.map((e) => { return { id: e.id, name: e.name, type: null}})"
+        :placeholder="state.search"
+        not-found-message="no roasters found"
+        :suggestions="suggestions as Suggestion[]"
         @update:suggestion="callData(1, $event)"
         @click:suggestion="emit('selected', $event.id as number)"
     />

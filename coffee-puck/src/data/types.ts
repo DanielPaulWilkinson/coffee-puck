@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-export const bean = z.object({
-    id: z.number(),
-    varietyId: z.number(),
-    process: z.string(),
-    producers: z.string(),
-    altitude: z.string(),
-    roast: z.string(),
-});
 
 export const pagination = z.object({
     current_page: z.number(),
@@ -42,12 +34,12 @@ export const roaster = z.object({
 
 export const variety = z.object({
     id: z.number(),
-    varietyId: z.number(),
-    name: z.string(),
-    process: z.string(),
-    producers: z.string(),
-    altitude: z.string(),
-    roast: z.string(),
+   name: z.string(),
+   history: z.string(),
+   parentId: z.number(),
+   dwarf: z.coerce.boolean(),
+   lineage: z.string(),
+   genetic: z.string(),
 });
 
 export const brew = z.object({
@@ -81,6 +73,16 @@ export const content = z.object({
     altitude: z.string(),
     roastLevel: z.string(),
 });
+
+export const bean = z.object({
+    id: z.number(),
+    process: z.string(),
+    producers: z.string(),
+    altitude: z.string(),
+    roast: z.string(),
+    variety: variety.nullable().optional(),
+});
+
 
 export const coffee = z.object({
     id: z.number(),

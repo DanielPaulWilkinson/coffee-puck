@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-export const bean = z.object({
-    id: z.number(),
-    varietyId: z.number(),
-    process: z.string(),
-    producers: z.string(),
-    altitude: z.string(),
-    roast: z.string(),
-});
 
 export const pagination = z.object({
     current_page: z.number(),
@@ -41,11 +33,20 @@ export const roaster = z.object({
 
 export const variety = z.object({
     id: z.number(),
-    varietyId: z.number(),
+   name: z.string(),
+   history: z.string(),
+   parentId: z.number(),
+   dwarf: z.coerce.boolean(),
+   lineage: z.string(),
+   genetic: z.string(),
+});
+export const bean = z.object({
+    id: z.number(),
     process: z.string(),
     producers: z.string(),
     altitude: z.string(),
     roast: z.string(),
+    variety: variety.nullable().optional(),
 });
 
 export const brew = z.object({
@@ -60,8 +61,8 @@ export const brew = z.object({
     coffeeId: z.number(),
     coffeeTypeId: z.number(),
     rating: z.number(),
-    createdOn: z.string().optional().nullable(),
-    updatedOn: z.string().optional().nullable(),
+    createdOn: z.date().optional().nullable(),
+    updatedOn: z.date().optional().nullable(),
 });
 
 export const coffeeType = z.object({
@@ -93,6 +94,7 @@ export const coffee = z.object({
     recipe: z.string(),
     roasterId: z.number(),
     beans: z.array(bean).optional().nullable(),
+    brews: z.array(brew).optional().nullable(),
 });
 
 export type purchase = z.infer<typeof purchase>;

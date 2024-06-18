@@ -46,7 +46,6 @@ export const updateRoaster = async (roaster: roaster) => {
 
 export const getRoaster = async (id: number) => {
     const res = (await axios.get(`http://localhost:3000/roaster/get/${id}`)).data[0];
-    console.log(res);
     return res;
 };
 

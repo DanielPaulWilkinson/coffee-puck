@@ -10,7 +10,7 @@ import { computed, inject, onMounted, provide, reactive, watch } from "vue";
 import Text from "@/components/fields/Text.vue";
 import type { CreateNotification } from "@/services/notifications";
 import Select from "@/components/fields/Select.vue";
-import AddCoffeeForm from "../components/AddCoffeeForm.vue";
+import CoffeeForm from "../components/CoffeeForm.vue";
 import { coffee } from '../data/types';
 
 const store = useCoffeePagination();
@@ -141,7 +141,7 @@ const saveCoffee = async (coffee: coffee) => {
             </div>
         </div>
         <div class="row" v-else>
-            <AddCoffeeForm />
+            <CoffeeForm />
         </div>
     </div>
 </template>

@@ -1,7 +1,9 @@
+import { z } from "zod";
 import { brew } from "../types/types";
 import { pool } from "./database";
 
 const getBrewSQL = "select * from `brew` where id = ?";
+const getBrewForCoffeeSQL = "select * from `brew` where coffeeId = ?";
 const getBrewPageSQL = "SELECT * FROM `brew` ORDER BY ? ? LIMIT ? OFFSET ?";
 const createBrewSQL = `insert into brew (preGrindAroma, postGrindAroma, acidity, sweetness, body, finish, flavour, coffeeId, coffeeTypeId, rating, createdOn, updatedOn) values (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)`;
 const brewLengthSQL = "select count(id) as total_records from `brew`";
@@ -67,3 +69,8 @@ export const updateBrewQuery = async (coffee: brew, id: string) => {
   ]);
   return JSON.parse(JSON.stringify(rows)).insertId;
 };
+
+export const getBrewForCoffee = async (coffeeId: number) => {
+  const [rows] = await pool.query(getBrewForCoffeeSQL, [Number(coffeeId)]);
+  return z.array(brew).parse(rows);
+}

@@ -23,9 +23,8 @@ const state = reactive<State>({
 
 const props = defineProps<{
     suggestions: Suggestion[],
-    search: string,
+    search?: string,
     notFoundMessage: string,
-    clearInputAfterClick: boolean,
     placeholder?: string,
     id: string,
 }>();
@@ -38,7 +37,7 @@ const emit = defineEmits<{
 function setResult(suggestion: Suggestion) {
     state.isOpen = false;
     state.setResult = true;
-    state.searchTerm = props.clearInputAfterClick ? "" : suggestion.name;
+    state.searchTerm = suggestion.name;
     emit("click:suggestion", suggestion);
 }
 

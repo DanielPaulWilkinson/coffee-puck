@@ -1,15 +1,13 @@
 <script lang="ts" setup>
-import { onMounted, reactive, watch } from "vue";
-import AutoComplete from "../fields/AutoComplete.vue";
+import { computed, onMounted, reactive, watch } from "vue";
+import AutoComplete, { type Suggestion } from "../fields/AutoComplete.vue";
 import { getVarieties } from "../../data/varieties";
 import type { pagination, variety } from "@/data/types";
-const props = withDefaults(
+const props = 
     defineProps<{
         id: string;
-        modelValue: string | null;
-    }>(),
-    {},
-);
+        modelValue: string | null | undefined;
+    }>();
 
 type varietySearch = {
     data: variety[];
@@ -30,7 +28,7 @@ async function callData(page: number, search?: string) {
 }
 
 const emit = defineEmits<{
-    (on: "selected", value: number): void;
+    (on: "selected", value: variety | null): void;
 }>();
 
 watch(() => props.modelValue, async () => {
@@ -42,14 +40,18 @@ onMounted(async () => {
     state.search = props.modelValue ?? "";
     await callData(1);
 });
+
+const suggestions = computed(() => state.data.map((e: variety) => { return { id: e.id, name: e.name, type: e.lineage}}))
+
 </script>
 <template>
     <AutoComplete
         :id="id"
-        :clear-input-after-click="false"
-        not-found-message="no found"
-        :suggestions="state.data.map((e) => { return { id: e.id, name: e.name, type: e.process}})"
+        :search="state.search"
+        :placeholder="state.search"
+        not-found-message="no varieties found"
+        :suggestions="suggestions"
         @update:suggestion="callData(1, $event)"
-        @click:suggestion="emit('selected', $event.id as number)"
+        @click:suggestion="emit('selected', state.data.find(x => x.id === $event.id) ?? null)"
     />
 </template>

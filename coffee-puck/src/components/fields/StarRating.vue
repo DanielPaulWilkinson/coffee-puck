@@ -42,7 +42,6 @@ onMounted(() => {
         index: i,
       });
     }
-    console.log(props.modelValue);
     for(let i = 0; i < props.modelValue; i++){
       state.stars[i].active = true;
     };

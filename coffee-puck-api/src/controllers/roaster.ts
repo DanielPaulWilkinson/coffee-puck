@@ -3,9 +3,7 @@ import { getRoasterRowCountQuery, getRoasterPageQuery, getSingleRoasterQuery} fr
 
 export const GetRoaster = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log(req.params.id);
         const result = await getSingleRoasterQuery(req.params.id);
-        console.log(result);
         res.json(result);
     } catch (err) {
         next(err);
