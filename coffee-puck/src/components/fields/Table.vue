@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, watch } from "vue";
 import Text from "./Text.vue";
-import type { Brew, Coffee } from "@/stores/brewPagination";
+import type { brew, coffee } from "@/data/types";
 
 export type Td = {
     value: string;
@@ -13,13 +13,13 @@ export type Row = {
 };
 
 const props = defineProps<{
-    id: string,
-    rows: Coffee[] | Brew[],
-    currentPage: number,
-    totalPages: number,
-    editable?: boolean,
-    caption: string, 
-    tableType?: "horizontal" | "vertical",
+    id: string;
+    rows: coffee[] | brew[];
+    currentPage: number;
+    totalPages: number;
+    editable?: boolean;
+    caption: string;
+    tableType: "horizontal" | "vertical";
 }>();
 
 const emit = defineEmits<{
@@ -29,12 +29,12 @@ const emit = defineEmits<{
     (on: "delete", value: any): void;
 }>();
 
-const updateTableData = () => {
+const updateTableDataHorizontal = () => {
     state.headings = [];
     state.rows = [];
 
     if (props.rows[0]) {
-        const dataKeys = Reflect.ownKeys(props.rows[0]);
+        let dataKeys = Reflect.ownKeys(props.rows[0]);
         dataKeys.forEach((key) => {
             state.headings.push(key.toString());
         });
@@ -54,14 +54,42 @@ const updateTableData = () => {
     }
 };
 
+const updateTableDataVertical = () => {
+    state.headings = [];
+    state.rows = [];
+
+    if (props.rows[0]) {
+        const dataKeys = Reflect.ownKeys(props.rows[0]);
+        dataKeys.forEach((key) => {
+            state.headings.push(key.toString());
+        });
+
+        state.headings.forEach((key) => {
+            const c: Row = [] as Row;
+            c.cells = [];
+            props.rows.forEach((row) => {
+                c.cells?.push({
+                    id: key.toString(),
+                    value: Reflect.get(row, key),
+                });
+            });
+            state.rows?.push(c);
+        });
+    }
+};
+
 onMounted(() => {
-    updateTableData();
+    props.tableType === "horizontal"
+        ? updateTableDataHorizontal()
+        : updateTableDataVertical();
 });
 
 watch(
-    () => props.rows,
+    () => [props.rows, props.tableType],
     () => {
-        updateTableData();
+        props.tableType === "horizontal"
+            ? updateTableDataHorizontal()
+            : updateTableDataVertical();
     },
 );
 
@@ -86,7 +114,9 @@ export type State = {
 const clearInputsOFEditableRow = () => (state.currentEditableRowId = null);
 const undoChanges = () => {
     clearInputsOFEditableRow();
-    updateTableData();
+    props.tableType === "horizontal"
+        ? updateTableDataHorizontal()
+        : updateTableDataVertical();
 };
 
 const state = reactive<State>({
@@ -98,11 +128,13 @@ const state = reactive<State>({
 </script>
 
 <template>
-    <table :id="id">
+    <table :id="`${props.id}-${props.tableType}`">
         <caption>
-            {{ caption }}
+            {{
+                caption
+            }}
         </caption>
-        <thead>
+        <thead v-if="props.tableType === 'horizontal'">
             <tr class="table-th">
                 <th v-for="title in state.headings" scope="col">
                     {{ title }}
@@ -112,6 +144,9 @@ const state = reactive<State>({
         </thead>
         <tbody>
             <tr v-for="(row, i) in state.rows">
+                <th class="vertical-th" v-if="props.tableType === 'vertical'">
+                    {{ state.headings[i] }}
+                </th>
                 <td v-for="(td, ii) in row.cells" scope="col">
                     <Text
                         :id="`input-row-${i}-cell-${ii}`"
@@ -123,7 +158,7 @@ const state = reactive<State>({
                     />
                     <p v-else>{{ td.value }}</p>
                 </td>
-                <td class="text-center">
+                <td v-if="props.tableType === 'horizontal'" class="text-center">
                     <div v-if="i !== state.currentEditableRowId">
                         <a
                             class="margin-right"
@@ -142,7 +177,7 @@ const state = reactive<State>({
                         >
                             <font-awesome-icon :icon="['fas', 'edit']" />
                         </a>
-                        <a href="#" @click.prevent="emit('delete',i)">
+                        <a href="#" @click.prevent="emit('delete', i)">
                             <font-awesome-icon :icon="['fas', 'trash']" />
                         </a>
                     </div>
@@ -152,6 +187,48 @@ const state = reactive<State>({
                             href="#"
                             @click.prevent="
                                 emit('save', reconstruct(row));
+                                clearInputsOFEditableRow();
+                            "
+                        >
+                            <font-awesome-icon :icon="['fas', 'save']" />
+                        </a>
+                        <a href="#" @click.prevent="undoChanges()"
+                            ><font-awesome-icon :icon="['fas', 'cancel']"
+                        /></a>
+                    </div>
+                </td>
+            </tr>
+            <tr v-if="props.tableType === 'vertical'">
+                <th>Actions</th>
+                <td v-for="(row, i) in props.rows" class="text-center">
+                    <div v-if="i !== state.currentEditableRowId">
+                        <a
+                            class="margin-right"
+                            href="#"
+                            @click.prevent="
+                                state.currentEditableRowId = i;
+                                state.showExtraData = true;
+                            "
+                        >
+                            <font-awesome-icon :icon="['fas', 'eye']" />
+                        </a>
+                        <a
+                            class="margin-right"
+                            href="#"
+                            @click.prevent="state.currentEditableRowId = i"
+                        >
+                            <font-awesome-icon :icon="['fas', 'edit']" />
+                        </a>
+                        <a href="#" @click.prevent="emit('delete', i)">
+                            <font-awesome-icon :icon="['fas', 'trash']" />
+                        </a>
+                    </div>
+                    <div v-else>
+                        <a
+                            class="margin-right"
+                            href="#"
+                            @click.prevent="
+                                emit('save', reconstruct(row as Row));
                                 clearInputsOFEditableRow();
                             "
                         >
@@ -203,10 +280,12 @@ td,
 th {
     border: 1px solid;
 }
+
 table {
     width: 100%;
     border-collapse: collapse;
 }
+
 th {
     font-family: marker;
     font-weight: bold;
@@ -224,6 +303,7 @@ td p {
 td {
     padding: 0 5px;
 }
+
 tr:hover :not(tr > th) {
     background: #876;
     opacity: 0.9;
@@ -260,4 +340,7 @@ nav li a {
     border: 1px solid #000;
 }
 
+.vertical-th {
+    width: 100px;
+}
 </style>

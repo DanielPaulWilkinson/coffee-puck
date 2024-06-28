@@ -37,8 +37,8 @@ export const variety = z.object({
    history: z.string(),
    parentId: z.number(),
    dwarf: z.coerce.boolean(),
-   lineage: z.string(),
-   genetic: z.string(),
+   lineage: z.string().optional().nullable(),
+   genetic: z.string().optional().nullable(),
 });
 export const bean = z.object({
     id: z.number(),

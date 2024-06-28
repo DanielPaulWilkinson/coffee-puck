@@ -17,7 +17,7 @@ import VarietySearch from '../components/search/VarietySearch.vue';
 import RoasterSearch from './search/RoasterSearch.vue';
 import { createCoffee, getCoffee, updateCoffee } from '../data/coffee';
 import { useRoute } from 'vue-router';
-import { getRoaster, getRoasters } from '@/data/roasters';
+import { getRoaster } from '@/data/roasters';
 const route = useRoute();
 
 export type CoffeeViewState = {

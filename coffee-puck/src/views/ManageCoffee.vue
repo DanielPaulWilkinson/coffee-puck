@@ -20,12 +20,14 @@ type ManageCoffee = {
     search: string | null;
     count: number | null,
     filters: boolean,
+    tableType: "vertical" | "horizontal",
     isTableSearch: boolean,
 };
 
 const state = reactive<ManageCoffee>({
     search: null,
-    count: 5,
+    count: 3,
+    tableType: 'vertical',
     filters: false,
     isTableSearch: true,
 });
@@ -105,17 +107,17 @@ const saveCoffee = async (coffee: coffee) => {
         <div class="row mt-4" v-if="state.filters && state.isTableSearch">
             <div class="col-3">
                 <p>Table Type:</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary active">
-                        <font-awesome-icon :icon="['fas', 'table']" />
-                    </label>
-                    <label class="btn btn-secondary">
-                        <font-awesome-icon :icon="['fas', 'table']" />
-                    </label>
-                    <label class="btn btn-secondary">
-                        <font-awesome-icon :icon="['fas', 'table-cells-large']" />
-                    </label>
-                </div>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary" :class="state.tableType === 'horizontal' ? 'active' : ''" @click="state.tableType = 'horizontal'">
+                            <font-awesome-icon :icon="['fas', 'table']" />
+                        </label>
+                        <label class="btn btn-secondary" :class="state.tableType === 'vertical' ? 'active' : ''" @click="state.tableType = 'vertical'">
+                            <font-awesome-icon :icon="['fas', 'table']" />
+                        </label>
+                        <label class="btn btn-secondary">
+                            <font-awesome-icon :icon="['fas', 'table-cells-large']" />
+                        </label>
+                    </div>
             </div>
             <div class="col-2">
                 <p>Amount:</p>
@@ -136,7 +138,7 @@ const saveCoffee = async (coffee: coffee) => {
                 <Table caption="Coffee List" v-if="store.data.length > 0" id="test" :rows="store.data"
                     :current-page="store.pagination.current_page" :totalPages="store.pagination.total_pages"
                     @previous-page="callData($event)" @next-page="callData($event)"
-                    @save="saveCoffee($event as coffee)" />
+                    @save="saveCoffee($event as coffee)" :table-type="state.tableType"/>
                 <p v-else>No data found for search</p>
             </div>
         </div>
