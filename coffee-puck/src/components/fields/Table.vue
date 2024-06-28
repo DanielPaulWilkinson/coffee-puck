@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, reactive, watch } from "vue";
+import { computed, onMounted, reactive, watch } from "vue";
 import Text from "./Text.vue";
 import type { brew, coffee } from "@/data/types";
 
@@ -28,6 +28,10 @@ const emit = defineEmits<{
     (on: "save", value: unknown): void;
     (on: "delete", value: any): void;
 }>();
+
+const updateTableData = computed(() =>  props.tableType === "horizontal"
+        ? updateTableDataHorizontal()
+        : updateTableDataVertical());
 
 const updateTableDataHorizontal = () => {
     state.headings = [];
@@ -79,48 +83,50 @@ const updateTableDataVertical = () => {
 };
 
 onMounted(() => {
-    props.tableType === "horizontal"
-        ? updateTableDataHorizontal()
-        : updateTableDataVertical();
+    updateTableData.value;
 });
 
 watch(
     () => [props.rows, props.tableType],
     () => {
-        props.tableType === "horizontal"
-            ? updateTableDataHorizontal()
-            : updateTableDataVertical();
+        updateTableData.value;
     },
 );
 
-const reconstruct = (row: Row) => {
+const reconstruct = (row: Row, columnId?: number) => {
     let data = {};
-    let keys = row.cells?.flatMap((x) => x.id);
-
-    keys?.forEach((key) => {
-        Reflect.set(data, key, row.cells?.find((x) => x.id === key)?.value);
-    });
-
+    if(props.tableType === 'horizontal'){
+        let keys = row.cells?.flatMap((x) => x.id);
+        keys?.forEach((key) => {
+            Reflect.set(data, key, row.cells?.find((x) => x.id === key)?.value);
+        });
+    } else {
+        state.rows?.forEach(element => {
+            if(element.cells && columnId) {
+                const r = element.cells[columnId];
+                const key = r.id;
+                Reflect.set(data, key, r.value);
+            }
+        });
+    }
     return data;
 };
 
 export type State = {
-    currentEditableRowId: number | null;
+    currentEditableRowOrColumnId: number | null;
     rows: Row[] | null;
     headings: string[];
     showExtraData: boolean;
 };
 
-const clearInputsOFEditableRow = () => (state.currentEditableRowId = null);
+const clearInputsOFEditableRow = () => (state.currentEditableRowOrColumnId = null);
 const undoChanges = () => {
     clearInputsOFEditableRow();
-    props.tableType === "horizontal"
-        ? updateTableDataHorizontal()
-        : updateTableDataVertical();
+    updateTableData.value;
 };
 
 const state = reactive<State>({
-    currentEditableRowId: null,
+    currentEditableRowOrColumnId: null,
     showExtraData: false,
     rows: [],
     headings: [],
@@ -151,7 +157,8 @@ const state = reactive<State>({
                     <Text
                         :id="`input-row-${i}-cell-${ii}`"
                         type="text"
-                        v-if="i === state.currentEditableRowId && ii != 0"
+                        v-if="(i === state.currentEditableRowOrColumnId && ii != 0 && props.tableType === 'horizontal') ||
+                              (ii === state.currentEditableRowOrColumnId && props.tableType === 'vertical')"
                         :model-value="td.value"
                         @input="td.value = $event.target.value"
                         error="ew"
@@ -159,12 +166,12 @@ const state = reactive<State>({
                     <p v-else>{{ td.value }}</p>
                 </td>
                 <td v-if="props.tableType === 'horizontal'" class="text-center">
-                    <div v-if="i !== state.currentEditableRowId">
+                    <div v-if="i !== state.currentEditableRowOrColumnId">
                         <a
                             class="margin-right"
                             href="#"
                             @click.prevent="
-                                state.currentEditableRowId = i;
+                                state.currentEditableRowOrColumnId = i;
                                 state.showExtraData = true;
                             "
                         >
@@ -173,7 +180,7 @@ const state = reactive<State>({
                         <a
                             class="margin-right"
                             href="#"
-                            @click.prevent="state.currentEditableRowId = i"
+                            @click.prevent="state.currentEditableRowOrColumnId = i"
                         >
                             <font-awesome-icon :icon="['fas', 'edit']" />
                         </a>
@@ -186,7 +193,7 @@ const state = reactive<State>({
                             class="margin-right"
                             href="#"
                             @click.prevent="
-                                emit('save', reconstruct(row));
+                                emit('save', reconstruct(row as Row));
                                 clearInputsOFEditableRow();
                             "
                         >
@@ -201,12 +208,12 @@ const state = reactive<State>({
             <tr v-if="props.tableType === 'vertical'">
                 <th>Actions</th>
                 <td v-for="(row, i) in props.rows" class="text-center">
-                    <div v-if="i !== state.currentEditableRowId">
+                    <div v-if="i !== state.currentEditableRowOrColumnId">
                         <a
                             class="margin-right"
                             href="#"
                             @click.prevent="
-                                state.currentEditableRowId = i;
+                                state.currentEditableRowOrColumnId = i;
                                 state.showExtraData = true;
                             "
                         >
@@ -215,7 +222,7 @@ const state = reactive<State>({
                         <a
                             class="margin-right"
                             href="#"
-                            @click.prevent="state.currentEditableRowId = i"
+                            @click.prevent="state.currentEditableRowOrColumnId = i"
                         >
                             <font-awesome-icon :icon="['fas', 'edit']" />
                         </a>
@@ -228,7 +235,7 @@ const state = reactive<State>({
                             class="margin-right"
                             href="#"
                             @click.prevent="
-                                emit('save', reconstruct(row as Row));
+                                emit('save', reconstruct(row as Row, i));
                                 clearInputsOFEditableRow();
                             "
                         >
