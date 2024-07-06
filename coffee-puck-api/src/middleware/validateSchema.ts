@@ -104,6 +104,8 @@ export const Schemas = {
     roaster: {
         get: Joi.object({}),
         getPage: Joi.object({}),
+        create: Joi.object({}),
+        update: Joi.object({}),
     },
     stats: {
         get: Joi.object({}),

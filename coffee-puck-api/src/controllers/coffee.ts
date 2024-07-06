@@ -11,35 +11,30 @@ import {
   createNewBeanQuery,
   createNewCoffeeBeanQuery,
   getAllBeansForCoffeeQuery,
-  getBeanQuery,
 } from "../data/beanQueries";
-import { bean, coffee, coffeePaginationResponse } from "../types/types";
-import { GetVariety } from "./varieties";
-import {
-  getSingleVarietyQuery,
-  getVarietyForBean,
-} from "../data/varietyQueries";
+import { bean, coffee, paginationRequest } from "../types/types";
+import { getVarietyForBean } from "../data/varietyQueries";
 import { getBrewForCoffee } from "../data/brewQueries";
 
-export const getFullCoffees = async (): Promise<coffee[]> =>  {
+export const getFullCoffees = async (): Promise<coffee[]> => {
   const coffee: coffee[] = await getAllCoffeeQuery();
 
-    for (let i = 0; i < coffee.length; i++) {
-      let beans = await getAllBeansForCoffeeQuery(coffee[i].id);
-      if (beans.length > 0) {
-        for (let ii = 0; ii < beans.length; ii++) {
-          let v = await getVarietyForBean(beans[ii].id);
+  for (let i = 0; i < coffee.length; i++) {
+    let beans = await getAllBeansForCoffeeQuery(coffee[i].id!);
+    if (beans.length > 0) {
+      for (let ii = 0; ii < beans.length; ii++) {
+        let v = await getVarietyForBean(beans[ii].id);
 
-          if(v.length > 0){
-            beans[ii].variety = v[0];
-          }
+        if (v.length > 0) {
+          beans[ii].variety = v[0];
         }
       }
-      coffee[i].brews = await getBrewForCoffee(coffee[i].id);
-      coffee[i].beans = beans;
     }
-    return coffee;
-}
+    coffee[i].brews = await getBrewForCoffee(coffee[i].id!);
+    coffee[i].beans = beans;
+  }
+  return coffee;
+};
 
 export const getCoffee = async (
   req: Request,
@@ -47,22 +42,24 @@ export const getCoffee = async (
   next: NextFunction
 ) => {
   try {
-    const coffee: coffee[] = await getCoffeeQuery(req.params.id);
+    if (req.params.id) {
+      const coffee: coffee[] = await getCoffeeQuery(req.params.id);
 
-    for (let i = 0; i < coffee.length; i++) {
-      let beans = await getAllBeansForCoffeeQuery(coffee[i].id);
-      if (beans.length > 0) {
-        for (let ii = 0; ii < beans.length; ii++) {
-          let v = await getVarietyForBean(beans[ii].id);
+      for (let i = 0; i < coffee.length; i++) {
+        let beans = await getAllBeansForCoffeeQuery(coffee[i].id!);
+        if (beans.length > 0) {
+          for (let ii = 0; ii < beans.length; ii++) {
+            let v = await getVarietyForBean(beans[ii].id);
 
-          if(v.length > 0){
-            beans[ii].variety = v[0];
+            if (v.length > 0) {
+              beans[ii].variety = v[0];
+            }
           }
         }
+        coffee[i].beans = beans;
       }
-      coffee[i].beans = beans;
+      return res.json(coffee[0]);
     }
-    return res.json(coffee[0]);
   } catch (err) {
     next(err);
   }
@@ -74,41 +71,47 @@ export const getCoffeePage = async (
   next: NextFunction
 ) => {
   try {
-    const { page, limit, sortBy, sortOrder, search } = req.query;
-    const offset = Number(page) * Number(limit) - Number(limit);
-    const totalRecords = await getCoffeeRowCountQuery();
-    const totalPages = totalRecords / Number(limit);
+    const maybeValid = await paginationRequest.safeParseAsync(req.query);
+    if (maybeValid.success) {
+      const data = maybeValid.data;
+      const offset = data.page * data.limit - data.limit;
+      const totalRecords = await getCoffeeRowCountQuery();
+      const totalPages = totalRecords / data.limit;
+      const coffee: coffee[] = await getCoffeePageQuery(
+        offset,
+        data.limit,
+        data.sortBy,
+        data.sortOrder,
+        data.search ?? ""
+      );
 
-    const coffee: coffee[] = await getCoffeePageQuery(
-      offset,
-      Number(limit),
-      sortBy as string,
-      sortOrder as string,
-      search as string
-    );
-
-    for (let i = 0; i < coffee.length; i++) {
-      let beans = await getAllBeansForCoffeeQuery(coffee[i].id);
-      if (beans) {
-        for (let ii = 0; ii < beans.length; ii++) {
-          let v = await getVarietyForBean(beans[ii].id);
-          beans[ii].variety = v[0];
-        }
+      for (let i = 0; i < coffee.length; i++) {
+          let beans = await getAllBeansForCoffeeQuery(coffee[i].id!);
+          if (beans) {
+            for (let ii = 0; ii < beans.length; ii++) {
+              let v = await getVarietyForBean(beans[ii].id);
+              beans[ii].variety = v[0];
+            }
+          }
+          coffee[i].beans = beans;
       }
-      coffee[i].beans = beans;
-    }
 
-    res.json({
-      data: coffee,
-      pagination: {
-        total_records: totalRecords,
-        total_pages: Math.round(totalPages),
-        current_page: Number(page),
-        offset: offset,
-        next_page: Number(page) + 1,
-        prev_page: Number(page) === 1 ? 1 : Number(page) - 1,
-      },
-    });
+      return res.json({
+        data: coffee,
+        pagination: {
+          total_records: totalRecords,
+          total_pages: Math.round(totalPages),
+          current_page: data.page,
+          offset: offset,
+          next_page: data.page + 1,
+          prev_page: data.page === 1 ? 1 : data.page - 1,
+        },
+      });
+    } else {
+      return res.json({
+        error: maybeValid.error,
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -120,15 +123,21 @@ export const createCoffee = async (
   next: NextFunction
 ) => {
   try {
-    const coffeeId = await createNewCoffeeQuery(req.body as coffee);
-    req.body.beans?.forEach(async (bean: bean) => {
-      const beanId = await createNewBeanQuery(bean);
-      await createNewCoffeeBeanQuery(coffeeId, beanId);
-    });
-
-    res.json({
-      coffeeId: coffeeId,
-    });
+    const maybeValid = await coffee.safeParseAsync(req.body);
+    if (maybeValid.success) {
+      const coffeeId = await createNewCoffeeQuery(maybeValid.data);
+      maybeValid.data.beans?.forEach(async (bean: bean) => {
+        const beanId = await createNewBeanQuery(bean);
+        await createNewCoffeeBeanQuery(coffeeId, beanId);
+      });
+      return res.json({
+        coffeeId: coffeeId,
+      });
+    } else {
+      return res.json({
+        error: maybeValid.error,
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -141,13 +150,20 @@ export const updateCoffee = async (
 ) => {
   try {
     if (req.params.id) {
-      const response = await updateCoffeeQuery(
-        req.body as coffee,
-        req.params.id
-      );
-      res.json({
-        sucess: response,
-      });
+      const maybeValid = await coffee.safeParseAsync(req.body);
+      if (maybeValid.success) {
+        const response = await updateCoffeeQuery(
+          maybeValid.data,
+          req.params.id
+        );
+        res.json({
+          success: response,
+        });
+      } else {
+        res.json({
+          error: maybeValid.error,
+        });
+      }
     }
   } catch (err) {
     next(err);

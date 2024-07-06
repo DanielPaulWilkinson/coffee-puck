@@ -27,7 +27,7 @@ export const roaster = z.object({
     name: z.string(),
     logo: z.string(),
     url: z.string(),
-    blogUrl: z.string(),
+    blogURL: z.string(),
     notes: z.string(),
     socials: z.array(social),
 });

@@ -14,7 +14,7 @@ export type Row = {
 
 const props = defineProps<{
     id: string;
-    rows: coffee[] | brew[];
+    rows: coffee[] | brew[] | roaster[];
     currentPage: number;
     totalPages: number;
     editable?: boolean;
@@ -29,9 +29,9 @@ const emit = defineEmits<{
     (on: "delete", value: any): void;
 }>();
 
-const updateTableData = computed(() =>  props.tableType === "horizontal"
-        ? updateTableDataHorizontal()
-        : updateTableDataVertical());
+const updateTableData = computed(() => props.tableType === "horizontal"
+    ? updateTableDataHorizontal()
+    : updateTableDataVertical());
 
 const updateTableDataHorizontal = () => {
     state.headings = [];
@@ -93,21 +93,27 @@ watch(
     },
 );
 
-const reconstruct = (row: Row, columnId?: number) => {
+const reconstruct = (row: Row, columnId: number = 0) => {
     let data = {};
-    if(props.tableType === 'horizontal'){
+    if (props.tableType === 'horizontal') {
         let keys = row.cells?.flatMap((x) => x.id);
         keys?.forEach((key) => {
             Reflect.set(data, key, row.cells?.find((x) => x.id === key)?.value);
         });
     } else {
-        state.rows?.forEach(element => {
-            if(element.cells && columnId) {
+        if (state.rows) {
+            state.rows.forEach(element => {
+
+                if(element.cells === undefined){
+                    return;
+                }
+
                 const r = element.cells[columnId];
+                console.log(r);
                 const key = r.id;
                 Reflect.set(data, key, r.value);
-            }
-        });
+            });
+        }
     }
     return data;
 };
@@ -131,14 +137,15 @@ const state = reactive<State>({
     rows: [],
     headings: [],
 });
+
 </script>
 
 <template>
     <table :id="`${props.id}-${props.tableType}`">
         <caption>
             {{
-                caption
-            }}
+        caption
+    }}
         </caption>
         <thead v-if="props.tableType === 'horizontal'">
             <tr class="table-th">
@@ -154,34 +161,20 @@ const state = reactive<State>({
                     {{ state.headings[i] }}
                 </th>
                 <td v-for="(td, ii) in row.cells" scope="col">
-                    <Text
-                        :id="`input-row-${i}-cell-${ii}`"
-                        type="text"
-                        v-if="(i === state.currentEditableRowOrColumnId && ii != 0 && props.tableType === 'horizontal') ||
-                              (ii === state.currentEditableRowOrColumnId && props.tableType === 'vertical')"
-                        :model-value="td.value"
-                        @input="td.value = $event.target.value"
-                        error="ew"
-                    />
+                    <Text :id="`input-row-${i}-cell-${ii}`" type="text" v-if="(i === state.currentEditableRowOrColumnId && ii != 0 && props.tableType === 'horizontal') ||
+        (ii === state.currentEditableRowOrColumnId && props.tableType === 'vertical')" :model-value="td.value"
+                        @input="td.value = $event.target.value" error="ew" />
                     <p v-else>{{ td.value }}</p>
                 </td>
                 <td v-if="props.tableType === 'horizontal'" class="text-center">
                     <div v-if="i !== state.currentEditableRowOrColumnId">
-                        <a
-                            class="margin-right"
-                            href="#"
-                            @click.prevent="
-                                state.currentEditableRowOrColumnId = i;
-                                state.showExtraData = true;
-                            "
-                        >
+                        <a class="margin-right" href="#" @click.prevent="
+        state.currentEditableRowOrColumnId = i;
+    state.showExtraData = true;
+    ">
                             <font-awesome-icon :icon="['fas', 'eye']" />
                         </a>
-                        <a
-                            class="margin-right"
-                            href="#"
-                            @click.prevent="state.currentEditableRowOrColumnId = i"
-                        >
+                        <a class="margin-right" href="#" @click.prevent="state.currentEditableRowOrColumnId = i">
                             <font-awesome-icon :icon="['fas', 'edit']" />
                         </a>
                         <a href="#" @click.prevent="emit('delete', i)">
@@ -189,19 +182,13 @@ const state = reactive<State>({
                         </a>
                     </div>
                     <div v-else>
-                        <a
-                            class="margin-right"
-                            href="#"
-                            @click.prevent="
-                                emit('save', reconstruct(row as Row));
-                                clearInputsOFEditableRow();
-                            "
-                        >
+                        <a class="margin-right" href="#" @click.prevent="
+        emit('save', reconstruct(row as Row));
+    clearInputsOFEditableRow();
+    ">
                             <font-awesome-icon :icon="['fas', 'save']" />
                         </a>
-                        <a href="#" @click.prevent="undoChanges()"
-                            ><font-awesome-icon :icon="['fas', 'cancel']"
-                        /></a>
+                        <a href="#" @click.prevent="undoChanges()"><font-awesome-icon :icon="['fas', 'cancel']" /></a>
                     </div>
                 </td>
             </tr>
@@ -209,21 +196,13 @@ const state = reactive<State>({
                 <th>Actions</th>
                 <td v-for="(row, i) in props.rows" class="text-center">
                     <div v-if="i !== state.currentEditableRowOrColumnId">
-                        <a
-                            class="margin-right"
-                            href="#"
-                            @click.prevent="
-                                state.currentEditableRowOrColumnId = i;
-                                state.showExtraData = true;
-                            "
-                        >
+                        <a class="margin-right" href="#" @click.prevent="
+        state.currentEditableRowOrColumnId = i;
+    state.showExtraData = true;
+    ">
                             <font-awesome-icon :icon="['fas', 'eye']" />
                         </a>
-                        <a
-                            class="margin-right"
-                            href="#"
-                            @click.prevent="state.currentEditableRowOrColumnId = i"
-                        >
+                        <a class="margin-right" href="#" @click.prevent="state.currentEditableRowOrColumnId = i">
                             <font-awesome-icon :icon="['fas', 'edit']" />
                         </a>
                         <a href="#" @click.prevent="emit('delete', i)">
@@ -231,19 +210,13 @@ const state = reactive<State>({
                         </a>
                     </div>
                     <div v-else>
-                        <a
-                            class="margin-right"
-                            href="#"
-                            @click.prevent="
-                                emit('save', reconstruct(row as Row, i));
-                                clearInputsOFEditableRow();
-                            "
-                        >
+                        <a class="margin-right" href="#" @click.prevent="
+        emit('save', reconstruct(row as Row, i));
+    clearInputsOFEditableRow();
+    ">
                             <font-awesome-icon :icon="['fas', 'save']" />
                         </a>
-                        <a href="#" @click.prevent="undoChanges()"
-                            ><font-awesome-icon :icon="['fas', 'cancel']"
-                        /></a>
+                        <a href="#" @click.prevent="undoChanges()"><font-awesome-icon :icon="['fas', 'cancel']" /></a>
                     </div>
                 </td>
             </tr>
@@ -252,31 +225,19 @@ const state = reactive<State>({
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">
-                <a
-                    class="previous"
-                    :class="props.currentPage === 1 ? 'disabled' : ''"
-                    href="#"
-                    @click.prevent="
-                        emit('previousPage', props.currentPage - 1);
-                        clearInputsOFEditableRow();
-                    "
-                >
+                <a class="previous" :class="props.currentPage === 1 ? 'disabled' : ''" href="#" @click.prevent="
+        emit('previousPage', props.currentPage - 1);
+    clearInputsOFEditableRow();
+    ">
                     Previous
                 </a>
             </li>
             <li class="page-item">
-                <a
-                    class="next"
-                    href="#"
-                    :class="
-                        props.currentPage >= props.totalPages ? 'disabled' : ''
-                    "
-                    @click.prevent="
-                        emit('nextPage', props.currentPage + 1);
-                        clearInputsOFEditableRow();
-                    "
-                    >Next</a
-                >
+                <a class="next" href="#" :class="props.currentPage >= props.totalPages ? 'disabled' : ''
+        " @click.prevent="
+        emit('nextPage', props.currentPage + 1);
+    clearInputsOFEditableRow();
+    ">Next</a>
             </li>
         </ul>
     </nav>
@@ -301,17 +262,16 @@ th {
 }
 
 td p {
-    margin: 0;
-    text-wrap: nowrap;
-    overflow: hidden;
-    width: 50px;
+    padding: 5px 5px;
 }
 
 td {
-    padding: 0 5px;
+    text-wrap: wrap;
+    display: table-cell;
+    word-wrap: break-word;
 }
 
-tr:hover :not(tr > th) {
+#test-horizontal tr:hover :not(tr > th) {
     background: #876;
     opacity: 0.9;
 }

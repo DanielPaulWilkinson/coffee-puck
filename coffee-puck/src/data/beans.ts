@@ -12,33 +12,15 @@ export const getBeans = async (
     sortBy: string,
     sortOrder: string,
     search?: string,
-): Promise<BeanPaginationResponse> => {
-    const response = await axios.get(
-        `http://localhost:3000/bean/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
-            `${search ? `&search=${search}` : ""}`,
-    );
-    if (response.status === 200) {
-        return response.data;
-    }
-    return {} as BeanPaginationResponse;
-};
-
-export const createBean = async (bean: bean): Promise<boolean> => {
-    try {
-        const response = await axios.post(
-            `http://localhost:3000/bean/create`,
-            bean,
-        );
-        if (response.status === 200) {
-            return true;
-        }
-        return false;
-    } catch (err) {
-        return false;
-    }
-};
-
-export const updateBean = async (bean: bean) => {
-    return (await axios.post(`http://localhost:3000/bean/update/${bean.id}`, bean))
+): Promise<BeanPaginationResponse> =>
+    (
+        await axios.get(
+            `http://localhost:3000/bean/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
+                `${search ? `&search=${search}` : ""}`,
+        )
+    ).data;
+export const createBean = async (bean: bean): Promise<boolean> =>
+    (await axios.post(`http://localhost:3000/bean/create`, bean)).data;
+export const updateBean = async (bean: bean) =>
+    (await axios.post(`http://localhost:3000/bean/update/${bean.id}`, bean))
         .data;
-};

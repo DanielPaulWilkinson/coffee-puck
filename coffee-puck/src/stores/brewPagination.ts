@@ -1,4 +1,4 @@
-import type { brew } from '@/data/Types'
+import type { brew } from '@/data/types'
 import { defineStore } from 'pinia'
 
 export const useBrewPagination = defineStore('brewPagination', () => {

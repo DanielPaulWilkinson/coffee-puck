@@ -7,8 +7,6 @@ const getTypesQuery = "SELECT * FROM `coffee_types`"
 const getTypesPageQuery = "SELECT * FROM `coffee_types` WHERE name LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?"
 const typeLengthQuery = "select count(id) as total_records from `coffee_types`"
 
-
-
 export const getTypeRowCount = async () => {
     const [rows] = await pool.query(typeLengthQuery)
     return JSON.parse(JSON.stringify(rows))[0].total_records;
@@ -16,7 +14,7 @@ export const getTypeRowCount = async () => {
 
 export const getSingleType = async (id: string) => {
     const [rows] = await pool.query(getTypeQuery, [Number(id)]); 
-    return JSON.parse(JSON.stringify(rows));
+    return z.array(coffeeType).parse(rows);
 }
 
 export const getTypes = async () => {
@@ -26,5 +24,5 @@ export const getTypes = async () => {
 
 export const getTypePage = async (offset: number, limit: number, sortBy: string, sortOrder: string, search: string) => {
     const [rows] = await pool.query(getTypesPageQuery, ['%' + search + '%', sortBy, sortOrder, Number(limit), Number(offset)]);
-    return rows;
+    return z.array(coffeeType).parse(rows);
 }

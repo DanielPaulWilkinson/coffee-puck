@@ -1,74 +1,107 @@
-import { NextFunction, Request, Response } from 'express';
-import { getBrewPageQuery, getSingleBrewQuery, createNewBrewQuery, getBrewRowCountQuery, updateBrewQuery } from '../data/brewQueries';
-import { brew } from '../types/types';
+import { NextFunction, Request, Response } from "express";
+import {
+  getBrewPageQuery,
+  getSingleBrewQuery,
+  getBrewRowCountQuery,
+  updateBrewQuery,
+} from "../data/brewQueries";
+import { brew, paginationRequest } from "../types/types";
 
-//used for a single brew detail
-export const GetBrew = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const result = await getSingleBrewQuery(req.params.id);
-        res.json(result);
-    } catch (err) {
-        next(err);
+export const GetBrew = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (req.params.id) {
+      const result = await getSingleBrewQuery(req.params.id);
+      return res.json(result);
+    } else {
+      return res.json({
+        error: "no param id",
+      });
     }
+  } catch (err) {
+    next(err);
+  }
 };
 
-// used for pagination
-export const GetBrewPage = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-
-        const { page, limit, sortBy, sortOrder } = req.query;
-
-        const offset = (Number(page) * Number(limit)) - Number(limit);
-
-        const totalRecords = await getBrewRowCountQuery();
-
-        const totalPages = totalRecords / Number(limit);
-
-        const brews = await getBrewPageQuery(
-            offset,
-            Number(limit),
-            sortBy as string,
-            sortOrder as string);
-
-        res.json(
-            {
-                data: brews,
-                pagination: {
-                    total_records: totalRecords,
-                    total_pages: Math.round(totalPages),
-                    current_page: Number(page),
-                    offset: offset,
-                    next_page: Number(page) + 1,
-                    prev_page: Number(page) === 1 ? 1 : Number(page) - 1
-                }
-            })
-
+export const GetBrewPage = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const maybeValid = await paginationRequest.safeParseAsync(req.query);
+    if (maybeValid.success) {
+      const data = maybeValid.data;
+      const offset = data.page * data.limit - data.limit;
+      const totalRecords = await getBrewRowCountQuery();
+      const totalPages = totalRecords / data.limit;
+      const brews = await getBrewPageQuery(
+        offset,
+        data.limit,
+        data.sortBy,
+        data.sortOrder
+      );
+      res.json({
+        data: brews,
+        pagination: {
+          total_records: totalRecords,
+          total_pages: Math.round(totalPages),
+          current_page: data.page,
+          offset: offset,
+          next_page: data.page + 1,
+          prev_page: data.page === 1 ? 1 : data.page - 1,
+        },
+      });
+    } else {
+      return res.json(maybeValid.error);
     }
-    catch (err) {
-        next(err);
-    }
+  } catch (err) {
+    next(err);
+  }
 };
 
-export const CreateBrew = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const result = await createNewBrewQuery(req.body as brew);
-        res.status(200).json(result);
+export const CreateBrew = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const maybeValid = await brew.safeParseAsync(req.body);
+    if (maybeValid.success) {
+      res.status(200).json(maybeValid.data);
+    } else {
+      res.json({
+        error: maybeValid.error,
+      });
     }
-    catch (err) {
-        next(err);
-    }
+  } catch (err) {
+    next(err);
+  }
 };
 
-export const UpdateBrew = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        if (req.params.id) {
-            const response = await updateBrewQuery(req.body as brew, req.params.id);
-            res.json({
-                sucess: response,
-            });
-        }
+export const UpdateBrew = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    if (req.params.id) {
+      const maybeValid = await brew.safeParseAsync(req.body);
+      if (maybeValid.success) {
+        const response = await updateBrewQuery(maybeValid.data, req.params.id);
+        res.json({
+          success: response,
+        });
+      } else {
+        res.json({
+          error: maybeValid.error,
+        });
+      }
     }
-    catch (err) {
-        next(err);
-    }
+  } catch (err) {
+    next(err);
+  }
 };

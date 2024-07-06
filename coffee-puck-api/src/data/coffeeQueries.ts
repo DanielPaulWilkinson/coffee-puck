@@ -2,7 +2,6 @@ import { z } from "zod";
 import { coffee } from "../types/types";
 import { pool } from "./database";
 
-//all coffee
 const getCoffeeSQL = "SELECT * FROM `coffee` WHERE id = ?";
 const getAllCoffee = "SELECT * FROM `coffee`"
 const getCoffeePageSearchSQL =
@@ -38,7 +37,7 @@ export const getCoffeePageQuery = async (
   search: string
 ) => {
   if (search) {
-    const [rows, fields] = await pool.query(getCoffeePageSearchSQL, [
+    const [rows] = await pool.query(getCoffeePageSearchSQL, [
       "%" + search + "%",
       sortBy,
       sortOrder,
@@ -47,7 +46,7 @@ export const getCoffeePageQuery = async (
     ]);
     return z.array(coffee).parse(rows);
   } else {
-    const [rows, fields] = await pool.query(getCoffeePageSQL, [
+    const [rows] = await pool.query(getCoffeePageSQL, [
       sortBy,
       sortOrder,
       Number(limit),

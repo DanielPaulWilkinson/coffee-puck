@@ -1,6 +1,15 @@
 import { z } from "zod";
 
 
+
+export const paginationRequest = z.object({
+    page: z.coerce.number(), 
+    limit: z.coerce.number(), 
+    sortBy: z.string(), 
+    sortOrder: z.string(),
+    search: z.string().optional(),
+});
+
 export const pagination = z.object({
     current_page: z.number(),
     next_page: z.number(),
@@ -26,7 +35,7 @@ export const roaster = z.object({
     name: z.string(),
     logo: z.string(),
     url: z.string(),
-    blogUrl: z.string(),
+    blogURL: z.string(),
     notes: z.string(),
     socials: z.array(social)
 });
@@ -84,7 +93,7 @@ export const content = z.object({
 });
 
 export const coffee = z.object({
-    id: z.number(),
+    id: z.number().optional(),
     name: z.string(),
     isDecaf: z.coerce.boolean(),
     rating: z.number(),  

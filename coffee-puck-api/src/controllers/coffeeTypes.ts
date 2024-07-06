@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { getSingleType, getTypePage, getTypeRowCount, getTypes } from '../data/typeQueries';
+import { paginationRequest } from '../types/types';
 
-//used for a single brew detail
 export const GetType = async (req: Request, res: Response, next: NextFunction) => {
     try{
         const result = await getSingleType(req.params.id);
@@ -22,35 +22,33 @@ export const GetTypes = async (req: Request, res: Response, next: NextFunction) 
 
 export const GetTypePage = async (req: Request, res: Response, next: NextFunction) => {
     try {
-
-        const { page, limit, sortBy, sortOrder, search } = req.query;
-    
-        const offset = (Number(page) * Number(limit)) - Number(limit);
-
+        const maybeValid = await paginationRequest.safeParseAsync(req.query);
+        if (maybeValid.success) {
+        const data = maybeValid.data;
+        const offset = data.page * data.limit - data.limit;
         const totalRecords = await getTypeRowCount();
-
-        const totalPages = totalRecords / Number(limit);
-
+        const totalPages = totalRecords / data.limit;
         const coffee = await getTypePage(
             offset,
-            Number(limit),
-            sortBy as string,
-            sortOrder as string,
-            search as string);
-
-            res.json(
+            data.limit,
+            data.sortBy,
+            data.sortOrder,
+            data.search ?? "");
+            return res.json(
                 {
                     data: coffee,
                     pagination: {
                         total_records: totalRecords,
                         total_pages: Math.round(totalPages),
-                        current_page: Number(page),
+                        current_page: data.page,
                         offset: offset,
-                        next_page: Number(page) + 1,
-                        prev_page:  Number(page) === 1 ? 1 : Number(page) - 1
+                        next_page: data.page + 1,
+                        prev_page:  data.page === 1 ? 1 : data.page - 1
                     }
-                })
-
+                });
+            } else {
+                return res.json(maybeValid.error);
+            }
     }
     catch (err) {
         next(err);

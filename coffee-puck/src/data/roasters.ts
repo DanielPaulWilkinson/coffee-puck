@@ -12,40 +12,24 @@ export const getRoasters = async (
     sortBy: string,
     sortOrder: string,
     search?: string,
-): Promise<roastersPaginationResponse> => {
-    const response = await axios.get(
-        `http://localhost:3000/roaster/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
-            `${search ? `&search=${search}` : ""}`,
-    );
+): Promise<roastersPaginationResponse> =>
+    (
+        await axios.get(
+            `http://localhost:3000/roaster/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}` +
+                `${search ? `&search=${search}` : ""}`,
+        )
+    ).data;
 
-    if (response.status === 200) {
-        return response.data;
-    }
-    return {} as roastersPaginationResponse;
-};
+export const createRoaster = async (roaster: roaster): Promise<boolean> =>
+    (await axios.post(`http://localhost:3000/roaster/create`, roaster)).data;
 
-export const createRoaster= async (roaster: roaster): Promise<boolean> => {
-    try {
-        const response = await axios.post(
-            `http://localhost:3000/roaster/create`,
+export const updateRoaster = async (roaster: roaster): Promise<boolean> =>
+    (
+        await axios.post(
+            `http://localhost:3000/roaster/update/${roaster.id}`,
             roaster,
-        );
-        if (response.status === 200) {
-            return true;
-        }
-        return false;
-    } catch (err) {
-        return false;
-    }
-};
+        )
+    ).data;
 
-export const updateRoaster = async (roaster: roaster) => {
-    return (await axios.post(`http://localhost:3000/roaster/update/${roaster.id}`, roaster))
-        .data;
-};
-
-export const getRoaster = async (id: number) => {
-    const res = (await axios.get(`http://localhost:3000/roaster/get/${id}`)).data[0];
-    return res;
-};
-
+export const getRoaster = async (id: number) =>
+    (await axios.get(`http://localhost:3000/roaster/get/${id}`)).data[0];

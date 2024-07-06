@@ -81,13 +81,9 @@ onMounted(async () => {
             <div class="row">
                 <div class="col-md-6" v-for="(statistic, i) in state.other">
                     <div class="card selectable text-center mt-4">
-                        <div class="card-title">
-                            <h1>{{ statistic.value }}</h1>
-
-                        </div>
                         <div class="card-body">
-                            <p>{{ statistic.title }}</p>
-
+                            <h1>{{ statistic.title }}</h1>
+                            <p>{{ statistic.value }}</p>
                         </div>
                     </div>
                 </div>
@@ -124,7 +120,11 @@ onMounted(async () => {
             </div>
 </template>
 <style>
+h1 {
+    font-size: 20px;
+}
+
 .card {
-    min-height: 200px;
+    min-height: 100px;
 }
 </style>

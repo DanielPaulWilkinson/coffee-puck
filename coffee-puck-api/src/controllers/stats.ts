@@ -249,14 +249,14 @@ const getFaveCoffee = (coffees: coffee[]): baseStatistic => {
       if (index) {
         index.total + 1;
       } else {
-        totals.push({ id: coffee.id, total: 1 });
+        totals.push({ id: coffee.id!, total: 1 });
       }
     });
   });
 
   const sorted = totals.sort((x) => x.total);
   return {
-    title: "Fave Coffee",
+    title: "Top Coffee",
     chartType: "none",
     value: coffees.find((x) => x.id === sorted[0].id)?.name ?? "",
   };
@@ -280,7 +280,7 @@ const getFaveCoffeeType = (
 
   const rse = totals.sort((x) => x.total);
   return {
-    title: "Fave Coffee Types",
+    title: "Top Coffee Type",
     chartType: "none",
     value: types.find((x) => x.id === rse[0].id)?.name ?? "",
   };

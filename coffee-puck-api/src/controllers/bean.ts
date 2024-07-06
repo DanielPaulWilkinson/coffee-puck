@@ -6,6 +6,7 @@ import {
   getBeanQuery,
   getBeanPageQuery,
 } from "../data/beanQueries";
+import { paginationRequest } from "../types/types";
 
 export const getBean = async (
   req: Request,
@@ -26,32 +27,32 @@ export const getBeanPage = async (
   next: NextFunction
 ) => {
   try {
-    const { page, limit, sortBy, sortOrder } = req.query;
-
-    const offset = Number(page) * Number(limit) - Number(limit);
-
-    const totalRecords = await getBeanRowCountQuery();
-
-    const totalPages = totalRecords / Number(limit);
-
-    const brews = await getBeanPageQuery(
-      offset,
-      Number(limit),
-      sortBy as string,
-      sortOrder as string
-    );
-
-    res.json({
-      data: brews,
-      pagination: {
-        total_records: totalRecords,
-        total_pages: Math.round(totalPages),
-        current_page: Number(page),
-        offset: offset,
-        next_page: Number(page) + 1,
-        prev_page: Number(page) === 1 ? 1 : Number(page) - 1,
-      },
-    });
+    const maybeValid = await paginationRequest.safeParseAsync(req.query);
+    if (maybeValid.success) {
+      const data = maybeValid.data;
+      const offset = data.page * data.limit - data.limit;
+      const totalRecords = await getBeanRowCountQuery();
+      const totalPages = totalRecords / data.limit;
+      const brews = await getBeanPageQuery(
+        offset,
+        data.limit,
+        data.sortBy,
+        data.sortOrder
+      );
+      return res.json({
+        data: brews,
+        pagination: {
+          total_records: totalRecords,
+          total_pages: Math.round(totalPages),
+          current_page: data.page,
+          offset: offset,
+          next_page: data.page + 1,
+          prev_page: data.page === 1 ? 1 : data.page - 1,
+        },
+      });
+    } else {
+      return res.json(maybeValid.error);
+    }
   } catch (err) {
     next(err);
   }

@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import { coffee } from "../data/types";
+import { roaster } from "../data/types";
 
-export const useCoffeePagination = defineStore('coffeePagination', () => {
+export const useRoasterPagination = defineStore('roasterPagination', () => {
     return { 
-      data: [] as coffee[],
+      data: [] as roaster[],
       pagination: {
         current_page: 1,
         next_page: 2,

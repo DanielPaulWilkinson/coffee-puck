@@ -20,7 +20,7 @@ export const getSingleVarietyQuery = async (id: number) => {
 
 export const getVarietyPageQuery = async (offset: number, limit: number, sortBy: string, sortOrder: string, search: string) => {
     const [rows] = await pool.query(getVarietyPageSQL, [ "%" + search + "%", sortBy, sortOrder, Number(limit), Number(offset)]); 
-    return rows;
+    return z.array(variety).parse(rows);
 }
 
 export const createNewBeanVarietyQuery = async (beanId: number, varietyId: number): Promise<number> => {
