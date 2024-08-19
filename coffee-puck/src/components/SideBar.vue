@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink } from 'vue-router'
 </script>
 <template>
-  <div class="sidebar">
-    <div class="logo">
-      <a class="sidebar-link" href="#">
-        <p>Coffee Puck <font-awesome-icon :icon="['fas', 'coffee']" /></p>
+  <section class="sidebar-container">
+    <div class="logo-container">
+      <a class="logo" href="#">
+        <p class="">Coffee Puck <font-awesome-icon :icon="['fas', 'coffee']" /></p>
       </a>
     </div>
-    <div class="menu">
+    <nav class="menu">
       <ul>
         <router-link to="/" active-class="selected" exact-active-class="selected">
           <li class="sidebar-link">
@@ -66,81 +66,6 @@ import { RouterLink, RouterView } from 'vue-router'
           </li>
         </a>
       </ul>
-    </div>
-  </div>
+    </nav>
+  </section>
 </template>
-<style>
-:root {
-  --sidebar-font-color: #FFF;
-  --sidebar-background-color: #6F4E37;
-  --sidebar-link-hover-background-color: #f7f6f3;
-  --sidebar-link-selected-background: #f1f0e9;
-  --sidebar-link-selected-hover-background: #efede6;
-}
-
-.sidebar {
-  display: flex;
-  flex-direction: column;
-  grid-area: sidebar;
-  background-color: var(--sidebar-background-color);
-  border-right: var(--outline-separator);
-}
-
-.sidebar a {
-  text-decoration: none;
-}
-
-.sidebar ul {
-  padding: 0;
-}
-
-.sidebar-link {
-  display: flex;
-  align-items: center;
-  padding: 0 40px;
-  color: var(--black-font-color);
-}
-
-.menu .sidebar-link:hover {
-  background: var(--sidebar-link-hover-background-color);
-  border-end-start-radius: 50px;
-  border-start-start-radius: 50px;
-}
-
-.menu .sidebar-link:hover p, .menu .sidebar-link:hover svg {
-  color: var(--sidebar-background-color);
-}
-
-.logo .sidebar-link:hover {
-  background: none;
-}
-
-.sidebar-link svg {
-  color: var(--sidebar-font-color);
-}
-
-.sidebar-link > p{
-  color: var(--sidebar-font-color);
-  font-family: MARKER;
-  font-weight: bold;
-  font-size: 1.1rem;
-  margin-top: 20px;
-  margin-left: 10px;
-}
-.selected .sidebar-link p, .selected .sidebar-link svg{
-  color: var(--sidebar-background-color);
-  background: var(--sidebar-link-selected-background);
-}
-
-.selected .sidebar-link {
-  color: var(--sidebar-background-color);
-  background: var(--sidebar-link-selected-background);
-  border-end-start-radius: 50px;
-    border-start-start-radius: 50px;
-}
-
-.selected:hover .sidebar-link {
-  color: var(--sidebar-background-color);
-  background: var(--sidebar-link-selected-hover-background);
-}
-</style>

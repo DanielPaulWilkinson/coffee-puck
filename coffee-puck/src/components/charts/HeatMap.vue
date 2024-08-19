@@ -1,62 +1,59 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
 
-const props = defineProps<{
-    days: [],
-}>();
-
-type date = {
-    data: { day: number; value: number }[];
-    days: number;
-    selectedData: { day: number; value: number } | null;
-    showModal: boolean;
-    currentDate: number;
+type DataItem = { 
+    date: Date;
+    dateNumber: number;
+    displayValue: number 
 };
 
-const state = reactive<date>({
+const props = defineProps<{
+    days: DataItem[],
+}>();
+
+type HeatMapState = {
+    data: DataItem[];
+    selectedData: DataItem | null;
+    showModal: boolean;
+    today: Date | null;
+};
+
+const state = reactive<HeatMapState>({
     data: [],
-    days: 0,
     showModal: false,
     selectedData: null,
-    currentDate: 0,
+    today: null,
 });
 
 const daysInMonth = (year: number, month: number) =>
     new Date(year, month, 0).getDate();
 
+const getDateFromNumber = (dayNumber: number): Date => {
+    const today = new Date();
+    return new Date(today.getFullYear(), today.getMonth(), dayNumber);
+};
 
 onMounted(() => {
-    var currentDate = new Date();
-    var currentYear = currentDate.getFullYear();
-    var currentMonth = currentDate.getMonth();
-    var currentDay = currentDate.getDate();
-    state.currentDate = currentDay;
-    state.days = daysInMonth(currentYear, currentMonth);
-    for (let i = 0; i < state.days; i++) {
-
-        const ii = props.days.find((x) => x.day === i + 1)?.value ?? 0;
-
-        const u = {
-            day: i + 1,
-            value: ii,
-        };
-        state.data.push(u);
+    const today = new Date();
+    state.today = today;
+    const numberOfDaysInMonth = daysInMonth(today.getFullYear(), today.getMonth());
+    for (let i = 0; i < numberOfDaysInMonth; i++) {
+        const ii: number = props.days.find((x: DataItem) => x.dateNumber === i + 1)?.displayValue ?? 0;
+        const date = getDateFromNumber(i + 1);
+        state.data.push({
+            date,
+            dateNumber: i + 1,
+            displayValue: ii,
+        });
     }
 });
 
-const nthNumber = (number: number) => {
-  if (number > 3 && number < 21) return "th";
-  switch (number % 10) {
-    case 1:
-      return "st";
-    case 2:
-      return "nd";
-    case 3:
-      return "rd";
-    default:
-      return "th";
-  }
-};
+function getOrdinalSuffix(dayNumber: number): string {
+    const suffixes = ["th", "st", "nd", "rd"];
+    const value = dayNumber % 100;
+    return dayNumber + (suffixes[(value - 20) % 10] || suffixes[value] || suffixes[0]);
+}
+
 const getShade = (number: number) => {
     if (number <= 2) {
         return "#754";
@@ -67,13 +64,14 @@ const getShade = (number: number) => {
     }
 };
 
-const showModal = (day, i) => {
+const showModal = (day: DataItem) => {
     state.showModal = true;
     state.selectedData = day;
 }
-const getStyles = (day, i) => {
-    const todayHighlight = state.currentDate === i + 1 ? `border: 1px solid red;` : ``;
-    const coffeeQuantityShade = `background:${getShade(day.value)};`;
+
+const getStyles = (day: DataItem) => {
+    const todayHighlight = state.today?.getDate() === day.date.getDate() ? `border: 1px solid red;` : ``;
+    const coffeeQuantityShade = `background:${getShade(day.displayValue)};`;
     return `${coffeeQuantityShade} ${todayHighlight}`;
 }
 
@@ -81,11 +79,11 @@ const getStyles = (day, i) => {
 <template>
     <div class="graph">
         <div :id="`day-${i}`" class="date"  v-for="(day, i) in state.data"
-            @mouseover="showModal(day, i)" @mouseleave="state.showModal = false;">
-            <div class="coffee-amount" :style="getStyles(day, i)">{{ day.value }}</div>
-            <p class="day">{{ day.day }}{{ nthNumber(day.day) }}</p>
-            <div class="pop-up" v-if="state.showModal && i === state.selectedData?.day">
-                <p>You drank {{ state.selectedData?.value }} on {{ state.selectedData?.day }}{{ nthNumber(state.selectedData?.day) }}</p>
+            @mouseover="showModal(day)" @mouseleave="state.showModal = false;">
+            <div class="coffee-amount" :style="getStyles(day)">{{ day.displayValue }}</div>
+            <p class="day">{{ getOrdinalSuffix(day.dateNumber) }}</p>
+            <div class="pop-up" v-if="state.showModal && i === state.selectedData?.dateNumber">
+                <p>You drank {{ state.selectedData?.displayValue }} on {{ state.selectedData?.date }}{{ getOrdinalSuffix(state.selectedData?.dateNumber) }}</p>
             </div>
         </div>
     </div>

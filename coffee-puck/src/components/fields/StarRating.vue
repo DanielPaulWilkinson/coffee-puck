@@ -74,30 +74,3 @@ const highlightTo = (selectedIndex: number) => {
       </div>
     </div>
 </template>
-
-<style scoped lang="scss">
-.readonly{
-  cursor:default;
-}
-
-.rating-box {
-  border-radius: 25px;
-  text-align: center;
-  margin: 10px 0;
-}
-.rating-box .stars {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-.stars svg {
-  font-size: 20px;
-  color: #b5b8b1;
-  transition: all 0.2s;
-  cursor: pointer;
-}
-.stars svg.active {
-  color: #ffb851;
-  transform: scale(1.2);
-}
-</style>

@@ -8,5 +8,5 @@ import Statistics from '../components/Statistics.vue';
         <Statistics />
       </div>
     </div>
-    </div>
-    </template>
+  </div>
+</template>

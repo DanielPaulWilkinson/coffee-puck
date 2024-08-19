@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useRoasterPagination } from "../stores/roasterPagination";
+import { useRoasterPagination } from "@/stores/roasterPagination";
 import {
     getRoasters,
     updateRoaster,
-} from "../data/roasters";
+} from "@/data/roasters";
 import Select from "@/components/fields/Select.vue";
 import Table from "../components/fields/Table.vue";
 import Text from "@/components/fields/Text.vue";
 import { inject, onMounted, reactive, watch } from "vue";
 import type { CreateNotification } from "@/services/notifications";
-import { roaster } from '../data/types';
+import { roaster } from "@/data/types";
 const store = useRoasterPagination();
 const createNotification = <CreateNotification>inject("create-notification");
 

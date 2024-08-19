@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue';
 
-
-
-type stateTypes = {
+type State = {
 	slices: string[],
 	data: number[],
 }
@@ -14,7 +12,7 @@ const props = defineProps<{
 	colors: string[],
 }>();
 
-const state = reactive<stateTypes>({
+const state = reactive<State>({
 	slices: [],
 	data: [],
 });
@@ -52,6 +50,7 @@ onMounted(async () => {
 		</div>
 	</div>
 </template>
+
 <style>
 .color-box {
 	height: 20px;
@@ -59,18 +58,22 @@ onMounted(async () => {
 	display: inline-block;
 	border-radius: 20px;
 }
+
 .chart {
 	padding: 20px;
 }
+
 .pie-chart {
 	border-radius: 50%;
 	height: 200px;
 	width: 200px
 }
+
 .pie-keys {
 	padding: 20px;
 	text-align: left;
 }
+
 .key {
 	display: flex;
     flex-direction: row;

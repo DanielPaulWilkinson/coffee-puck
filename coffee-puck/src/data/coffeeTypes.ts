@@ -1,7 +1,7 @@
 import axios from "axios";
 import type { coffeeType, pagination } from "./types";
 
-export type CoffeeTypePaginationResponse = {
+export type coffeeTypePaginationResponse = {
     data: coffeeType[];
     pagination: pagination;
 };
@@ -12,7 +12,7 @@ export const getTypePage = async (
     sortBy: string,
     sortOrder: string,
     search: string,
-): Promise<CoffeeTypePaginationResponse> =>
+): Promise<coffeeTypePaginationResponse> =>
     (
         await axios.get(
             `http://localhost:3000/types/get?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}&search=${search}`,

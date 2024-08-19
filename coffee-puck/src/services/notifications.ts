@@ -15,7 +15,7 @@ function createUUID() {
 
 export type Notification = {
   id: string;
-  type: string;
+  notificationType: string;
   title: string;
   message: string;
   autoClose: boolean;
@@ -33,7 +33,7 @@ export type CreateNotification = {
 };
 
 const defaultNotificationOptions = {
-  type: "info",
+  notificationType: "info",
   title: "Info Notification",
   message: "Ooops! A message was not provided",
   autoClose: true,

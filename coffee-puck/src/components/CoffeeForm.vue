@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import { useCoffeeStore } from '../stores/addCoffee';
+import { inject, onMounted, reactive } from 'vue';
+import { useRoute } from 'vue-router';
 
-const store = useCoffeeStore();
-import Question from './../components/fields/Question.vue';
-import Text from './../components/fields/Text.vue';
+import Question from '@/components/fields/Question.vue';
+import Text from '@/components/fields/Text.vue';
+import VarietySearch from '@/components/search/VarietySearch.vue';
+import Rating from '@/components/fields/StarRating.vue';
 import RadioSet from './fields/RadioSet.vue';
 import Radio from './fields/Radio.vue';
-import { inject, onMounted, reactive } from 'vue';
-import { bean, variety } from '../data/types';
-import { getBeans, type BeanPaginationResponse } from '@/data/beans';
-import Select from './fields/Select.vue';
-import type { CreateNotification } from '@/services/notifications';
-import Rating from '../components/fields/StarRating.vue';
-const createNotification = <CreateNotification>inject("create-notification");
-import VarietySearch from '../components/search/VarietySearch.vue';
 import RoasterSearch from './search/RoasterSearch.vue';
-import { createCoffee, getCoffee, updateCoffee } from '../data/coffee';
-import { useRoute } from 'vue-router';
+import Select from './fields/Select.vue';
+import { createCoffee, getCoffee, updateCoffee } from '@/data/coffee';
+import { useCoffeeStore } from '../stores/addCoffee';
 import { getRoaster } from '@/data/roasters';
+
+import type { bean, variety } from '../data/types';
+import type { BeanPaginationResponse } from '@/data/beans';
+import type { CreateNotification } from '@/services/notifications';
+
 const route = useRoute();
+const store = useCoffeeStore();
+const createNotification = <CreateNotification>inject("create-notification");
 
 export type CoffeeViewState = {
     selectedBeans: bean[] | null,

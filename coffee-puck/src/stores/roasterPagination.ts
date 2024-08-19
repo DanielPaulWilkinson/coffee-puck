@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { roaster } from "../data/types";
+import { roaster } from "@/data/types";
 
 export const useRoasterPagination = defineStore('roasterPagination', () => {
     return { 

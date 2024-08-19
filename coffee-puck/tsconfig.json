@@ -1,14 +1,28 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
+  "compilerOptions": {
+      "lib": ["esnext", "dom"],
+      "module": "esnext",
+      "target": "esnext",
+      "useDefineForClassFields": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "sourceMap": true,
+      "typeRoots": ["./node_modules/@types", "./typings", "./node_modules"],
+      "strict": true,
+      "baseUrl": "./",
+      "paths": {
+        "@/*": ["src/*"]
+      },
+      "outDir": "server/build",
+      "forceConsistentCasingInFileNames": true,
+      "types": ["node", "vite/client"],
+      "moduleResolution": "node",
+      "jsx": "preserve",
+      "resolveJsonModule": true,
+      "isolatedModules": true,
+      "noErrorTruncation": true,
+      "noUnusedLocals": true,
     },
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.vitest.json"
-    }
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

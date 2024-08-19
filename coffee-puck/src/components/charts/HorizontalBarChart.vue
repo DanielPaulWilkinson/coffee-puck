@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { on } from 'events';
 import { onMounted, reactive } from 'vue';
 
 const props = withDefaults(defineProps<{

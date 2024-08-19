@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { coffee, variety, bean } from "../data/Types";
+import type { coffee, variety, bean } from "@/data/types";
 
 export type CoffeeStore = {
   coffee: coffee,

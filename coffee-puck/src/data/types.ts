@@ -59,7 +59,7 @@ export const brew = z.object({
 export const coffeeType = z.object({
     id: z.number().optional(),
     name: z.string(),
-    icon: z.string().nullable(),
+    icon: z.string(),
     description: z.string().nullable(),
     ratio: z.string().nullable(),
 });

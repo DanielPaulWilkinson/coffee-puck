@@ -69,7 +69,7 @@ onMounted(async () => {
         <div class="col-12" v-for="(statistic, i) in state.heatmap">
             <div class="card selectable text-center mt-4">
                 <div class="card-title">
-                     <h1>{{ statistic.title }}</h1>
+                    <h1>{{ statistic.title }}</h1>
                 </div>
                 <div class="card-body">
                     <HeatMap :days="statistic.days">
@@ -106,18 +106,19 @@ onMounted(async () => {
         </div>
     </div>
     <div class="row">
-                <div class="col-md-6" v-for="(statistic, i) in state.bar">
-                    <div class="card selectable text-center mt-4">
+        <div class="col-md-6" v-for="(statistic, i) in state.bar">
+            <div class="card selectable text-center mt-4">
 
-                        <h1>{{ statistic.title }}</h1>
+                <h1>{{ statistic.title }}</h1>
 
-                        <div class="card-body">
-                            <HorizontalBarChart :series="statistic.dataGroups" :colours="statistic.colours" :labels="statistic.labels" type="number">
-                            </HorizontalBarChart>
-                        </div>
-                    </div>
+                <div class="card-body">
+                    <HorizontalBarChart id="" :series="statistic.dataGroups" :colours="statistic.colours"
+                        :labels="statistic.labels" type="number">
+                    </HorizontalBarChart>
                 </div>
             </div>
+        </div>
+    </div>
 </template>
 <style>
 h1 {

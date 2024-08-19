@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, watch } from "vue";
 import Text from "./Text.vue";
-import type { brew, coffee } from "@/data/types";
+import type { brew, coffee, roaster, variety } from "@/data/types";
+import TableActions from "./TableActions.vue";
 
 export type Td = {
     value: string;
@@ -14,7 +15,7 @@ export type Row = {
 
 const props = defineProps<{
     id: string;
-    rows: coffee[] | brew[] | roaster[];
+    rows: coffee[] | brew[] | roaster[] | variety[];
     currentPage: number;
     totalPages: number;
     editable?: boolean;
@@ -32,6 +33,9 @@ const emit = defineEmits<{
 const updateTableData = computed(() => props.tableType === "horizontal"
     ? updateTableDataHorizontal()
     : updateTableDataVertical());
+
+const isEditableTd = (i: number, ii: number) => (i === state.editableId && ii != 0 && props.tableType === 'horizontal') ||
+    (ii === state.editableId && props.tableType === 'vertical')
 
 const updateTableDataHorizontal = () => {
     state.headings = [];
@@ -104,7 +108,7 @@ const reconstruct = (row: Row, columnId: number = 0) => {
         if (state.rows) {
             state.rows.forEach(element => {
 
-                if(element.cells === undefined){
+                if (element.cells === undefined) {
                     return;
                 }
 
@@ -119,20 +123,20 @@ const reconstruct = (row: Row, columnId: number = 0) => {
 };
 
 export type State = {
-    currentEditableRowOrColumnId: number | null;
+    editableId: number | null;
     rows: Row[] | null;
     headings: string[];
     showExtraData: boolean;
 };
 
-const clearInputsOFEditableRow = () => (state.currentEditableRowOrColumnId = null);
+const clearInputsOFEditableRow = () => (state.editableId = null);
 const undoChanges = () => {
     clearInputsOFEditableRow();
     updateTableData.value;
 };
 
 const state = reactive<State>({
-    currentEditableRowOrColumnId: null,
+    editableId: null,
     showExtraData: false,
     rows: [],
     headings: [],
@@ -144,8 +148,8 @@ const state = reactive<State>({
     <table :id="`${props.id}-${props.tableType}`">
         <caption>
             {{
-        caption
-    }}
+                caption
+            }}
         </caption>
         <thead v-if="props.tableType === 'horizontal'">
             <tr class="table-th">
@@ -161,63 +165,29 @@ const state = reactive<State>({
                     {{ state.headings[i] }}
                 </th>
                 <td v-for="(td, ii) in row.cells" scope="col">
-                    <Text :id="`input-row-${i}-cell-${ii}`" type="text" v-if="(i === state.currentEditableRowOrColumnId && ii != 0 && props.tableType === 'horizontal') ||
-        (ii === state.currentEditableRowOrColumnId && props.tableType === 'vertical')" :model-value="td.value"
-                        @input="td.value = $event.target.value" error="ew" />
+                    <Text :id="`input-row-${i}-cell-${ii}`" type="text" v-if="isEditableTd(i, ii)"
+                        :model-value="td.value" @input="td.value = $event.target.value" error="ew" />
                     <p v-else>{{ td.value }}</p>
                 </td>
                 <td v-if="props.tableType === 'horizontal'" class="text-center">
-                    <div v-if="i !== state.currentEditableRowOrColumnId">
-                        <a class="margin-right" href="#" @click.prevent="
-        state.currentEditableRowOrColumnId = i;
-    state.showExtraData = true;
-    ">
-                            <font-awesome-icon :icon="['fas', 'eye']" />
-                        </a>
-                        <a class="margin-right" href="#" @click.prevent="state.currentEditableRowOrColumnId = i">
-                            <font-awesome-icon :icon="['fas', 'edit']" />
-                        </a>
-                        <a href="#" @click.prevent="emit('delete', i)">
-                            <font-awesome-icon :icon="['fas', 'trash']" />
-                        </a>
-                    </div>
-                    <div v-else>
-                        <a class="margin-right" href="#" @click.prevent="
-        emit('save', reconstruct(row as Row));
-    clearInputsOFEditableRow();
-    ">
-                            <font-awesome-icon :icon="['fas', 'save']" />
-                        </a>
-                        <a href="#" @click.prevent="undoChanges()"><font-awesome-icon :icon="['fas', 'cancel']" /></a>
-                    </div>
+                    <TableActions id="horizontal-actions" :index="i"
+                        :current-editable-row-or-column-id="state.editableId" 
+                        @delete=""
+                        @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();"
+                        @undo="undoChanges()"
+                        @update-editable-id="state.editableId = $event" />
                 </td>
             </tr>
             <tr v-if="props.tableType === 'vertical'">
                 <th>Actions</th>
                 <td v-for="(row, i) in props.rows" class="text-center">
-                    <div v-if="i !== state.currentEditableRowOrColumnId">
-                        <a class="margin-right" href="#" @click.prevent="
-        state.currentEditableRowOrColumnId = i;
-    state.showExtraData = true;
-    ">
-                            <font-awesome-icon :icon="['fas', 'eye']" />
-                        </a>
-                        <a class="margin-right" href="#" @click.prevent="state.currentEditableRowOrColumnId = i">
-                            <font-awesome-icon :icon="['fas', 'edit']" />
-                        </a>
-                        <a href="#" @click.prevent="emit('delete', i)">
-                            <font-awesome-icon :icon="['fas', 'trash']" />
-                        </a>
-                    </div>
-                    <div v-else>
-                        <a class="margin-right" href="#" @click.prevent="
-        emit('save', reconstruct(row as Row, i));
-    clearInputsOFEditableRow();
-    ">
-                            <font-awesome-icon :icon="['fas', 'save']" />
-                        </a>
-                        <a href="#" @click.prevent="undoChanges()"><font-awesome-icon :icon="['fas', 'cancel']" /></a>
-                    </div>
+                    <TableActions id="vertical-actions" 
+                        :index="i"
+                        :current-editable-row-or-column-id="state.editableId" 
+                        @delete=""
+                        @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();" 
+                        @undo="undoChanges()"
+                        @update-editable-id="state.editableId = $event" />
                 </td>
             </tr>
         </tbody>
@@ -226,18 +196,18 @@ const state = reactive<State>({
         <ul class="pagination">
             <li class="page-item">
                 <a class="previous" :class="props.currentPage === 1 ? 'disabled' : ''" href="#" @click.prevent="
-        emit('previousPage', props.currentPage - 1);
-    clearInputsOFEditableRow();
-    ">
+                    emit('previousPage', props.currentPage - 1);
+                clearInputsOFEditableRow();
+                ">
                     Previous
                 </a>
             </li>
             <li class="page-item">
                 <a class="next" href="#" :class="props.currentPage >= props.totalPages ? 'disabled' : ''
-        " @click.prevent="
-        emit('nextPage', props.currentPage + 1);
-    clearInputsOFEditableRow();
-    ">Next</a>
+                    " @click.prevent="
+            emit('nextPage', props.currentPage + 1);
+        clearInputsOFEditableRow();
+        ">Next</a>
             </li>
         </ul>
     </nav>

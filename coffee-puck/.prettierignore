@@ -1,14 +1,14 @@
 package-lock.json
+.prettierignore
 **/*.js
 **/*.jsx
 **/*.ts
 **/*.tsx
-
 **/*.scss
 **/*.css
 **/*.vue
+**/*.svg
 **/*.ico
-
 **/*.woff
 **/*.woff2
 coverage
