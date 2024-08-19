@@ -1,0 +1,26 @@
+{
+  "src/assets/check.svg": {
+    "file": "assets/check-bfa6f240.svg",
+    "src": "src/assets/check.svg"
+  },
+  "src/assets/marker.ttf": {
+    "file": "assets/marker-4a613a4e.ttf",
+    "src": "src/assets/marker.ttf"
+  },
+  "src/main.css": {
+    "file": "assets/main-5f01d6af.css",
+    "src": "src/main.css"
+  },
+  "src/main.ts": {
+    "assets": [
+      "assets/check-bfa6f240.svg",
+      "assets/marker-4a613a4e.ttf"
+    ],
+    "css": [
+      "assets/main-5f01d6af.css"
+    ],
+    "file": "assets/main-d55ccdd3.js",
+    "isEntry": true,
+    "src": "src/main.ts"
+  }
+}

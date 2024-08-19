@@ -1,0 +1,47 @@
+@use '../abstracts' as a;
+
+.sidebar-container {
+    grid-area: sidebar;
+    margin: 0;
+    padding: 0;
+    background-color: a.$sidebar-background-color;
+    border-right: a.$outline-separator;
+    height: 100%;
+    overflow: auto;
+
+    a {
+        text-decoration: none;
+    }
+
+    ul {
+        padding: 0;
+    }
+
+    .selected .sidebar-link {
+        color: a.$sidebar-background-color;
+        background: a.$sidebar-link-selected-background;
+        border-end-start-radius: 50px;
+        border-start-start-radius: 50px;
+    }
+
+    .sidebar-link {
+        display: flex;
+        align-items: center;
+        padding: 0 40px;
+        color: a.$black-font-color;
+
+        p {
+            font-family: marker;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-left: 10px;
+        }
+
+        &:hover {
+            background: a.$sidebar-link-hover-background-color;
+            border-end-start-radius: 50px;
+            border-start-start-radius: 50px;
+            color: a.$sidebar-background-color;
+        }
+    }
+}

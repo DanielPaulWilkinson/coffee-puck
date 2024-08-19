@@ -1,0 +1,14 @@
+@use '../abstracts' as a;
+
+button {
+
+    cursor: pointer;
+
+    &.primary-button {
+        color: a.$primary-font-color;
+        background-color: a.$primary-background-color;
+        border-radius: 0.3rem;
+    }
+
+    
+}
