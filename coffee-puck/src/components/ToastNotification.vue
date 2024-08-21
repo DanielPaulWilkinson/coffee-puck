@@ -73,19 +73,15 @@ const close = () => {
 </script>
 
 <template>
-  <div
-    class="toast-notification"
-    :style="`$toast-duration: ${duration}s; $toast-color: ${toastColor}`"
-    @click.prevent="close"
-    :ref="id"
-  >
+  <div class="toast-notification" :style="`$toast-duration: ${duration}s; $toast-color: ${toastColor}`"
+    @click.prevent="close" :ref="id">
     <div @click="close" class="close-btn" title="Close">
       <RiCloseFill />
     </div>
 
     <div class="body">
       <div v-if="props.type === 'warning'">
-        <RiErrorWarningLine :color="toastColor"  />
+        <RiErrorWarningLine :color="toastColor" />
       </div>
       <div v-else-if="props.type === 'error'">
         <RiEmotionUnhappyLine :color="toastColor" />

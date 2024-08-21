@@ -36,18 +36,18 @@ onMounted(() => {
             s > biggestValue ? biggestValue = s : biggestValue = biggestValue;
         });
 
-        for(let ii = 0; ii < 6; ii++){
+        for (let ii = 0; ii < 6; ii++) {
             state.lines.push(Math.round(biggestValue / 5 * ii));
             state.lineNumbers.push(Math.round(biggestValue / 5 * ii));
         }
-        
+
         for (let i = 0; i < props.series.length; i++) {
             state.bars.push(Math.round(props.series[i] / biggestValue * 100))
 
         }
     } else {
         state.bars = props.series;
-        for(let i = 0; i < 6; i++){
+        for (let i = 0; i < 6; i++) {
             state.lines.push(20 * i);
             state.lineNumbers.push(20 * i);
         }

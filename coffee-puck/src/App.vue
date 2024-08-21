@@ -5,6 +5,7 @@ import ToastNotification from "./components/ToastNotification.vue";
 import { provide } from 'vue';
 import MainFooter from './components/MainFooter.vue';
 import SideBar from './components/SideBar.vue';
+import Head from './components/Head.vue';
 import "./styles/style.scss";
 
 const {
@@ -19,6 +20,7 @@ provide("create-notification", createNotification);
 
 </script>
 <template>
+    <Head />
     <SideBar />
     <section class="main">
       <RouterView />

@@ -1,5 +1,5 @@
-import { unknown, z } from "zod";
-import { bean, variety } from "../types/types";
+import { z } from "zod";
+import { variety } from "../types/types";
 import { pool } from "./database";
 
 const getVarietySQL = "SELECT * FROM `varieties` WHERE id = ?";

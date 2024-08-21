@@ -1,8 +1,7 @@
-
 <script setup lang="ts">
 </script>
 <template>
-     <header>
+  <header>
     <div class="greeting">
       <img class="user-profile-picture" src="" alt="profile picture" />
       <div>
@@ -13,7 +12,6 @@
   </header>
 </template>
 <style>
-
 .buttons {
   display: grid;
   grid-template-rows: 1fr;

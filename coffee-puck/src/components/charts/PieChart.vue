@@ -41,7 +41,7 @@ onMounted(async () => {
 			<div class="pie-keys">
 				<div class="key" v-for="(item, i) in state.data.length">
 					<div class="color-box" :style="`background: ${colors[i]};`"></div>
-					<span>{{ props.labels[i] }} {{data[i]}}</span>
+					<span>{{ props.labels[i] }} {{ data[i] }}</span>
 				</div>
 			</div>
 		</div>
@@ -76,8 +76,8 @@ onMounted(async () => {
 
 .key {
 	display: flex;
-    flex-direction: row;
-    align-items: center;
+	flex-direction: row;
+	align-items: center;
 }
 
 .key>span {

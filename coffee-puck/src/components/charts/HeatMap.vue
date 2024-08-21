@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
 
-type DataItem = { 
+type DataItem = {
     date: Date;
     dateNumber: number;
-    displayValue: number 
+    displayValue: number
 };
 
 const props = defineProps<{
@@ -78,12 +78,13 @@ const getStyles = (day: DataItem) => {
 </script>
 <template>
     <div class="graph">
-        <div :id="`day-${i}`" class="date"  v-for="(day, i) in state.data"
-            @mouseover="showModal(day)" @mouseleave="state.showModal = false;">
+        <div :id="`day-${i}`" class="date" v-for="(day, i) in state.data" @mouseover="showModal(day)"
+            @mouseleave="state.showModal = false;">
             <div class="coffee-amount" :style="getStyles(day)">{{ day.displayValue }}</div>
             <p class="day">{{ getOrdinalSuffix(day.dateNumber) }}</p>
             <div class="pop-up" v-if="state.showModal && i === state.selectedData?.dateNumber">
-                <p>You drank {{ state.selectedData?.displayValue }} on {{ state.selectedData?.date }}{{ getOrdinalSuffix(state.selectedData?.dateNumber) }}</p>
+                <p>You drank {{ state.selectedData?.displayValue }} on {{ state.selectedData?.date }}{{
+            getOrdinalSuffix(state.selectedData?.dateNumber) }}</p>
             </div>
         </div>
     </div>
@@ -132,7 +133,7 @@ const getStyles = (day: DataItem) => {
     display: inline-block;
     color: #fff;
     opacity: 1;
-    text-align: center;    
+    text-align: center;
     animation: roll-in 2s ease;
     position: relative;
 }

@@ -149,8 +149,8 @@ const state = reactive<State>({
         <table :id="`${props.id}-${props.tableType}`" class="table">
             <caption>
                 {{
-                    caption
-                }}
+            caption
+        }}
             </caption>
             <thead v-if="props.tableType === 'horizontal'">
                 <tr class="table-th">
@@ -172,23 +172,18 @@ const state = reactive<State>({
                     </td>
                     <td v-if="props.tableType === 'horizontal'" class="text-center">
                         <TableActions id="horizontal-actions" :index="i"
-                            :current-editable-row-or-column-id="state.editableId" 
-                            @delete=""
+                            :current-editable-row-or-column-id="state.editableId" @delete=""
                             @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();"
-                            @undo="undoChanges()"
-                            @update-editable-id="state.editableId = $event" />
+                            @undo="undoChanges()" @update-editable-id="state.editableId = $event" />
                     </td>
                 </tr>
                 <tr v-if="props.tableType === 'vertical'">
                     <th>Actions</th>
                     <td v-for="(row, i) in props.rows" class="text-center">
-                        <TableActions id="vertical-actions" 
-                            :index="i"
-                            :current-editable-row-or-column-id="state.editableId" 
-                            @delete=""
-                            @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();" 
-                            @undo="undoChanges()"
-                            @update-editable-id="state.editableId = $event" />
+                        <TableActions id="vertical-actions" :index="i"
+                            :current-editable-row-or-column-id="state.editableId" @delete=""
+                            @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();"
+                            @undo="undoChanges()" @update-editable-id="state.editableId = $event" />
                     </td>
                 </tr>
             </tbody>
@@ -198,15 +193,15 @@ const state = reactive<State>({
         <ul class="pagination">
             <li class="page-item">
                 <a class="previous" :class="props.currentPage === 1 ? 'disabled' : ''" href="#" @click.prevent="
-                    emit('previousPage', props.currentPage - 1);
-                clearInputsOFEditableRow();
-                ">
+            emit('previousPage', props.currentPage - 1);
+        clearInputsOFEditableRow();
+        ">
                     Previous
                 </a>
             </li>
             <li class="page-item">
                 <a class="next" href="#" :class="props.currentPage >= props.totalPages ? 'disabled' : ''
-                    " @click.prevent="
+            " @click.prevent="
             emit('nextPage', props.currentPage + 1);
         clearInputsOFEditableRow();
         ">Next</a>
