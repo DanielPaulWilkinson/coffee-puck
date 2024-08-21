@@ -23,7 +23,7 @@ export const getFullCoffees = async (): Promise<coffee[]> => {
     let beans = await getAllBeansForCoffeeQuery(coffee[i].id!);
     if (beans.length > 0) {
       for (let ii = 0; ii < beans.length; ii++) {
-        let v = await getVarietyForBean(beans[ii].id);
+        let v = await getVarietyForBean(beans[ii].id ?? 0);
 
         if (v.length > 0) {
           beans[ii].variety = v[0];
@@ -49,7 +49,7 @@ export const getCoffee = async (
         let beans = await getAllBeansForCoffeeQuery(coffee[i].id!);
         if (beans.length > 0) {
           for (let ii = 0; ii < beans.length; ii++) {
-            let v = await getVarietyForBean(beans[ii].id);
+            let v = await getVarietyForBean(beans[ii].id ?? 0);
 
             if (v.length > 0) {
               beans[ii].variety = v[0];
@@ -89,8 +89,10 @@ export const getCoffeePage = async (
           let beans = await getAllBeansForCoffeeQuery(coffee[i].id!);
           if (beans) {
             for (let ii = 0; ii < beans.length; ii++) {
-              let v = await getVarietyForBean(beans[ii].id);
-              beans[ii].variety = v[0];
+              if(beans[ii].id){
+                let v = await getVarietyForBean(beans[ii].id ?? 0);
+                beans[ii].variety = v[0];
+              }
             }
           }
           coffee[i].beans = beans;
@@ -127,8 +129,11 @@ export const createCoffee = async (
     if (maybeValid.success) {
       const coffeeId = await createNewCoffeeQuery(maybeValid.data);
       maybeValid.data.beans?.forEach(async (bean: bean) => {
+        console.log(bean);
         const beanId = await createNewBeanQuery(bean);
+        console.log(beanId);
         await createNewCoffeeBeanQuery(coffeeId, beanId);
+        console.log("reached");
       });
       return res.json({
         coffeeId: coffeeId,

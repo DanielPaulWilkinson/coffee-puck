@@ -145,53 +145,55 @@ const state = reactive<State>({
 </script>
 
 <template>
-    <table :id="`${props.id}-${props.tableType}`">
-        <caption>
-            {{
-                caption
-            }}
-        </caption>
-        <thead v-if="props.tableType === 'horizontal'">
-            <tr class="table-th">
-                <th v-for="title in state.headings" scope="col">
-                    {{ title }}
-                </th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(row, i) in state.rows">
-                <th class="vertical-th" v-if="props.tableType === 'vertical'">
-                    {{ state.headings[i] }}
-                </th>
-                <td v-for="(td, ii) in row.cells" scope="col">
-                    <Text :id="`input-row-${i}-cell-${ii}`" type="text" v-if="isEditableTd(i, ii)"
-                        :model-value="td.value" @input="td.value = $event.target.value" error="ew" />
-                    <p v-else>{{ td.value }}</p>
-                </td>
-                <td v-if="props.tableType === 'horizontal'" class="text-center">
-                    <TableActions id="horizontal-actions" :index="i"
-                        :current-editable-row-or-column-id="state.editableId" 
-                        @delete=""
-                        @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();"
-                        @undo="undoChanges()"
-                        @update-editable-id="state.editableId = $event" />
-                </td>
-            </tr>
-            <tr v-if="props.tableType === 'vertical'">
-                <th>Actions</th>
-                <td v-for="(row, i) in props.rows" class="text-center">
-                    <TableActions id="vertical-actions" 
-                        :index="i"
-                        :current-editable-row-or-column-id="state.editableId" 
-                        @delete=""
-                        @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();" 
-                        @undo="undoChanges()"
-                        @update-editable-id="state.editableId = $event" />
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table :id="`${props.id}-${props.tableType}`" class="table">
+            <caption>
+                {{
+                    caption
+                }}
+            </caption>
+            <thead v-if="props.tableType === 'horizontal'">
+                <tr class="table-th">
+                    <th v-for="title in state.headings" scope="col">
+                        {{ title }}
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(row, i) in state.rows">
+                    <th class="vertical-th" v-if="props.tableType === 'vertical'">
+                        {{ state.headings[i] }}
+                    </th>
+                    <td v-for="(td, ii) in row.cells" scope="col">
+                        <Text :id="`input-row-${i}-cell-${ii}`" type="text" v-if="isEditableTd(i, ii)"
+                            :model-value="td.value" @input="td.value = $event.target.value" error="ew" />
+                        <p v-else>{{ td.value }}</p>
+                    </td>
+                    <td v-if="props.tableType === 'horizontal'" class="text-center">
+                        <TableActions id="horizontal-actions" :index="i"
+                            :current-editable-row-or-column-id="state.editableId" 
+                            @delete=""
+                            @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();"
+                            @undo="undoChanges()"
+                            @update-editable-id="state.editableId = $event" />
+                    </td>
+                </tr>
+                <tr v-if="props.tableType === 'vertical'">
+                    <th>Actions</th>
+                    <td v-for="(row, i) in props.rows" class="text-center">
+                        <TableActions id="vertical-actions" 
+                            :index="i"
+                            :current-editable-row-or-column-id="state.editableId" 
+                            @delete=""
+                            @save="emit('save', reconstruct(row as Row, $event)); clearInputsOFEditableRow();" 
+                            @undo="undoChanges()"
+                            @update-editable-id="state.editableId = $event" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">

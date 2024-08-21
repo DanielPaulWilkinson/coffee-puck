@@ -50,7 +50,7 @@ export const variety = z.object({
    genetic: z.string().optional().nullable(),
 });
 export const bean = z.object({
-    id: z.number(),
+    id: z.number().optional().nullable(),
     process: z.string(),
     producers: z.string(),
     altitude: z.string(),

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 
 export interface Options {
     value: string | number,
     name: string,
 }
     
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
         modelValue: string | number | null,
         options: (string | {value: string | number, label: string}) []
         placeholder: string | undefined

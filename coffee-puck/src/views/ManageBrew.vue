@@ -1,13 +1,20 @@
 <script setup lang="ts">
-import Table from "../components/fields/Table.vue";
 import { inject, onMounted, reactive, watch } from "vue";
-import Text from "../components/fields/Text.vue";
-import { getBrews, updateBrew } from "../data/brew";
+
 import type { CreateNotification } from "../services/notifications";
-import { useBrewPagination } from "../stores/brewPagination";
-import BrewForm from "../components/BrewForm.vue";
 import type { brew } from '../data/types';
-import Select from "@/components/fields/Select.vue";
+
+import Table from "../components/fields/Table.vue";
+import Text from "../components/fields/Text.vue";
+import Facets from "../components/Facets.vue";
+import ToggleButtons from "../components/fields/ToggleButtons.vue";
+import BrewForm from "../components/BrewForm.vue";
+
+import { getBrews, updateBrew } from "../data/brew";
+import { useBrewPagination } from "../stores/brewPagination";
+
+const store = useBrewPagination();
+const createNotification = <CreateNotification>inject("create-notification");
 
 export type State = {
     search: string | null;
@@ -24,9 +31,6 @@ const state = reactive<State>({
     filters: false,
     isTableSearch: true,
 });
-
-const store = useBrewPagination();
-const createNotification = <CreateNotification>inject("create-notification");
 
 async function callData(page: number, search?: string) {
     const result = await getBrews(page, Number(state.count), "id", "DESC", search ?? undefined);
@@ -70,16 +74,7 @@ const saveBrew = async (brew: brew) => {
             <div class="col-12">
                 <h1>Brew Management</h1>
                 <i>Edit, delete & update those yummy brews </i>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary" :class="[{ 'active': state.isTableSearch }]"
-                        @click="state.isTableSearch = true">
-                        <font-awesome-icon :icon="['fas', 'table']" /> Table
-                    </label>
-                    <label class="btn btn-secondary" :class="[{ 'active': !state.isTableSearch }]"
-                        @click="state.isTableSearch = false">
-                        <font-awesome-icon :icon="['fas', 'table-cells-large']" /> Add
-                    </label>
-                </div>
+                <ToggleButtons v-model="state.isTableSearch" />
             </div>
         </div>
         <div class="row mt-2" v-if="state.isTableSearch">
@@ -102,35 +97,8 @@ const saveBrew = async (brew: brew) => {
             </div>
         </div>
         <div class="row mt-4" v-if="state.filters && state.isTableSearch">
-            <div class="col-3">
-                <p>Table Type:</p>
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-secondary" :class="state.tableType === 'horizontal' ? 'active' : ''"
-                        @click="state.tableType = 'horizontal'">
-                        <font-awesome-icon :icon="['fas', 'table']" />
-                    </label>
-                    <label class="btn btn-secondary" :class="state.tableType === 'vertical' ? 'active' : ''"
-                        @click="state.tableType = 'vertical'">
-                        <font-awesome-icon :icon="['fas', 'table']" />
-                    </label>
-                    <label class="btn btn-secondary">
-                        <font-awesome-icon :icon="['fas', 'table-cells-large']" />
-                    </label>
-                </div>
-            </div>
-            <div class="col-2">
-                <p>Amount:</p>
-                <Select id="select" placeholder="hello" v-model="state.count" :options="[{
-                        value: 5,
-                        label: '5',
-                    }, {
-                        value: 25,
-                        label: '25',
-                    }, {
-                        value: 50,
-                        label: '50',
-                    }]" />
-            </div>
+            <Facets :table-type="state.tableType" :amount="state.count" @change-amount="state.count = Number($event)"
+                @change-table-type="state.tableType = $event" />
         </div>
         <div class="row" v-if="state.isTableSearch">
             <div class="col-md-12 mt-2">

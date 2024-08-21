@@ -77,7 +77,7 @@ onMounted(async () => {
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-6 col-sm-12">
             <div class="row">
                 <div class="col-md-6" v-for="(statistic, i) in state.other">
                     <div class="card selectable text-center mt-4">
@@ -89,7 +89,7 @@ onMounted(async () => {
                 </div>
             </div>
         </div>
-        <div class="col-6">
+        <div class="col-6 col-sm-12">
             <div class="row">
                 <div class="col-md-12" v-for="(statistic, i) in state.pie">
                     <div class="card selectable text-center mt-4">
