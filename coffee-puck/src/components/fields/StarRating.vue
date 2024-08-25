@@ -63,7 +63,7 @@ const highlightTo = (selectedIndex: number) => {
 
 </script>
 <template>
-    <div class="rating-box">
+    <div :id="id" class="rating-box">
       <div class="stars">
         <font-awesome-icon 
           :class="[star.active ? 'active' : '',
