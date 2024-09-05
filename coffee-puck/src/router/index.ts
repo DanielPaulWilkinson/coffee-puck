@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/AdminDashboard.vue';
-import ManageCoffee from '@/views/ManageCoffee.vue';
+import ManageCoffee from '../views/ManageCoffee.vue';
 import ManageBrew from '@/views/ManageBrew.vue';
 import ManageRoasters from '@/views/ManageRoasters.vue';
 import ManageVarieties from '@/views/ManageVarieties.vue';

@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { useRoasterPagination } from "@/stores/roasterPagination";
+import { useRoasterPagination } from "../stores/roasterPagination";
 import {
     getRoasters,
     updateRoaster,
-} from "@/data/roasters";
+} from "../data/roasters";
 import Table from "../components/fields/Table.vue";
-import Text from "@/components/fields/Text.vue";
-import { inject, onMounted, reactive, watch } from "vue";
-import type { CreateNotification } from "@/services/notifications";
-import { roaster } from "@/data/types";
+import Text from "../components/fields/Text.vue";
+import { onMounted, reactive, watch } from "vue";
+import { roaster } from "../data/types";
 import ToggleButtons from "../components/fields/ToggleButtons.vue";
-import Facets from "../components/Facets.vue";
+import Facets from "../components/layout/Facets.vue";
+import { useAppStore } from "../stores/app";
+const app = useAppStore();
 const store = useRoasterPagination();
-const createNotification = <CreateNotification>inject("create-notification");
 
 type ManageRoasters = {
     search: string | null;
@@ -50,15 +50,21 @@ const openFilters = async () => {
 const saveRoasters = async (coffee: roaster) => {
     try {
         await updateRoaster(coffee);
-        createNotification({
-            type: 'success',
-            message: 'dont panic',
-        })
+        app.addNotification({
+            notificationType: 'success',
+            message: 'Successfully saved coffee roaster',
+            title: "Success",
+            autoClose: true,
+            duration: 15,
+        });
     } catch (err) {
-        createNotification({
-            type: 'error',
-            message: 'panic',
-        })
+        app.addNotification({
+            notificationType: 'error',
+            message: 'Could not save coffee roaster',
+            title: "Error",
+            autoClose: true,
+            duration: 15,
+        });
     }
     await callData(store.pagination.current_page);
 };

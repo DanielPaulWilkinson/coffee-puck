@@ -9,8 +9,14 @@
     height: 100%;
     overflow: auto;
 
+    .logo-container {
+        margin-top: 15px;
+    }
+
     a {
         text-decoration: none;
+        color: #fff;
+        text-align: center;
     }
 
     ul {
@@ -28,7 +34,7 @@
         display: flex;
         align-items: center;
         padding: 0 40px;
-        color: a.$black-font-color;
+        color: #fff;
 
         p {
             font-family: marker;

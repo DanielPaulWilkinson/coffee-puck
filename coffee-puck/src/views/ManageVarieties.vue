@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import Table from "../components/fields/Table.vue";
-import Text from "@/components/fields/Text.vue";
-import { inject, onMounted, reactive, watch } from "vue";
-import type { CreateNotification } from "@/services/notifications";
-import { variety } from "@/data/types";
+import Text from "../components/fields/Text.vue";
+import { onMounted, reactive, watch } from "vue";
+import { variety } from "../data/types";
 import ToggleButtons from "../components/fields/ToggleButtons.vue";
-import Facets from "../components/Facets.vue";
+import Facets from "../components/layout/Facets.vue";
 import { getVarieties, updateVariety } from "../data/varieties";
 import { useVarietyStore } from "../stores/varietyPagination";
+import { useAppStore } from "../stores/app";
 const store = useVarietyStore();
-const createNotification = <CreateNotification>inject("create-notification");
+const app = useAppStore();
 
 type ManageVarieties = {
     search: string | null;
@@ -47,15 +47,21 @@ const openFilters = async () => {
 const saveVariety = async (variety: variety) => {
     try {
         await updateVariety(variety);
-        createNotification({
-            type: 'success',
-            message: 'dont panic',
-        })
+        app.addNotification({
+            notificationType: 'success',
+            message: 'Successfully saved bean variety',
+            title: "Success!",
+            autoClose: true,
+            duration: 15,
+        });
     } catch (err) {
-        createNotification({
-            type: 'error',
-            message: 'panic',
-        })
+        app.addNotification({
+            notificationType: 'error',
+            message: 'Could not save bean variety',
+            title: "Error",
+            autoClose: true,
+            duration: 15,
+        });
     }
     await callData(store.pagination.current_page);
 };

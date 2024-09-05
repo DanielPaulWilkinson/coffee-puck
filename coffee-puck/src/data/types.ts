@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 export const pagination = z.object({
     current_page: z.number(),
     next_page: z.number(),
@@ -85,7 +84,7 @@ export const bean = z.object({
 
 
 export const coffee = z.object({
-    id: z.number(),
+    id: z.number().optional(),
     name: z.string(),
     isDecaf: z.boolean(),
     rating: z.number(),
@@ -105,6 +104,15 @@ export const statistics = z.object({
     variety: z.array(statistic),
     roaster: z.array(statistic),
 });
+
+export type notification = {
+    id?: string | null,
+    notificationType: string,
+    title: string,
+    message: string,
+    autoClose: boolean,
+    duration: number,
+};
 
 export type statistic = z.infer<typeof statistic>;
 export type statistics = z.infer<typeof statistics>;

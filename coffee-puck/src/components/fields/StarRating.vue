@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import { onMounted, reactive, watch } from 'vue';
-
+import { ValidationArgs } from "@vuelidate/core";
+import Validation from "./Validation.vue";
 const props = withDefaults(defineProps<{
-    id: string,
-    starCount?: number,
-    readonly?: boolean
-    modelValue: number,
+  id: string,
+  starCount?: number,
+  readonly?: boolean
+  modelValue: number,
+  validation?: ValidationArgs,
 }>(), {
   starCount: 5,
   readonly: false,
 });
 
 const emit = defineEmits<{
-    (on: "update:modelValue", index: number): void
+  (on: "update:modelValue", index: number): void
 }>();
-
 
 type stars = {
   stars: star[],
@@ -30,30 +31,30 @@ const state = <stars>reactive({
 });
 
 onMounted(() => {
-    if(props.modelValue > props.starCount){
-      throw new Error("fill count is more than star count");
-    }
+  if (props.modelValue > props.starCount) {
+    throw new Error("fill count is more than star count");
+  }
 
-    for(let i = 0; i < props.starCount; i++){
-      state.stars.push({
-        active: false,
-        index: i,
-      });
-    }
-    for(let i = 0; i < props.modelValue; i++){
-      state.stars[i].active = true;
-    };
+  for (let i = 0; i < props.starCount; i++) {
+    state.stars.push({
+      active: false,
+      index: i,
+    });
+  }
+  for (let i = 0; i < props.modelValue; i++) {
+    state.stars[i].active = true;
+  };
 });
 
 watch(() => props.modelValue, () => {
-  for(let i = 0; i < props.modelValue; i++){
-      state.stars[i].active = true;
-    };
+  for (let i = 0; i < props.modelValue; i++) {
+    state.stars[i].active = true;
+  };
 });
 
 const highlightTo = (selectedIndex: number) => {
   state.stars.forEach((star) => {
-      star.index <= selectedIndex ? star.active = true  : star.active = false;
+    star.index <= selectedIndex ? star.active = true : star.active = false;
   });
 
   emit("update:modelValue", selectedIndex);
@@ -61,14 +62,12 @@ const highlightTo = (selectedIndex: number) => {
 
 </script>
 <template>
-    <div :id="id" class="rating-box">
-      <div class="stars">
-        <font-awesome-icon 
-          :class="[star.active ? 'active' : '',
-           props.readonly ? 'readonly' : '']"
-          v-for="(star, index) in state.stars" 
-          :icon="['fas', 'star']" 
-          @click="props.readonly ? '' : highlightTo(index)" />
-      </div>
+  <div :id="id" class="rating-box">
+    <div class="stars">
+      <font-awesome-icon :class="[star.active ? 'active' : '',
+  props.readonly ? 'readonly' : '']" v-for="(star, index) in state.stars" :icon="['fas', 'star']"
+        @click="props.readonly ? '' : highlightTo(index)" />
     </div>
+  </div>
+  <Validation v-model="props.modelValue" :validation="props.validation" />
 </template>

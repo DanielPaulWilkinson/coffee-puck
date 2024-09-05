@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ValidationArgs } from "@vuelidate/core";
+import Validation from "./Validation.vue";
 const props = withDefaults(defineProps<{
     id: string,
     // https://www.w3schools.com/html/html_form_input_types.asp
@@ -17,19 +19,18 @@ const props = withDefaults(defineProps<{
     //do we want the blur event?
     emitBlurEvent?: boolean,
     disabled?: boolean,
+    validation?: ValidationArgs
 }>(), {
     filter: () => true,
     maxLength: 999,
     inputmode: undefined,
     placeholder: undefined,
-    class: "col-md-6",
+    class: "",
     append: "",
     prepend: "",
     emitBlurEvent: false,
     disabled: false,
 });
-
-
 const emit = defineEmits<{
     (on: "update:modelValue", value: string | number): void
     (on: "blur"): void
@@ -39,26 +40,19 @@ const emit = defineEmits<{
 <template>
     <div :class="props?.class">
         <div :class="(prepend || append || type === 'currency') ? 'input-group' : ''">
-            <span 
-                v-if="prepend || type === 'currency'" 
-                class="input-group-text">
+            <span v-if="prepend || type === 'currency'" class="input-group-text">
                 {{ type === "currency" ? '£' : prepend }}
             </span>
-            <input 
-                :id="id" 
-                :type="type" 
-                :value="modelValue" 
-                :maxLength="maxLength" 
-                :disabled="disabled"
-                class="form-control" :placeholder="placeholder || undefined" :inputmode="inputmode"
+            <input :id="id" :type="type" :value="modelValue" :maxLength="maxLength" :disabled="disabled"
+                class="form-control input" 
+                :placeholder="placeholder || undefined" :inputmode="inputmode"
                 @keypress="props.filter" 
                 @input="emit('update:modelValue', ($event.target as HTMLInputElement).value)"
                 @blur="emitBlurEvent ? emit('blur') : '';">
-            <span 
-                v-if="append"
-                 class="input-group-text">
-                 {{ append }}
+            <span v-if="append" class="input-group-text">
+                {{ append }}
             </span>
         </div>
+        <Validation v-model="props.modelValue" :validation="props.validation"/>
     </div>
 </template>

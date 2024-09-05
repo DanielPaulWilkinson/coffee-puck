@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { coffeeType, coffee } from '@/data/types';
-import Question from '@/components/fields/Question.vue';
-import FillCoffee from '@/components/FillCoffee.vue';
+import Question from '../../components/layout/Question.vue';
+import FillCoffee from '../../components/utils/FillCoffee.vue';
 import Text from '@/components/fields/Text.vue';
 import { onMounted, reactive, watch } from 'vue';
 import type { coffeePaginationResponse } from '@/data/coffee';
 import type { coffeeTypePaginationResponse } from '@/data/coffeeTypes';
-import Modal from '@/components/Modal.vue';
+import Modal from '../../components/utils/Modal.vue';
+import { ValidationArgs } from "@vuelidate/core";
+import Validation from "./Validation.vue";
 
 export type Search = {
     cardSuggestions: CardSuggestion[],
@@ -28,6 +30,7 @@ const props = defineProps<{
     class: string,
     suggestions: coffeePaginationResponse | coffeeTypePaginationResponse | null,
     error: string,
+    validation?: ValidationArgs,
 }>();
 
 const emit = defineEmits<{
@@ -67,7 +70,7 @@ const unselectSuggestions = async () => state.cardSuggestions?.forEach(x => x.is
 
 </script>
 <template>
-    <div class="col-6">
+    <div class="col-md-6 mt-2">
         <h2>{{ question }}</h2>
         <Question name="coffee" :tooltip="props.tooltip" :label="props.label" :form-group="true" :error="props.error"
             class="">
@@ -81,7 +84,7 @@ const unselectSuggestions = async () => state.cardSuggestions?.forEach(x => x.is
 
         <div class="row mt-2" v-if="state.cardSuggestions">
             <div class="col-md-4 col-sm-12 col-xs-12 mt-sm-2" v-for="(suggestion) in state.cardSuggestions">
-                <div class="card selectable" :class="{ 'selected': suggestion.isSelected }"
+                <div class="card selectable mt-3" :class="{ 'selected': suggestion.isSelected }"
                     @click="emit('selectItem', suggestion.data); unselectSuggestions(); suggestion.isSelected = true;">
                     <div v-if="typeof suggestion === typeof coffeeType && 'icon' in suggestion.data">
                         <FillCoffee v-if="suggestion.data.icon === 'espresso'" :id="suggestion.data.icon"
@@ -108,8 +111,9 @@ const unselectSuggestions = async () => state.cardSuggestions?.forEach(x => x.is
                 </div>
             </div>
         </div>
+        <Validation v-model="props.modelValue" :validation="props.validation"/>
     </div>
-    <Modal :id="`${props.id}-suggestion-modal`" title="" :show="state.modalShow">
+    <Modal :id="`${props.id}-suggestion-modal`" :show="state.modalShow">
         <template #body>
             <div class="modal-header">
                 <h5 class="modal-title">{{ state.modalItem?.name }}</h5>

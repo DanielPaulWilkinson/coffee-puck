@@ -13,13 +13,8 @@ body{
     "sidebar nav"
     "sidebar body"
     "sidebar footer";
-    grid-template-rows: 60px 1fr 60px;
-    gap: 0.2rem;
-}
-
-.navigation-container {
-    grid-area: nav;
-    background: solid pink;
+    grid-template-rows: 65px 1fr 60px;
+    gap: 0.2rem 0.2rem;
 }
 
 .main {
@@ -34,7 +29,7 @@ footer {
 @media only screen and (max-width: 800px) {
     #app {
         grid-template-columns: 1fr;
-        grid-template-rows: 5rem 0px 1fr 5rem;
+        grid-template-rows: 100px 0px 1fr 60px;
         grid-template-areas:
         "nav"
         "sidebar"

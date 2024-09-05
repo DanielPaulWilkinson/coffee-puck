@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { computed, inject } from "vue";
 
 const props = withDefaults(defineProps<{
     modelValue: string,
@@ -30,7 +29,7 @@ const emit = defineEmits<{
     <div :class="props?.class">
         <textarea
             :id="id"
-            ref="inputRef"
+            ref="inputRef" 
             :value="modelValue"
             :maxLength="maxLength"
             :class="[{

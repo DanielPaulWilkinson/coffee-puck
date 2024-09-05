@@ -1,41 +1,44 @@
-$primary-font-color: #ffffff;
-$secondary-color: #000000; 
-
-$primary-background-color: #6F4E37;
-
-$toast-color: #0067ff;
-$sidebar-font-color:"#000";
-$sidebar-background-color: #6F4E37;
-$sidebar-link-hover-background-color: #f7f6f3;
-$sidebar-link-selected-background: #f1f0e9;
-$sidebar-link-selected-hover-background: #efede6;
-$espresso: #562215;
+// Coffee Colours
+$espresso: #6f4e37;
 $water: #74ccf4;
 $milk: #eeeeee;
 $chocolate: #4d2e07;
 $foam: #fff8ef;
-$white: #fff;
+$white: #FFF;
 $coffee: #cfb495;
-$light-grey-color: #dbdbdb;
-$header-background-color: #ffffff;
-$outline-separator: 1px solid #eaeae1;
-$main-background-color: #faf8f4;
-$button-background-color: #e4e1d5;
-$button-background-color-hover: #d7d2c0;
-$search-background-color: #ffffff;
+
+// Primary secondary fonts
+$primary-font-color-light: #FFF;
+$primary-font-color-dark: #000000; 
+$primary-background-color-light: $foam;
+$primary-background-color-dark: #6F4E37;
+
+/*Toasts */
+::root {
+    --toast-color:"#0067ff";
+    --toast-duration: "15s";
+}
+
+/* Header */
+$header-background-color: #6f4e37;
+
+/*Side bar*/
+$sidebar-font-color:"#000";
+$sidebar-background-color: #6f4e37;
+$sidebar-link-hover-background-color: #f7f6f3;
+$sidebar-link-selected-background: #f1f0e9;
+$sidebar-link-selected-hover-background: #efede6;
+$outline-separator: 2px solid #000;
+
+/*Card*/
 $card-background-color: #ffffff;
 $card-grey-font-color: #656565;
 $card-outline-color: #e3e1d5;
-$announcements-separator-color: #e1e1e1;
+
+/*Butons*/
+$button-background-color: #e4e1d5;
+$button-background-color-hover: #d7d2c0;
+
+/*General colours*/
+$main-background-color: #faf8f4;
 $black-font-color: #000000;
-$light-grey-color: #dbdbdb;
-$header-background-color: #ffffff;
-$outline-separator: 1px solid #eaeae1;
-$main-background-color: #faf8f4;
-$button-background-color: #e4e1d5;
-$button-background-color-hover: #d7d2c0;
-$search-background-color: #ffffff;
-$card-background-color: #ffffff;
-$card-grey-font-color: #656565;
-$card-outline-color: #e3e1d5;
-$announcements-separator-color: #e1e1e1;

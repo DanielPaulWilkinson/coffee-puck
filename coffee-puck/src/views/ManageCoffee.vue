@@ -3,18 +3,17 @@ import { useCoffeePagination } from "../stores/coffeePagination";
 import {
     getCoffees,
     updateCoffee,
-} from "@/data/coffee";
+} from "../data/coffee";
 import Table from "../components/fields/Table.vue";
-import { inject, onMounted, reactive, watch } from "vue";
-import Text from "@/components/fields/Text.vue";
-import type { CreateNotification } from "@/services/notifications";
-import CoffeeForm from "../components/CoffeeForm.vue";
+import { onMounted, reactive, watch } from "vue";
+import Text from "../components/fields/Text.vue";
+import CoffeeForm from "../components/forms/CoffeeForm.vue";
 import { coffee } from '../data/types';
 import ToggleButtons from "../components/fields/ToggleButtons.vue";
-import Facets from "../components/Facets.vue";
-
+import Facets from "../components/layout/Facets.vue";
+import { useAppStore } from "../stores/app";
+const app = useAppStore();
 const store = useCoffeePagination();
-const createNotification = <CreateNotification>inject("create-notification");
 
 type ManageCoffee = {
     search: string | null;
@@ -54,15 +53,21 @@ const saveCoffee = async (coffee: coffee) => {
     try {
         coffee.isDecaf = coffee.isDecaf ? true : false;
         await updateCoffee(coffee);
-        createNotification({
-            type: 'success',
-            message: 'dont panic',
-        })
+        app.addNotification({
+            notificationType: 'success',
+            message: 'Successfully saved coffee',
+            title: "Success",
+            autoClose: true,
+            duration: 15,
+        });
     } catch (err) {
-        createNotification({
-            type: 'error',
-            message: 'panic',
-        })
+        app.addNotification({
+            notificationType: 'error',
+            message: 'Could not save coffee',
+            title: "Error",
+            autoClose: true,
+            duration: 15,
+        });
     }
     await callData(store.pagination.current_page);
 };

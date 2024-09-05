@@ -1,10 +1,19 @@
+@use '../abstracts' as a;
+
 .radio-standard {
     display: inline-block;
     padding-right: 15px;
+
     label.form-radio-label {
         padding: 11px 20px 9px;
         text-align: center;
         border-radius: 4px;
+        border: solid 1px #000;
+
+        &.selected, &:hover {
+            background-color: a.$espresso;
+            color: #FFF;
+        }
     }
 }
 .radio-pill{

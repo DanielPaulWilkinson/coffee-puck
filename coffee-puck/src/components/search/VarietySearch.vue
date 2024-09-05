@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, reactive, watch } from "vue";
-import AutoComplete, { type Suggestion } from "../fields/AutoComplete.vue";
+import AutoComplete from "../fields/AutoComplete.vue";
 import { getVarieties } from "../../data/varieties";
 import type { pagination, variety } from "@/data/types";
 const props = 

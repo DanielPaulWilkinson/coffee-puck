@@ -1,9 +1,9 @@
 <script lang="ts" setup>
-import { computed, onMounted, reactive, watch } from "vue";
+import { computed, reactive } from "vue";
 import AutoComplete, { type Suggestion } from "../fields/AutoComplete.vue";
 import { getRoasters } from "../../data/roasters";
 import type { pagination, roaster } from "@/data/types";
-const props = withDefaults(
+withDefaults(
     defineProps<{
         id: string;
         modelValue: string | null | undefined;

@@ -1,6 +1,6 @@
-@use '../abstracts/colors' as c;
+@use '../abstracts' as a;
 
-.toast-notifications {
+.notifications {
     z-index: 100;
     position: absolute;
     top: 0.5rem;
@@ -30,7 +30,7 @@
     }
   }
 
-  .toast-notification {
+  .notification {
     cursor: pointer;
     max-width: 450px;
     position: relative;
@@ -66,7 +66,7 @@
       place-items: center;
   
       i {
-        color: var(c.$toast-color);
+        color: var(--toast-color);
       }
   
       .vl {
@@ -86,16 +86,16 @@
       }
     }
   
-    .progress {
+    .progress-indicator {
       position: absolute;
       bottom: 0px;
       left: 0;
       height: 0.4rem;
       width: 100%;
-      background: c.$toast-color;
-      animation: progress 1000 ease-in-out forwards;
-    }
-  
+      background: var(--toast-color);
+      animation: progress var(--toast-duration) ease-in-out forwards;
+
+        
     @keyframes progress {
       to {
         width: 0;
@@ -118,3 +118,4 @@
       }
     }
   }
+}

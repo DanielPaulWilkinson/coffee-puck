@@ -2,7 +2,7 @@
 import { useSlots } from 'vue';
 
     useSlots();
-    const props = withDefaults(defineProps<{
+    withDefaults(defineProps<{
         id: string,
         name: string,
         class?: string,

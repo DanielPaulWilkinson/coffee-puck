@@ -25,7 +25,9 @@ import {
     faSearch,
     faEye,
     faChevronUp,
-    faChevronDown
+    faChevronDown,
+    faBell,
+    faDownload,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add([
@@ -42,7 +44,9 @@ library.add([
     faSearch,
     faEye,
     faChevronUp,
-    faChevronDown
+    faChevronDown,
+    faBell,
+    faDownload,
 ]);
 
 const app = createApp(App);

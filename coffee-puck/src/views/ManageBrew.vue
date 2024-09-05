@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { inject, onMounted, reactive, watch } from "vue";
+import { onMounted, reactive, watch } from "vue";
 
-import type { CreateNotification } from "../services/notifications";
 import type { brew } from '../data/types';
 
 import Table from "../components/fields/Table.vue";
 import Text from "../components/fields/Text.vue";
-import Facets from "../components/Facets.vue";
+import Facets from "../components/layout/Facets.vue";
 import ToggleButtons from "../components/fields/ToggleButtons.vue";
-import BrewForm from "../components/BrewForm.vue";
+import BrewForm from "../components/forms/BrewForm.vue";
 
 import { getBrews, updateBrew } from "../data/brew";
 import { useBrewPagination } from "../stores/brewPagination";
-
+import { useAppStore } from "../stores/app";
+const app = useAppStore();
 const store = useBrewPagination();
-const createNotification = <CreateNotification>inject("create-notification");
 
 export type State = {
     search: string | null;
@@ -54,15 +53,21 @@ const saveBrew = async (brew: brew) => {
     try {
         brew.coffeeTypeId = Number(brew.coffeeTypeId);
         await updateBrew(brew);
-        createNotification({
-            type: 'success',
-            message: 'dont panic',
-        })
+        app.addNotification({
+            notificationType: 'success',
+            message: 'Successfully saved brew',
+            title: "Success",
+            autoClose: true,
+            duration: 15,
+        });
     } catch (err) {
-        createNotification({
-            type: 'error',
-            message: 'panic',
-        })
+        app.addNotification({
+            notificationType: 'error',
+            message: 'Could not save brew',
+            title: "Error",
+            autoClose: true,
+            duration: 15,
+        });
     }
     await callData(store.pagination.current_page);
 };

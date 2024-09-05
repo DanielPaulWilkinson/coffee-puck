@@ -1,14 +1,36 @@
 @use '../abstracts' as a;
 
 button {
-
     cursor: pointer;
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 20px;
+    font-weight: 500;
 
-    &.primary-button {
-        color: a.$primary-font-color;
-        background-color: a.$primary-background-color;
-        border-radius: 0.3rem;
+    &.primary {
+        color: a.$primary-font-color-light;
+        background-color: a.$primary-background-color-dark;
+        border-radius: 10px;
+
+        &:hover,
+        &:focus {
+            color: a.$primary-font-color-light;
+            background-color: a.$primary-background-color-dark;
+        }
     }
 
-    
+    &.circle {
+        border-radius: 100%;
+        height: 30px;
+        width: 30px;
+        line-height: 1px;
+        font-size: 15px;
+        text-align: center;
+
+    }
+
+    &.secondary {
+        color: a.$primary-font-color-dark;
+        background-color: a.$primary-background-color-light;
+    }
 }

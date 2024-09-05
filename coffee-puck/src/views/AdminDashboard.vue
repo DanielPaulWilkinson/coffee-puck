@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Statistics from '../components/Statistics.vue';
+import Statistics from '../components/layout/Statistics.vue';
 </script>
 <template>
   <div class="container-fluid">
