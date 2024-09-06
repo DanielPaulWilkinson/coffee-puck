@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import useVuelidate, { ValidationArgs } from '@vuelidate/core';
+
  withDefaults(defineProps<{
     title: string,
     id?: string | undefined,
@@ -6,7 +8,8 @@
     childClass?: string,
     radioType?: "standard" | "pill" | "block",
     modelValue: unknown,
-    disabled?: boolean
+    disabled?: boolean,
+    validation?: ValidationArgs,
 }>(), {
     id: undefined,
     childClass: undefined,
@@ -17,6 +20,9 @@
 defineEmits<{
     (on:"update:modelValue", value: unknown): void
 }>();
+
+
+const v$ = useVuelidate();
 
 </script>
 
@@ -29,7 +35,7 @@ defineEmits<{
             :disabled="disabled"
             :checked="value === modelValue"
             type="radio"
-            @change="[$emit('update:modelValue', value)]"
+            @change="v$.$touch(); [$emit('update:modelValue', value)]"
         >
         <label
             :for="`${id}_${value}`"

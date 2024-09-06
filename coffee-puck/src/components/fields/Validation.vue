@@ -3,7 +3,7 @@ import { computed, watch } from "vue";
 import { ValidationArgs, useVuelidate } from "@vuelidate/core";
 
 const props = defineProps<{
-    modelValue: string | number | null,
+    modelValue: string | number | boolean | null,
     validation?: ValidationArgs,
 }>();
 

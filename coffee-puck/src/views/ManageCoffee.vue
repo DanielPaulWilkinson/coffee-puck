@@ -7,7 +7,7 @@ import {
 import Table from "../components/fields/Table.vue";
 import { onMounted, reactive, watch } from "vue";
 import Text from "../components/fields/Text.vue";
-import CoffeeForm from "../components/forms/CoffeeForm.vue";
+import CoffeeForm from "../components/forms/AddUpdateCoffeeForm.vue";
 import { coffee } from '../data/types';
 import ToggleButtons from "../components/fields/ToggleButtons.vue";
 import Facets from "../components/layout/Facets.vue";

@@ -86,7 +86,7 @@ export const bean = z.object({
 export const coffee = z.object({
     id: z.number().optional(),
     name: z.string(),
-    isDecaf: z.boolean(),
+    isDecaf: z.boolean().nullable(),
     rating: z.number(),
     size: z.string(),
     image: z.string(),

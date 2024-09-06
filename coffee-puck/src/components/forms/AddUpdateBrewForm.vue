@@ -16,10 +16,12 @@ import { createBrew, getBrew, updateBrew } from '../../data/brew'
 import { type coffeePaginationResponse, getCoffee, getCoffees } from '../../data/coffee';
 import { useAppStore } from "../../stores/app";
 import { brewFormValidator } from "../../validation/validators";
+
 const app = useAppStore();
 const store = useBrewStore();
 const route = useRoute();
 const v$ = useVuelidate();
+const validator = brewFormValidator(store);
 
 export type BrewViewState = {
     selectedCoffee: coffee | null,
@@ -72,7 +74,7 @@ const runCoffeeTypeSearch = async () => state.coffeeTypeSuggestions = await getT
 const selectCoffee = async (value: coffee) => {
     store.coffee = value.name;
     state.selectedCoffee = value;
-    if(state.coffeeSuggestions?.data){
+    if (state.coffeeSuggestions?.data) {
         state.coffeeSuggestions.data = [state.selectedCoffee];
     }
 }
@@ -80,6 +82,50 @@ const selectCoffee = async (value: coffee) => {
 const selectCoffeeType = async (value: coffeeType) => {
     state.selectedCoffeeType = value;
 
+}
+
+const createBrewPath = async () => {
+    const success = await createBrew(store.brew);
+    if (success) {
+        if (success) {
+            app.addNotification({
+                notificationType: 'success',
+                message: 'Successfully created brew',
+                title: "Success",
+                autoClose: true,
+                duration: 15,
+            });
+        } else {
+            app.addNotification({
+                notificationType: 'error',
+                message: 'Could not create brew',
+                title: "Error",
+                autoClose: true,
+                duration: 15,
+            });
+        }
+    }
+}
+
+const updateBrewPath = async () => {
+    const success = await updateBrew(store.brew);
+    if (success) {
+        app.addNotification({
+            notificationType: 'success',
+            message: 'Successfully updated brew',
+            title: "Success",
+            autoClose: true,
+            duration: 15,
+        });
+    } else {
+        app.addNotification({
+            notificationType: 'error',
+            message: 'Could not update brew',
+            title: "Error",
+            autoClose: true,
+            duration: 15,
+        });
+    }
 }
 
 const submit = async () => {
@@ -97,51 +143,9 @@ const submit = async () => {
     if (state.selectedCoffeeType) {
         store.brew.coffeeTypeId = state.selectedCoffeeType?.id ?? 0;
     }
-    if (route.query.id) {
-        const success = await updateBrew(store.brew);
-        if (success) {
-            app.addNotification({
-                notificationType: 'success',
-                message: 'Successfully updated brew',
-                title: "Success",
-                autoClose: true,
-                duration: 15,
-            });
-        } else {
-            app.addNotification({
-                notificationType: 'error',
-                message: 'Could not update brew',
-                title: "Error",
-                autoClose: true,
-                duration: 15,
-            });
-        }
-    } else {
-        const success = await createBrew(store.brew);
-        if (success) {
-            if (success) {
-                app.addNotification({
-                    notificationType: 'success',
-                    message: 'Successfully created brew',
-                    title: "Success",
-                    autoClose: true,
-                    duration: 15,
-                });
-            } else {
-                app.addNotification({
-                    notificationType: 'error',
-                    message: 'Could not create brew',
-                    title: "Error",
-                    autoClose: true,
-                    duration: 15,
-                });
-            }
-        }
-    }
+
+    route.query.id ? updateBrewPath() : createBrewPath();
 }
-
-const validator = brewFormValidator(store);
-
 </script>
 <template>
 
@@ -215,10 +219,12 @@ const validator = brewFormValidator(store);
         <div class="row">
             <Search id="coffee-search" :modelValue="store.coffee" :suggestions="state.coffeeSuggestions"
                 question="Which Coffee did you use?" label="Search for a coffee..." class="" error="" tooltip=""
-                @search="store.coffee = $event; runCoffeeSearch();" @select-item="(value) => selectCoffee(value as coffee)" :validation="validator.coffeeId" />
+                @search="store.coffee = $event; runCoffeeSearch();"
+                @select-item="(value) => selectCoffee(value as coffee)" :validation="validator.coffeeId" />
             <Search id="type-search" :modelValue="store.coffeeType" :suggestions="state.coffeeTypeSuggestions"
                 question="Which Coffee Type did you use?" label="Search for a type..." class="" error="" tooltip=""
-                @search="store.coffeeType = $event; runCoffeeTypeSearch();" @select-item="(value) => selectCoffeeType(value as coffeeType)" :validation="validator.coffeeTypeId" />
+                @search="store.coffeeType = $event; runCoffeeTypeSearch();"
+                @select-item="(value) => selectCoffeeType(value as coffeeType)" :validation="validator.coffeeTypeId" />
         </div>
         <hr>
         <button type="submit" class="primary mt-10">

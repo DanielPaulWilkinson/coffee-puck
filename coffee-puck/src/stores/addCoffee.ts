@@ -13,7 +13,7 @@ export const useCoffeeStore = defineStore('addCoffeeStore', {
         coffee: {
             id: 0,
             name: "",
-            isDecaf: false,
+            isDecaf: null,
             rating: 0,
             size: "",
             image: "",
