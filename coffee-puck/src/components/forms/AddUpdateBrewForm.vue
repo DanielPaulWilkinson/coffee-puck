@@ -6,7 +6,7 @@ import { useVuelidate } from "@vuelidate/core";
 import Question from '../../components/layout/Question.vue';
 import Text from '../../components/fields/Text.vue';
 import StarRating from '../fields/StarRating.vue';
-import Search from '../fields/Search.vue';
+import Search from '../fields/CardSearch.vue';
 
 import { coffee, coffeeType } from '../../data/types';
 

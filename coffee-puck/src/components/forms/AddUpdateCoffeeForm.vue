@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import { onMounted, reactive } from 'vue';
+import { computed, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import useVuelidate from '@vuelidate/core';
 
-import type { bean, variety } from '@/data/types';
+import type { bean, roaster, variety } from '@/data/types';
 import type { BeanPaginationResponse } from '@/data/beans';
 
 import Question from '@/components/layout/Question.vue';
 import Text from '@/components/fields/Text.vue';
-import VarietySearch from '@/components/search/VarietySearch.vue';
 import Rating from '@/components/fields/StarRating.vue';
 import RadioSet from '@/components/fields/RadioSet.vue';
 import Radio from '@/components/fields/RadioInput.vue';
-import RoasterSearch from '../search/RoasterSearch.vue';
-import Select from '@/components/fields/Select.vue';
+import AutoComplete, { Suggestion } from '../fields/AutoComplete.vue';
+import AddBeanToCoffee from '../layout/AddBeanToCoffee.vue';
 
 import { useAppStore } from "@/stores/app";
 import { useCoffeeStore } from '@/stores/addCoffee';
 
 import { createCoffee, getCoffee, updateCoffee } from '@/data/coffee';
-import { getRoaster } from '@/data/roasters';
+import { getRoaster, getRoasters, roastersPaginationResponse } from '@/data/roasters';
 
-import { coffeeAltitude, coffeeProcess, coffeeRoast } from "@/utils/consts";
 import { coffeeFormValidator } from '@/validation/validators';
 
 const route = useRoute();
@@ -36,12 +34,14 @@ export type CoffeeViewState = {
     newBeans: bean[] | null,
     beanSuggestions: BeanPaginationResponse | null,
     beanSearch: string,
+    roasterSuggestions: roastersPaginationResponse | null,
 };
 
 const state = reactive<CoffeeViewState>({
     selectedBeans: [],
     newBeans: [],
     beanSuggestions: null,
+    roasterSuggestions: null,
     beanSearch: "",
     selectedRoaster: "",
 });
@@ -59,18 +59,6 @@ onMounted(async () => {
         }
     }
 });
-
-const removeBean = async (index: number) => {
-    if (store.beans[index]) {
-        store.beans.splice(index, 1);
-    }
-}
-
-const setSelectedVariety = (index: number, variety: variety) => {
-    if (state.newBeans) {
-        state.newBeans[index].variety = variety;
-    }
-}
 
 const updateCoffeePath = async () => {
     const success = await updateCoffee(store.coffee);
@@ -92,6 +80,13 @@ const updateCoffeePath = async () => {
         });
     }
 }
+
+async function callRoasterData(page: number, search?: string) {
+    state.roasterSuggestions = await getRoasters(page, 5, "id", "DESC", search);
+}
+
+const roasterSuggestions = computed(() => state.roasterSuggestions?.data.map((e: roaster) => { return { id: e.id, name: e.name, type: e.name } }))
+
 
 const createCoffeePath = async () => {
     const success = await createCoffee(store.coffee);
@@ -121,7 +116,6 @@ const submit = async () => {
         return;
     }
 
-    store.coffee.beans = state.newBeans as bean[];
     route.query.id ? updateCoffeePath() : createCoffeePath();
 }
 </script>
@@ -178,56 +172,21 @@ const submit = async () => {
             </div>
             <div class="col-md-6">
                 <Question name="roaster" tooltip="" label="Who is the roaster?" class="" :form-group="false" error="">
-                    <RoasterSearch id="roaster-search" :model-value="state.selectedRoaster"
-                        @selected="store.coffee.roasterId = $event" :validaton="validator.roasterId" />
+                    <AutoComplete id="roaster-search" :search="state.selectedRoaster"
+                        :placeholder="state.selectedRoaster" not-found-message="No roasters found"
+                        :suggestions="roasterSuggestions as Suggestion[]" :validation="validator.roasterId"
+                        @update:suggestion="callRoasterData(1, $event)"
+                        @click:suggestion="store.coffee.roasterId = $event.id as number" />
                 </Question>
             </div>
         </div>
         <hr>
         <div class="row">
             <div class="col-12">
-                <button value="Add Bean" @click.prevent="state.newBeans?.push({} as bean)">Add Bean</button>
+                <button value="Add Bean" @click.prevent="store.coffee.beans?.push({} as bean)">Add Bean</button>
             </div>
-            <div v-for="(bean, i) in state.newBeans" class="col-md-6 mt-2">
-                <div class="bean">
-                    <div class="row">
-                        <div class="col-6">
-                            <h1>Bean {{ i + 1 }}</h1>
-                        </div>
-                        <div class="col-6">
-                            <font-awesome-icon class="shevron" :icon="['fas', 'chevron-up']" />
-                        </div>
-                    </div>
-
-                    <div>
-                        <Question :name="`${i}-altitude`" tooltip="" label="Altitude" class="" :form-group="false"
-                            error="">
-                            <Select :id="`${i}-altitude`" placeholder="" v-model="bean.altitude"
-                                :options="coffeeAltitude" />
-                        </Question>
-                        <Question :name="`${i}-process`" tooltip="" label="Process" class="" :form-group="false"
-                            error="">
-                            <Select :id="`${i}-process`" placeholder="" v-model="bean.process"
-                                :options="coffeeProcess" />
-                        </Question>
-                        <Question :name="`${i}-producers`" tooltip="" label="Producers" class="" :form-group="false"
-                            error="">
-                            <Text :id="`${i}-producers`" v-model="bean.producers" input-mode="text" type="text" />
-                        </Question>
-                        <Question :name="`${i}-roast`" tooltip="" label="Roast" class="" :form-group="false" error="">
-                            <Select :id="`${i}-roast`" placeholder="" v-model="bean.roast" :options="coffeeRoast" />
-                        </Question>
-                        <Question :name="`${i}-variety`" tooltip="" label="Variety" class="" :form-group="false"
-                            error="">
-                            <VarietySearch :id="`${i}-variety-search`" :model-value="bean.variety?.name"
-                                @selected="setSelectedVariety(i, $event as variety)" />
-                        </Question>
-                        <div class="form-button-group">
-                            <button class="btn btn-danger mt-2"
-                                @click.prevent="state.newBeans?.splice(i, 1); removeBean(i);">Delete</button>
-                        </div>
-                    </div>
-                </div>
+            <div v-for="(bean, index) in store.coffee.beans" class="col-md-6 mt-2">
+                <AddBeanToCoffee :id="index"  />
             </div>
         </div>
         <hr>

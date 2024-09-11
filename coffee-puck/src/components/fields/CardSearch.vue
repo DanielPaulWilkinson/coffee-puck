@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { coffeeType, coffee } from '@/data/types';
-import Question from '../../components/layout/Question.vue';
-import FillCoffee from '../../components/utils/FillCoffee.vue';
+import Question from '@/components/layout/Question.vue';
+import FillCoffee from '@/components/utils/FillCoffee.vue';
 import Text from '@/components/fields/Text.vue';
 import { onMounted, reactive, watch } from 'vue';
 import type { coffeePaginationResponse } from '@/data/coffee';
 import type { coffeeTypePaginationResponse } from '@/data/coffeeTypes';
-import Modal from '../../components/utils/Modal.vue';
+import Modal from '@/components/utils/Modal.vue';
 import { ValidationArgs } from "@vuelidate/core";
 import Validation from "./Validation.vue";
 
@@ -83,9 +83,9 @@ const unselectSuggestions = async () => state.cardSuggestions?.forEach(x => x.is
         </Question>
 
         <div class="row mt-2" v-if="state.cardSuggestions">
-            <div class="col-md-4 col-sm-12 col-xs-12 mt-sm-2" v-for="(suggestion) in state.cardSuggestions">
+            <div class="col-lg-4 col-md-12 col-sm-12 col-12 mt-sm-2" v-for="(suggestion) in state.cardSuggestions">
                 <div class="card selectable mt-3" :class="{ 'selected': suggestion.isSelected }"
-                    @click="emit('selectItem', suggestion.data); unselectSuggestions(); suggestion.isSelected = true;">
+                    @click.prevent="emit('selectItem', suggestion.data); unselectSuggestions(); suggestion.isSelected = true;">
                     <div v-if="typeof suggestion === typeof coffeeType && 'icon' in suggestion.data">
                         <FillCoffee v-if="suggestion.data.icon === 'espresso'" :id="suggestion.data.icon"
                             :type="suggestion.data.name" :espresso-delay="1000" :espresso-percent="16" />
@@ -113,7 +113,7 @@ const unselectSuggestions = async () => state.cardSuggestions?.forEach(x => x.is
         </div>
         <Validation v-model="props.modelValue" :validation="props.validation"/>
     </div>
-    <Modal :id="`${props.id}-suggestion-modal`" :show="state.modalShow">
+    <Modal :id="`${props.id}-suggestion-modal`" :isOpen="state.modalShow">
         <template #body>
             <div class="modal-header">
                 <h5 class="modal-title">{{ state.modalItem?.name }}</h5>

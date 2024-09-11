@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { reactive, watch } from "vue";
 import Text from "./Text.vue";
+import Validation from "./Validation.vue";
+import { ValidationArgs } from "@vuelidate/core";
 
 type State = {
     isOpen: boolean;
@@ -14,7 +16,6 @@ export type Suggestion = {
     type: string,
 }
 
-
 const state = reactive<State>({
     isOpen: false,
     setResult: false,
@@ -27,6 +28,7 @@ const props = defineProps<{
     notFoundMessage: string,
     placeholder?: string,
     id: string,
+    validation?: ValidationArgs,
 }>();
 
 const emit = defineEmits<{
@@ -78,6 +80,7 @@ watch(() => state.searchTerm, (value) => {
             </li>
         </ul>
     </div>
+    <Validation :model-value="state.searchTerm" :validation="validation" />
 </template>
 <style>
 .suggestions {

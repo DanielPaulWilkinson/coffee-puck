@@ -7,7 +7,7 @@ import Table from "../components/fields/Table.vue";
 import Text from "../components/fields/Text.vue";
 import Facets from "../components/layout/Facets.vue";
 import ToggleButtons from "../components/fields/ToggleButtons.vue";
-import BrewForm from "../components/forms/BrewForm.vue";
+import AddUpdateBrewForm from "../components/forms/AddUpdateBrewForm.vue";
 
 import { getBrews, updateBrew } from "../data/brew";
 import { useBrewPagination } from "../stores/brewPagination";
@@ -113,7 +113,7 @@ const saveBrew = async (brew: brew) => {
             </div>
         </div>
         <div class="row mt-2" v-else>
-            <BrewForm />
+            <AddUpdateBrewForm />
         </div>
     </div>
 </template>
