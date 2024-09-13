@@ -37,6 +37,7 @@ export const getVarietyPageQuery = async (
   
 
 export const createNewBeanVarietyQuery = async (beanId: number, varietyId: number): Promise<number> => {
+        console.log(beanId, varietyId);
         const [rows] = await pool.query(createBeanVarietySQL, [beanId, varietyId]);
         return JSON.parse(JSON.stringify(rows)).insertId;
 }

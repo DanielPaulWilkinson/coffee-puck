@@ -40,7 +40,6 @@ export const getBeanQuery = async (id: string) => {
 };
 
 export const createNewBeanQuery = async (bean: bean): Promise<number> => {
-  console.log('reached');
   const [rows] = await pool.query(createBeanSQL, [
     bean.process,
     bean.producers,
@@ -48,6 +47,7 @@ export const createNewBeanQuery = async (bean: bean): Promise<number> => {
     bean.roast,
   ]);
   const beanId = JSON.parse(JSON.stringify(rows)).insertId;
+  console.log(bean.variety);
   await createNewBeanVarietyQuery(beanId, Number(bean.variety?.id));
   return beanId;
 };

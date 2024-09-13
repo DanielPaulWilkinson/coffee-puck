@@ -8,6 +8,7 @@ import Text from '../fields/Text.vue';
 import { computed, reactive } from 'vue';
 import { getVarieties, varietyPaginationResponse } from '@/data/varieties';
 import AutoComplete, { Suggestion } from '../fields/AutoComplete.vue';
+import { beanFormValidator } from '@/validation/validators';
 
 defineProps<{
     id: number,
@@ -20,7 +21,7 @@ const removeBean = async (index: number) => {
 }
 
 const setSelectedVariety = (index: number, suggestion: Suggestion) => {
-    store.coffee.beans[index].variety = state.varietyPagination?.data[suggestion.id as number];
+    store.coffee.beans[index].variety = state.varietyPagination?.data.find(x => x.id === suggestion.id as number);
 }
 
 type varietySearch = {
@@ -38,8 +39,8 @@ async function callData(page: number, search?: string) {
 }
 
 const suggestions = computed(() => state.varietyPagination?.data.map((e: variety) => { return { id: e.id, name: e.name, type: e.name}}))
-
 const store = useCoffeeStore();
+const validator = beanFormValidator();
 </script>
 <template>
     <div class="bean">
@@ -54,16 +55,20 @@ const store = useCoffeeStore();
 
         <div>
             <Question :name="`${id}-altitude`" tooltip="" label="Altitude" class="" :form-group="false" error="">
-                <Select :id="`${id}-altitude`" placeholder="" v-model="store.coffee.beans[id].altitude" :options="coffeeAltitude" />
+                <Select :id="`${id}-altitude`" placeholder="" v-model="store.coffee.beans[id].altitude" :options="coffeeAltitude"
+                :validation="validator.altitude"  />
             </Question>
             <Question :name="`${id}-process`" tooltip="" label="Process" class="" :form-group="false" error="">
-                <Select :id="`${id}-process`" placeholder="" v-model="store.coffee.beans[id].process" :options="coffeeProcess" />
+                <Select :id="`${id}-process`" placeholder="" v-model="store.coffee.beans[id].process" :options="coffeeProcess"
+                :validation="validator.process" />
             </Question>
             <Question :name="`${id}-producers`" tooltip="" label="Producers" class="" :form-group="false" error="">
-                <Text :id="`${id}-producers`" v-model="store.coffee.beans[id].producers" input-mode="text" type="text" />
+                <Text :id="`${id}-producers`" v-model="store.coffee.beans[id].producers" input-mode="text" type="text" 
+                :validation="validator.producers"/>
             </Question>
             <Question :name="`${id}-roast`" tooltip="" label="Roast" class="" :form-group="false" error="">
-                <Select :id="`${id}-roast`" placeholder="" v-model="store.coffee.beans[id].roast" :options="coffeeRoast" />
+                <Select :id="`${id}-roast`" placeholder="" v-model="store.coffee.beans[id].roast" :options="coffeeRoast" 
+                :validation="validator.roast"/>
             </Question>
             <Question :name="`${id}-variety`" tooltip="" label="Variety" class="" :form-group="false" error="">
                 <AutoComplete
@@ -74,6 +79,7 @@ const store = useCoffeeStore();
                     :suggestions="suggestions as Suggestion[]"
                     @update:suggestion="callData(1, $event)"
                     @click:suggestion="setSelectedVariety(id, $event)"
+                    :validation="validator.variety"
                 />
             </Question>
             <div class="form-button-group">

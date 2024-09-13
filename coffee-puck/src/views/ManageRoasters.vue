@@ -11,6 +11,7 @@ import { roaster } from "../data/types";
 import ToggleButtons from "../components/fields/ToggleButtons.vue";
 import Facets from "../components/layout/Facets.vue";
 import { useAppStore } from "../stores/app";
+import AddUpdateRoastersForm from "@/components/forms/AddUpdateRoastersForm.vue";
 const app = useAppStore();
 const store = useRoasterPagination();
 
@@ -107,6 +108,7 @@ const saveRoasters = async (coffee: roaster) => {
             </div>
         </div>
         <div class="row" v-else>
+            <AddUpdateRoastersForm />
         </div>
     </div>
 </template>

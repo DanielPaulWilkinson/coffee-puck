@@ -8,8 +8,8 @@ button {
     font-weight: 500;
 
     &.primary {
-        color: a.$primary-font-color-light;
-        background-color: a.$primary-background-color-dark;
+        color: a.$milk;
+        background-color: a.$chocolate;
         border-radius: 10px;
 
         &:hover,
@@ -30,7 +30,8 @@ button {
     }
 
     &.secondary {
-        color: a.$primary-font-color-dark;
-        background-color: a.$primary-background-color-light;
+        border-radius: 10px;
+        color: a.$milk;
+        background-color: a.$espresso;
     }
 }

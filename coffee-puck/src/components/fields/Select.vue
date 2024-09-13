@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { ValidationArgs } from '@vuelidate/core';
+import Validation from './Validation.vue';
+
 
 export interface Options {
     value: string | number,
@@ -11,7 +14,8 @@ withDefaults(defineProps<{
     placeholder: string | undefined
     percentage?: boolean
     col?: string,
-    id?: string
+    id?: string,
+    validation?: ValidationArgs,
 }>(), {
 
 });
@@ -32,4 +36,5 @@ const emit = defineEmits<{
             {{ typeof option === 'string' ? option : option.label }}
         </option>
     </select>
+    <Validation :model-value="modelValue" :validation="validation" />
 </template>

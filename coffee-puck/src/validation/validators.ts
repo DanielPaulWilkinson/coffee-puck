@@ -2,6 +2,7 @@ import { computed } from "vue";
 import { helpers, required } from "@vuelidate/validators";
 import { useBrewStore } from "@/stores/addBrew";
 import { useCoffeeStore } from "@/stores/addCoffee";
+import { useRoasterStore } from "@/stores/addRoaster";
 
 const requiredMessage = (field: string) => `The ${field} field is required`;
 
@@ -62,4 +63,40 @@ export const coffeeFormValidator = (store: ReturnType<typeof useCoffeeStore>) =>
         required: helpers.withMessage(requiredMessage("beans"), required)
     },
     rating: {},
+}));
+
+export const roasterFormValidator = (store: ReturnType<typeof useRoasterStore>) => computed(() => ({
+    name:{
+        required: helpers.withMessage(requiredMessage("name"), required)
+    },
+    logo: {
+        required: helpers.withMessage(requiredMessage("logo"), required)
+    },
+    url:{
+        required: helpers.withMessage(requiredMessage("url"), required)
+    },
+    blogURL: {
+        required: helpers.withMessage(requiredMessage("blog"), required)
+    },
+    notes: {
+        required: helpers.withMessage(requiredMessage("notes"), required)
+    },
+}));
+
+export const beanFormValidator = () => computed(() => ({
+    altitude:{
+        required: helpers.withMessage(requiredMessage("altitude"), required)
+    },
+    process: {
+        required: helpers.withMessage(requiredMessage("process"), required)
+    },
+    producers:{
+        required: helpers.withMessage(requiredMessage("producers"), required)
+    },
+    roast: {
+        required: helpers.withMessage(requiredMessage("roast"), required)
+    },
+    variety: {
+        required: helpers.withMessage(requiredMessage("variety"), required)
+    },
 }));

@@ -87,7 +87,6 @@ async function callRoasterData(page: number, search?: string) {
 
 const roasterSuggestions = computed(() => state.roasterSuggestions?.data.map((e: roaster) => { return { id: e.id, name: e.name, type: e.name } }))
 
-
 const createCoffeePath = async () => {
     const success = await createCoffee(store.coffee);
     if (success) {
@@ -183,14 +182,14 @@ const submit = async () => {
         <hr>
         <div class="row">
             <div class="col-12">
-                <button value="Add Bean" @click.prevent="store.coffee.beans?.push({} as bean)">Add Bean</button>
+                <button class="secondary" value="Add Bean" @click.prevent="store.coffee.beans?.push({} as bean)">Add Bean</button>
             </div>
             <div v-for="(bean, index) in store.coffee.beans" class="col-md-6 mt-2">
                 <AddBeanToCoffee :id="index"  />
             </div>
         </div>
         <hr>
-        <button type="submit" class="btn btn-primary margin-top-10 right">
+        <button type="submit" class="primary margin-top-10 right">
             {{ route.query.id ? "Update Coffee" : "Add Coffee" }}
         </button>
     </form>
