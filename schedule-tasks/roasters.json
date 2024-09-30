@@ -1,0 +1,29 @@
+{
+    "roasters":[
+        {
+            "name": "rave",
+            "url": "https://ravecoffee.co.uk/collections/frontpage?page=1",
+            "gridItem": {
+                "cards":".cl-product-card",
+                "image": "cl-product-card-image-img",
+                "notes": "tastes-like",
+                "price": "price-variation",
+                "url": "a",
+                "name": ".cl-product-card-info a"
+            }
+        },
+        {
+            "name": "squaremile",
+            "url": "https://shop.squaremilecoffee.com/",
+            "gridItem": {
+                "cards":"sqmile-product",
+                "image": "cl-product-card-image-img",
+                "notes": "tastes-like",
+                "price": ".sqmile-product-price",
+                "url": "a",
+                "name": ".sqmile-product-name",
+                "desc": ".sqmile-product-description"
+            }
+        }
+    ]
+}

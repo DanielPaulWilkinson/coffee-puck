@@ -30,6 +30,7 @@ const state = reactive<State>({
 });
 
 onMounted(() => {
+    console.log(props.series);
     if (props.type === "number") {
         let biggestValue = 0;
         props.series.forEach((s) => {
@@ -58,15 +59,21 @@ onMounted(() => {
 });
 </script>
 <template>
+    <div class="keys">
+        <div class="labels">
+            <div v-for="(label, i) in state.labels" :style="`color:${colours[i]};`" class="key">
+                <div :style="`background:${colours[i]};`" class="colour-block"></div>
+                <span>
+                    {{ label }} {{ props.series[i] }} </span>
+
+            </div>
+
+        </div>
+    </div>
     <div class="row">
         <div class="col-12">
             <div class="graph">
-                <div class="labels">
-                    <span v-for="(label, i) in state.labels" :style="`color:${colours[i]};`" class="label">
-                        {{ label }} {{ props.series[i] }}
-                    </span>
 
-                </div>
                 <div class="bars">
                     <span class="bar" :style="`width: ${bar}%;background:${colours[i]};`"
                         v-for="(bar, i) in state.bars"></span>
@@ -82,6 +89,18 @@ onMounted(() => {
     </div>
 </template>
 <style scoped>
+.key {
+    margin-left: 10px;
+    display: inline-block;
+}
+
+.colour-block {
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+
+}
+
 .graph {
     position: relative;
     padding: 20px;
@@ -104,7 +123,6 @@ onMounted(() => {
 }
 
 .graph .bars {
-    margin-left: 110px;
     position: relative;
 }
 
@@ -167,7 +185,6 @@ onMounted(() => {
     border-top: 1px solid #848484;
     font-size: 12px;
     height: 20px;
-    margin-left: 110px;
     margin-top: -8px;
     position: relative;
 }

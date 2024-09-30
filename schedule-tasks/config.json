@@ -1,0 +1,5 @@
+{
+    "config": {
+        "output_method": "db|console|txt"
+    }
+}

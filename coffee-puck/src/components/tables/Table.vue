@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, watch } from "vue";
-import Text from "./Text.vue";
+import Text from "../fields/Text.vue";
 import type { brew, coffee, roaster, variety } from "@/data/types";
 import TableActions from "./TableActions.vue";
 
@@ -113,7 +113,6 @@ const reconstruct = (row: Row, columnId: number = 0) => {
                 }
 
                 const r = element.cells[columnId];
-                console.log(r);
                 const key = r.id;
                 Reflect.set(data, key, r.value);
             });

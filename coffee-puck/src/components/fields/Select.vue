@@ -22,12 +22,14 @@ withDefaults(defineProps<{
 
 const emit = defineEmits<{
     (on: "update:modelValue", value: string | number): void
+    (on: "change", value: string | number): void
 }>();
 
 </script>
 <template>
     <select :id="id" :value="modelValue" :class="['form-select form-control']"
-        @input="[$emit('update:modelValue', ($event.target as HTMLInputElement).value)]">
+        @input="[$emit('update:modelValue', ($event.target as HTMLInputElement).value)]"
+        @change="$emit('change', ($event.target as HTMLInputElement).value)">
         <option v-if="(typeof placeholder !== 'undefined')" value="" disabled="true" selected="true" hidden="true">
             {{ placeholder }}
         </option>

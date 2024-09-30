@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Table from "../components/fields/Table.vue";
+import Table from "../components/tables/Table.vue";
 import Text from "../components/fields/Text.vue";
 import { onMounted, reactive, watch } from "vue";
 import { variety } from "../data/types";

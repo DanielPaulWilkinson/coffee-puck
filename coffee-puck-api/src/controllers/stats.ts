@@ -27,6 +27,7 @@ export const getStatistics = async (
         { value: coffee.length, title: "Total Coffees" },
         { value: beans.length, title: "Total Beans" },
         { value: brews.length, title: "Total Brews" },
+        { value: roasterCount, title: "Total Roasters"},
         getFaveCoffee(coffee),
         getFaveCoffeeType(coffee, types),
       ],
@@ -70,28 +71,31 @@ export type chartError = {
 };
 
 const getVarietiesTried = (coffee: coffee[]): pieChart | chartError => {
-  const varieties: {
+  let varieties: {
     id: number;
     count: number;
     name: string;
   }[] = [];
+
   coffee.forEach((coffee) => {
-    coffee.beans?.forEach((beans) => { 
-      if(beans.variety){
-      const index = varieties.find((x) => x.id === beans.variety?.id);
-      if (index) {
-        index.count = index.count + 1;
-      } else {
-        console.log(beans.variety?.name ?? "");
-        varieties.push({
-          id: beans.variety?.id ?? 0,
-          count: 1,
-          name: beans.variety?.name ?? "",
-        });
+    coffee.beans?.forEach((beans) => {
+      if (beans.variety) {
+        const index = varieties.find((x) => x.id === beans.variety?.id);
+        if (index) {
+          index.count = index.count + 1;
+        } else {
+          console.log(beans.variety?.name ?? "");
+          varieties.push({
+            id: beans.variety?.id ?? 0,
+            count: 1,
+            name: beans.variety?.name ?? "",
+          });
+        }
       }
-    }
     });
   });
+
+  varieties = varieties.sort((a, b) => b.count - a.count).slice(0, 5);
 
   return {
     data: varieties.flatMap((x) => x.count),
@@ -123,6 +127,7 @@ const heatMapForCoffee = (coffee: coffee[]): heatMap | chartError => {
     days,
   };
 };
+
 const getDecafVsCaffeinated = (coffee: coffee[]): barChart | chartError => {
   const decaf = coffee.filter((x) => x.isDecaf === true).length;
   const notDecaf = coffee.filter((x) => x.isDecaf === false).length;
@@ -146,12 +151,14 @@ const getDecafVsCaffeinated = (coffee: coffee[]): barChart | chartError => {
     labels: ["Decaf", "Caffeinated"],
   };
 };
+
 const getTop5Coffee = (coffee: coffee[]): barChart | chartError => {
-  const coffeeChartData: {
+  let coffeeChartData: {
     id: number;
     ratings: number[];
     coffeeName: string;
     average: number;
+    total: number,
   }[] = [];
 
   coffee.forEach((coffee) => {
@@ -159,26 +166,26 @@ const getTop5Coffee = (coffee: coffee[]): barChart | chartError => {
       const index = coffeeChartData.find((x) => x.id === brew.coffeeId);
       if (index) {
         index.ratings.push(brew.rating);
+        index.total = index.total + brew.rating;
       } else {
         coffeeChartData.push({
           id: brew.coffeeId,
           ratings: [brew.rating],
           coffeeName: coffee.name,
+          total: brew.rating,
           average: 0,
         });
       }
     });
 
     const currentRatings = coffeeChartData.find(
-      (x) => x.id === coffee.id
-    )?.ratings;
+      (x) => x.id === coffee.id)?.ratings;
+
     if (currentRatings) {
       coffeeChartData.find((x) => x.id === coffee.id)!.average =
         currentRatings.reduce((part, a) => part + a, 0) / currentRatings.length;
     }
   });
-
-  coffeeChartData.sort((x) => x.average).slice(0, 4);
 
   if (coffeeChartData[0].average < 1) {
     return {
@@ -188,6 +195,8 @@ const getTop5Coffee = (coffee: coffee[]): barChart | chartError => {
     };
   }
 
+  coffeeChartData = coffeeChartData.slice(0, 5).sort((a, b) => a.average - b.average);
+
   return {
     chartType: "number",
     chartOptions: [],
@@ -195,15 +204,16 @@ const getTop5Coffee = (coffee: coffee[]): barChart | chartError => {
     subtitle: "calculated by avg brew rating average",
     tooltip: "",
     dataGroups: coffeeChartData.flatMap((x) => x.average.toFixed(2)),
-    colours: ["#765", "#876"],
+    colours: ["#ad6d2f", "#e4bc84", "#80411e", "#8f755f", "#d2c1b0"],
     labels: coffeeChartData.flatMap((x) => x.coffeeName),
   };
 };
+
 const getTop5CoffeeTypes = (
   coffee: coffee[],
   types: coffeeType[]
 ): barChart | chartError => {
-  const coffeeTypeChartData: {
+  let coffeeTypeChartData: {
     coffeeTypeId: number;
     coffeeTypeQuantity: number;
     coffeeTypeName: string;
@@ -227,7 +237,7 @@ const getTop5CoffeeTypes = (
     });
   });
 
-  coffeeTypeChartData.sort((x) => x.coffeeTypeQuantity).slice(0, 4);
+  coffeeTypeChartData = coffeeTypeChartData.sort((a, b) => a.coffeeTypeQuantity - b.coffeeTypeQuantity).slice(0, 5);
 
   return {
     chartType: "number",
@@ -236,31 +246,34 @@ const getTop5CoffeeTypes = (
     subtitle: "Most drank coffee types",
     tooltip: "This chart shows the quantity of the top 5 coffee types",
     dataGroups: coffeeTypeChartData.flatMap((x) => x.coffeeTypeQuantity),
-    colours: [],
+    colours: ["#ad6d2f", "#e4bc84", "#80411e", "#8f755f", "#d2c1b0"],
     labels: coffeeTypeChartData.flatMap((x) => x.coffeeTypeName),
   };
 };
+
 const getFaveCoffee = (coffees: coffee[]): baseStatistic => {
-  const totals: { id: number; total: number }[] = [];
+  const totals: { id: number; total: number, name: string }[] = [];
 
   coffees.forEach((coffee) => {
     coffee.brews?.forEach((brew) => {
       const index = totals.find((x) => x.id === coffee.id);
       if (index) {
-        index.total + 1;
+        index.total = index.total + 1;
       } else {
-        totals.push({ id: coffee.id!, total: 1 });
+        totals.push({ id: coffee.id!, total: 1, name: coffee.name });
       }
     });
   });
 
-  const sorted = totals.sort((x) => x.total);
+  const sorted = totals.sort((a,b) => b.total - a.total);
+
   return {
     title: "Top Coffee",
     chartType: "none",
-    value: coffees.find((x) => x.id === sorted[0].id)?.name ?? "",
+    value: sorted[0].name,
   };
 };
+
 const getFaveCoffeeType = (
   coffees: coffee[],
   types: coffeeType[]
@@ -271,14 +284,15 @@ const getFaveCoffeeType = (
     coffee.brews?.forEach((brew) => {
       const index = totals.find((x) => x.id === brew.coffeeTypeId);
       if (index) {
-        index.total + 1;
+        index.total = index.total + 1;
       } else {
         totals.push({ id: brew.coffeeTypeId, total: 1 });
       }
     });
   });
 
-  const rse = totals.sort((x) => x.total);
+  const rse = totals.sort((a,b) => b.total - a.total);
+
   return {
     title: "Top Coffee Type",
     chartType: "none",

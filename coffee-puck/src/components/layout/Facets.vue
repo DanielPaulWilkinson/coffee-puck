@@ -4,13 +4,13 @@ import { onMounted, reactive } from "vue";
 import Select from "../../components/fields/Select.vue";
 
 const props = defineProps<{
-    tableType: "vertical" | "horizontal",
+    tableType: "vertical" | "horizontal" | "card",
     amount: number | string | null,
 }>();
 
 const emit = defineEmits<{
-    (on: "changeTableType", value: "vertical" | "horizontal"): void
-    (on: "changeAmount", value: number | string | null): void
+    (on: "changeTableType", value: "vertical" | "horizontal" | "card"): void
+    (on: "changeAmount", value: number): void
 }>();
 
 type State = {
@@ -38,6 +38,10 @@ onMounted(() => {
                 @click="emit('changeTableType', 'vertical')">
                 <font-awesome-icon :icon="['fas', 'table']" />
             </label>
+            <label class="btn btn-secondary" :class="tableType === 'card' ? 'active' : ''"
+                @click="emit('changeTableType', 'card')">
+                <font-awesome-icon :icon="['fas', 'table']" />
+            </label>
         </div>
     </div>
     <div class="col-2">
@@ -51,6 +55,6 @@ onMounted(() => {
             }, {
                 value: 50,
                 label: '50',
-            }]" @change="emit('changeAmount', state.amount)" />
+            }]" @change="emit('changeAmount', Number(state.amount));" />
     </div>
 </template>

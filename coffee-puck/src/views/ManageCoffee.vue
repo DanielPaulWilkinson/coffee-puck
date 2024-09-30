@@ -4,7 +4,7 @@ import {
     getCoffees,
     updateCoffee,
 } from "../data/coffee";
-import Table from "../components/fields/Table.vue";
+import Table from "../components/tables/Table.vue";
 import { onMounted, reactive, watch } from "vue";
 import Text from "../components/fields/Text.vue";
 import AddUpdateCoffeeForm from "../components/forms/AddUpdateCoffeeForm.vue";
@@ -12,6 +12,7 @@ import { coffee } from '../data/types';
 import ToggleButtons from "../components/fields/ToggleButtons.vue";
 import Facets from "../components/layout/Facets.vue";
 import { useAppStore } from "../stores/app";
+import CardView from "@/components/tables/cardView.vue";
 const app = useAppStore();
 const store = useCoffeePagination();
 
@@ -19,7 +20,7 @@ type ManageCoffee = {
     search: string | null;
     count: number | null,
     filters: boolean,
-    tableType: "vertical" | "horizontal",
+    tableType: "vertical" | "horizontal" | "card",
     isTableSearch: boolean,
 };
 
@@ -101,10 +102,10 @@ const saveCoffee = async (coffee: coffee) => {
             </div>
         </div>
         <div class="row mt-4" v-if="state.filters && state.isTableSearch">
-            <Facets :table-type="state.tableType" :amount="state.count" @change-amount="state.count = Number($event)"
+            <Facets :table-type="state.tableType" :amount="state.count" @change-amount="state.count = Number($event);"
                 @change-table-type="state.tableType = $event" />
         </div>
-        <div class="row" v-if="state.isTableSearch">
+        <div class="row" v-if="state.isTableSearch && state.tableType === 'vertical' || state.tableType === 'horizontal' ">
             <div class="col-md-12 mt-2">
                 <Table caption="Coffee List" v-if="store.data.length > 0" id="test" :rows="store.data"
                     :current-page="store.pagination.current_page" :totalPages="store.pagination.total_pages"
@@ -113,7 +114,10 @@ const saveCoffee = async (coffee: coffee) => {
                 <p v-else>No data found for search</p>
             </div>
         </div>
-        <div class="row" v-else>
+        <div v-if="state.isTableSearch && state.tableType === 'card'">
+            <CardView :data="store.data" type="coffee"/>
+        </div>
+        <div class="row" v-if="!state.isTableSearch">
             <AddUpdateCoffeeForm />
         </div>
     </div>
@@ -140,5 +144,9 @@ h1 {
 .icon {
     border: 1px solid;
     background: #765;
+}
+.result-card {
+    display: inline-block;
+    margin: 10px 10px 0 0;
 }
 </style>

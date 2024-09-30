@@ -4,7 +4,7 @@ import {
     getRoasters,
     updateRoaster,
 } from "../data/roasters";
-import Table from "../components/fields/Table.vue";
+import Table from "../components/tables/Table.vue";
 import Text from "../components/fields/Text.vue";
 import { onMounted, reactive, watch } from "vue";
 import { roaster } from "../data/types";
@@ -12,6 +12,7 @@ import ToggleButtons from "../components/fields/ToggleButtons.vue";
 import Facets from "../components/layout/Facets.vue";
 import { useAppStore } from "../stores/app";
 import AddUpdateRoastersForm from "@/components/forms/AddUpdateRoastersForm.vue";
+import CardView from "@/components/tables/cardView.vue";
 const app = useAppStore();
 const store = useRoasterPagination();
 
@@ -19,7 +20,7 @@ type ManageRoasters = {
     search: string | null;
     count: number | null,
     filters: boolean,
-    tableType: "vertical" | "horizontal",
+    tableType: "vertical" | "horizontal" | "card",
     isTableSearch: boolean,
 };
 
@@ -98,7 +99,7 @@ const saveRoasters = async (coffee: roaster) => {
             <Facets :table-type="state.tableType" :amount="state.count" @change-amount="state.count = Number($event)"
                 @change-table-type="state.tableType = $event" />
         </div>
-        <div class="row" v-if="state.isTableSearch">
+        <div class="row" v-if="state.isTableSearch && (state.tableType === 'horizontal' || state.tableType === 'vertical')">
             <div class="col-md-12 mt-2">
                 <Table caption="Roaster List" v-if="store.data.length > 0" id="test" :rows="store.data"
                     :current-page="store.pagination.current_page" :totalPages="store.pagination.total_pages"
@@ -107,7 +108,10 @@ const saveRoasters = async (coffee: roaster) => {
                 <p v-else>No data found for search</p>
             </div>
         </div>
-        <div class="row" v-else>
+        <div v-if="state.isTableSearch && state.tableType === 'card'">
+            <CardView :data="store.data" type="roaster" />
+        </div>
+        <div class="row" v-if="!state.isTableSearch">
             <AddUpdateRoastersForm />
         </div>
     </div>

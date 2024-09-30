@@ -4,6 +4,8 @@ import ManageCoffee from '../views/ManageCoffee.vue';
 import ManageBrew from '@/views/ManageBrew.vue';
 import ManageRoasters from '@/views/ManageRoasters.vue';
 import ManageVarieties from '@/views/ManageVarieties.vue';
+import Communities from '@/views/Communities.vue';
+import Settings from '@/views/Settings.vue';
 
 const router = createRouter({
   linkActiveClass: "selected",
@@ -34,7 +36,19 @@ const router = createRouter({
       path: '/manage-varieties',
       name: 'manage-varieties',
       component: ManageVarieties
+    }, 
+    {
+      path: '/communities',
+      name: 'communities',
+      component: Communities
+    }, 
+    {
+      path: '/settings',
+      name: 'settings',
+      component: Settings
     }
+    
+
   ]
 });
 

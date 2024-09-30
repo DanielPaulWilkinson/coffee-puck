@@ -3,7 +3,7 @@ import { onMounted, reactive, watch } from "vue";
 
 import type { brew } from '../data/types';
 
-import Table from "../components/fields/Table.vue";
+import Table from "../components/tables/Table.vue";
 import Text from "../components/fields/Text.vue";
 import Facets from "../components/layout/Facets.vue";
 import ToggleButtons from "../components/fields/ToggleButtons.vue";

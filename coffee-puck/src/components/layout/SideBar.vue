@@ -40,19 +40,19 @@ import { RouterLink } from 'vue-router'
             <p>Manage Varieties</p>
           </li>
         </router-link>
-        <a href="#">
+        <router-link to="/communities" active-class="selected">
           <li class="sidebar-link">
             <font-awesome-icon :icon="['fas', 'star']" />
             <p>Communities</p>
           </li>
-        </a>
+        </router-link>
         <br />
-        <a href="#">
+        <router-link to="/settings" active-class="selected">
           <li class="sidebar-link">
             <font-awesome-icon :icon="['fas', 'star']" />
             <p>Settings</p>
           </li>
-        </a>
+        </router-link>
         <a href="#">
           <li class="sidebar-link">
             <font-awesome-icon :icon="['fas', 'star']" />

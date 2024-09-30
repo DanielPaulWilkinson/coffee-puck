@@ -55,7 +55,6 @@ const state = reactive<State>({
 
 onMounted(async () => {
     const graphs = await getStatistics();
-    console.log(graphs);
     state.other = graphs.statistics.filter(x => x.chartType === undefined || x.chartType === 'none');
     state.pie = graphs.statistics.filter(x => x.chartType === 'pie');
     state.heatmap = graphs.statistics.filter(x => x.chartType === 'heatmap');
@@ -105,7 +104,7 @@ onMounted(async () => {
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6" v-for="(statistic, i) in state.bar">
+        <div class="col-md-12" v-for="(statistic, i) in state.bar">
             <div class="card selectable text-center mt-4">
 
                 <h1>{{ statistic.title }}</h1>
