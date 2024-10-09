@@ -32,34 +32,44 @@ def goto(driver: webdriver, url: str):
     return driver
 
 
-def get_element_text_from_path(
+def get_text(
     driver: webdriver, by: By, path: str, default_value: any, log_term: str
 ):
     try:
-        return driver.find_element(by, path).text.strip()
+        return driver.find_element(by, path).text
     except:
         logger.log(0, log_term)
         return default_value
 
-
-def get_elements_from_path(driver: webdriver, by: By, path: str, log_term: str):
+def get_elements(driver: webdriver, by: By, path: str, log_term: str):
     try:
         return driver.find_elements(by, path)
     except:
         logger.log(0, log_term)
-
 
 def get_element(driver: webdriver, by: By, path: str, log_term: str):
     try:
         return driver.find_element(by, path)
     except:
         logger.log(0, log_term)
+        return log_term
 
-
+def get_element_attribute(driver: webdriver, by: By, path: str, log_term: str, attribute: str):
+    element = get_element(
+        driver,
+        By.CSS_SELECTOR,
+        path,
+        log_term,
+    )
+    
+    if element != log_term:
+        return element.get_attribute(attribute) 
+    else:
+        return log_term
+    
 def page_load(driver):
     element_on_page = EC.presence_of_element_located((By.TAG_NAME, "p"))
     WebDriverWait(driver, timeout=3).until(element_on_page)
-
 
 def create_select(driver, by, path, log_term):
     try:

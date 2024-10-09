@@ -1,0 +1,103 @@
+{
+    "roasters":[
+        {
+            "name": "rave",
+            "url": "https://ravecoffee.co.uk/collections/frontpage?page=1",
+            "blogURL": "https://ravecoffee.co.uk/blogs/news",
+            "coffee": {
+                "cards":".grid-item",
+                "image": "img",
+                "notes": "tastes-like",
+                "price": "price-variation",
+                "url": "a",
+                "name": ".cl-product-card-info a"
+            },
+            "blog": {
+                "name":"a",
+                "exert": "blog-post-excerpt",
+                "image": "image-snippet",
+                "url": "a"
+            }
+        },
+        {
+            "name": "squaremile",
+            "url": "https://shop.squaremilecoffee.com/",
+            "blogURL": "https://squaremileblog.com/category/news/",
+            "coffee": {
+                "cards":"sqmile-product",
+                "image": "cl-product-card-image-img",
+                "notes": "tastes-like",
+                "price": "sqmile-product-price",
+                "url": ".sqmile-product a",
+                "name": ".sqmile-product-name",
+                "desc": ".sqmile-product-description"
+            },
+            "blog": {
+                "name":".sqmalt-title-white a",
+                "exert": "cl-product-card-image-img",
+                "image": "sqmarc-post",
+                "url": "sqmalt-title-white a"
+            }
+        },
+        {
+            "name": "assembly",
+            "url": "https://assemblycoffee.co.uk/collections/buy-coffee",
+            "blogURL": "https://assemblycoffee.co.uk/blogs/news",
+            "coffee": {
+                "cards":"product-card",
+                "image": "img",
+                "notes": "tastes-like",
+                "price": "price",
+                "url": ".grid__item a",
+                "name": ".grid__item a",
+                "desc": ".sqmile-product-description"
+            },
+            "blog": {
+                "name":".sqmalt-title-white a",
+                "exert": "cl-product-card-image-img",
+                "image": "sqmarc-post",
+                "url": "sqmalt-title-white a"
+            }
+        },
+        {
+            "name": "origin",
+            "url": "https://www.origincoffee.co.uk/collections/coffee",
+            "blogURL": "https://www.origincoffee.co.uk/blogs/journal",
+            "coffee": {
+                "cards":"single-product",
+                "image": "img",
+                "notes": "single-product__subtitle",
+                "price": "single-product__price",
+                "url": ".product-grid__product-item a",
+                "name": "single-product__title",
+                "desc": ""
+            },
+            "blog": {
+                "name":".sqmalt-title-white a",
+                "exert": "cl-product-card-image-img",
+                "image": "sqmarc-post",
+                "url": "sqmalt-title-white a"
+            }
+        },
+        {
+            "name": "crankhouse",
+            "url": "https://www.crankhousecoffee.co.uk/collections/our-coffees",
+            "blogURL": "https://www.crankhousecoffee.co.uk/blogs/news",
+            "coffee": {
+                "cards":"product__inner",
+                "image": "img",
+                "notes": "a > div > ul > li:nth-child(1) > span",
+                "price": "div > div > div:nth-child(1) > a > span",
+                "url": ".product__inner a",
+                "name": "h3",
+                "desc": ""
+            },
+            "blog": {
+                "name":".sqmalt-title-white a",
+                "exert": "cl-product-card-image-img",
+                "image": "sqmarc-post",
+                "url": "sqmalt-title-white a"
+            }
+        }
+    ]
+}

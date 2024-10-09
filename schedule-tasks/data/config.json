@@ -1,0 +1,6 @@
+{
+    "config": {
+        "output_method": "json",
+        "debug": "false"
+    }
+}
