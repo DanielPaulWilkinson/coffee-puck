@@ -25,7 +25,7 @@ def add_coffee_to_json(c: coffee):
             rf.close()
         with open(path, "w", encoding="utf8") as wf:
             data["coffee"].append(c.__dict__)
-            json.dump(data, wf, indent=4, separators=(",", ": "), ensure_ascii=False)
+            json.dump(data, wf, indent=4, separators=(",", ": "))
             wf.close()
     except Exception as inst:
         print(inst)

@@ -1,6 +1,7 @@
 {
     "config": {
         "output_method": "json",
-        "debug": "false"
+        "debug": "false",
+        "database": "mysql://root:root@localhost:3306/coffee"
     }
 }
