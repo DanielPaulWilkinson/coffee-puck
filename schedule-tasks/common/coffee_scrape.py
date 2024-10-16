@@ -1,3 +1,4 @@
+import datetime
 from glob import escape
 from turtle import update
 from common.json_service import *
@@ -8,154 +9,90 @@ from objects.coffee import coffee
 logger = getMyLogger(__name__)
 
 
-def determineBy(by: str):
+def determine_by(by: str):
     if by == "css_selector":
         return By.CSS_SELECTOR
     elif by == "css_name":
         return By.CLASS_NAME
 
+def get_product_cards(driver, selectors):
+    for i in selectors:
+        if i[6] == "product_card":
+            return get_elements(driver, determine_by(i[5]), i[3], "Cannot find grid-items")    
+
 def coffee_scrape(driver, roaster, selectors):
     coffeeArray = []
+    class product: pass
+
     driver = goto(driver, roaster[6])
     page_load(driver)
 
-    cards = ""
-    for i in selectors:
-        if i[6] == "product_card":
-            print(i)
-            cards = get_elements(driver, determineBy(i[5]), i[3], "Cannot find grid-items")    
-
-    product_name = ""
-
+    cards = get_product_cards(driver, selectors)
 
     for card in cards:
         for selector in selectors:
             match selector[6]:
-                case "product_name":
-                    product_name = get_text(
+                case "product_name" | "product_notes" | "product_price":
+                    setattr(product, selector[6], get_text(
                         driver=card,
-                        by=determineBy(selector[5]),
+                        by=determine_by(selector[5]),
                         path=selector[3],
                         default_value=selector[4],
-                        log_term="Could not find NAME info"
+                        log_term="Could not find NAME info)")
                     )
-                    print(product_name)
-                
-    '''
+                case "product_url":
+                   setattr(product, selector[6], get_element_attribute(
+                        driver=card,
+                        by=determine_by(selector[5]),
+                        log_term="",
+                        path=selector[3],
+                        attribute="href"))
+                case "product_image":
+                   setattr(product, selector[6], get_element_attribute(
+                        driver=card,
+                        by=determine_by(selector[5]),
+                        log_term="",
+                        path=selector[3],
+                        attribute="src"))
 
-    for card in cards:
-        try:
-            productUrl = get_element_attribute(
-                card,
-                By.CSS_SELECTOR,
-                roaster['coffee']['url'],
-                "unknown",
-                "href"
-            )
+        coffeeArray.append(coffee(
+            product_name=product.product_name,
+            product_url=product.product_url,
+            product_image=product.product_image,
+            product_price=product.product_price,
+            product_notes=product.product_notes,
+            product_detail_altitude="",
+            roaster_name=roaster[1],
+            product_info_scrape_date=datetime.datetime.now()
+        ))
 
-            notes = get_text(
-                driver=card,
-                by=By.CLASS_NAME,
-                path=roaster['coffee']['notes'],
-                default_value="unknown",
-                log_term="Could not find NOTES info"
-            )
+    if roaster[9] == 1:
+        coffeeArray = get_product_page_information(driver, roaster, selectors, coffeeArray)
 
-            price = get_text(
-                driver=card,
-                by=By.CLASS_NAME,
-                path=roaster['coffee']['price'],
-                default_value="unknown",
-                log_term="Could not find PRICE info"
-            ).removeprefix('Regular price\n')
 
-            image = get_element_attribute(
-                driver=card,
-                by=By.CSS_SELECTOR,
-                path=roaster['coffee']['image'],
-                log_term="unknown",
-                attribute="src"
-            )
-       
 
-            name = get_text(
-                driver=card,
-                by=By.CSS_SELECTOR,
-                path=roaster['coffee']['name'],
-                default_value="unknown",
-                log_term="Could not find NAME info"
-            )
+    # check for duplicates (if duplicate update upated_scrape_date)
 
-            if productUrl != "unknown":
-                productPage = goto(driver, productUrl)
-                page_load(productPage)
+    # insert in database
 
-                process = get_text(
-                    driver=productPage,
-                    by=By.CSS_SELECTOR,
-                    path="section.product-origin.relative.flex.space-between.gap-medium > div.origin-table > div.origin-table-data > div:nth-child(1) > div > p",
-                    default_value="unknown",
-                    log_term="Could not find PROCESS info"
-                )
 
-                producers = get_text(
-                    driver=productPage,
-                    by=By.CSS_SELECTOR,
-                    path="section.product-origin.relative.flex.space-between.gap-medium > div.origin-table > div.origin-table-data > div:nth-child(2) > div > p",
-                    default_value="unknown",
-                    log_term="Could not find PROCESS info"
-                )
-                
-                grown = get_text(
-                    driver=productPage,
-                    by=By.CSS_SELECTOR,
-                    path="section.product-origin.relative.flex.space-between.gap-medium > div.origin-table > div.origin-table-data > div:nth-child(3) > div > p",
-                    default_value="unknown",
-                    log_term="Could not find PROCESS info"
-                )
+    return coffeeArray
 
-                altitude = get_text(
-                    driver=productPage,
-                    by=By.CSS_SELECTOR,
-                    path="section.product-origin.relative.flex.space-between.gap-medium > div.origin-table > div.origin-table-data > div:nth-child(4) > div > p",
-                    default_value="unknown",
-                    log_term="Could not find PROCESS info"
-                )
 
-                varieties = get_text(
-                    driver=productPage,
-                    by=By.CSS_SELECTOR,
-                    path="section.product-origin.relative.flex.space-between.gap-medium > div.origin-table > div.origin-table-data > div:nth-child(5) > div > p",
-                    default_value="unknown",
-                    log_term="Could not find PROCESS info"
-                )
+def get_product_page_information(driver, roaster, selectors, coffeeArray):
+    for coffee in coffeeArray:
+        productPage = goto(driver, coffee.product_url)
+        page_load(productPage)
+        for selector in selectors:
+            match selector[6]:
+                case "product_detail_process" | "product_detail_producers" | "product_detail_varieties" | "product_detail_altitude" | "product_detail_origin" | "product_detail_notes":
+                    setattr(coffee, selector[6], get_text(
+                        driver=productPage,
+                        by=determine_by(selector[5]),
+                        path=selector[3],
+                        default_value=selector[4],
+                        log_term="Could not find")
+                    )
 
-                desc = get_text(
-                    driver=productPage,
-                    by=By.CSS_SELECTOR,
-                    path="section.product-origin.relative.flex.space-between.gap-medium > div.origin-table > div.table-main-content",
-                    default_value="unknown",
-                    log_term="Could not find PROCESS info"
-                )
-
-            process=process,
-            producers=producers,
-            grown=grown,
-            altitude=altitude,
-            varieties=varieties,
-            desc=desc,
-            notes=notes,
-            coffeeArray.append(coffee(
-                name=name,
-                productUrl=productUrl,
-                image=image,
-                price=price,
-                notes=notes,
-                roaster_name="Assembly Coffee"
-            ))
-        except:
-            logger.log("cannot do this product", "ivalid product")
-    '''
-   
     return coffeeArray
 
