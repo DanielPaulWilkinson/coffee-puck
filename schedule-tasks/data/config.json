@@ -1,7 +1,12 @@
 {
     "config": {
-        "output_method": "json",
+        "output_method": "database",
         "debug": "false",
-        "database": "mysql://root:root@localhost:3306/coffee"
+        "db": {
+            "host": "localhost",
+            "user": "root",
+            "password": "root",
+            "database": "coffee"
+        }
     }
 }

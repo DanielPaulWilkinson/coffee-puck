@@ -10,7 +10,7 @@ from common.logger import getMyLogger
 logger = getMyLogger(__name__)
 
 
-def Create():
+def create():
     options = webdriver.EdgeOptions()
     options.add_argument("--window-size=1920,1080")
     options.add_argument("--no-sandbox")

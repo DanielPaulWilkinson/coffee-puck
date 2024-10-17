@@ -63,18 +63,16 @@ def coffee_scrape(driver, roaster, selectors):
             product_notes=product.product_notes,
             product_detail_altitude="",
             roaster_name=roaster[1],
+            product_detail_process="",
+            product_detail_producers="",
+            product_detail_varieties="",
+            product_detail_origin = "",
+            product_detail_notes="",
             product_info_scrape_date=datetime.datetime.now()
         ))
 
     if roaster[9] == 1:
         coffeeArray = get_product_page_information(driver, roaster, selectors, coffeeArray)
-
-
-
-    # check for duplicates (if duplicate update upated_scrape_date)
-
-    # insert in database
-
 
     return coffeeArray
 
