@@ -2,7 +2,6 @@
 import CheckBox from '@/components/fields/CheckBox.vue';
 import { coffeeTypePaginationResponse, getScrapeResults } from '@/data/scrape';
 import { onMounted, reactive, watch } from 'vue';
-import { date } from 'zod';
 
 type State = {
     data: coffeeTypePaginationResponse | null;
