@@ -25,11 +25,11 @@ def coffee_scrape(driver, roaster, selectors):
     class product: pass
 
     driver = goto(driver, roaster[6])
-    page_load(driver)
+    wait_for_page_load(driver)
 
     cards = get_product_cards(driver, selectors)
-
     for card in cards:
+        #print(card.get_attribute("innerHTML"))
         for selector in selectors:
             match selector[6]:
                 case "product_name" | "product_notes" | "product_price":
@@ -62,7 +62,7 @@ def coffee_scrape(driver, roaster, selectors):
             product_price=product.product_price,
             product_notes=product.product_notes,
             product_detail_altitude="",
-            roaster_name=roaster[1],
+            roaster_name=roaster[0],
             product_detail_process="",
             product_detail_producers="",
             product_detail_varieties="",
@@ -80,7 +80,7 @@ def coffee_scrape(driver, roaster, selectors):
 def get_product_page_information(driver, roaster, selectors, coffeeArray):
     for coffee in coffeeArray:
         productPage = goto(driver, coffee.product_url)
-        page_load(productPage)
+        wait_for_page_load(productPage)
         for selector in selectors:
             match selector[6]:
                 case "product_detail_process" | "product_detail_producers" | "product_detail_varieties" | "product_detail_altitude" | "product_detail_origin" | "product_detail_notes":

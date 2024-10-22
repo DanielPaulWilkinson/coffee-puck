@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import {
   getCoffeePageQuery,
   createNewCoffeeQuery,
-  getCoffeeRowCountQuery,
   updateCoffeeQuery,
   getCoffeeQuery,
   getAllCoffeeQuery,
@@ -15,6 +14,7 @@ import {
 import { bean, coffee, paginationRequest } from "../types/types";
 import { getVarietyForBean } from "../data/varietyQueries";
 import { getBrewForCoffee } from "../data/brewQueries";
+import { getTableRowCount, Table } from "../data/common";
 
 export const getFullCoffees = async (): Promise<coffee[]> => {
   const coffee: coffee[] = await getAllCoffeeQuery();
@@ -75,7 +75,7 @@ export const getCoffeePage = async (
     if (maybeValid.success) {
       const data = maybeValid.data;
       const offset = data.page * data.limit - data.limit;
-      const totalRecords = await getCoffeeRowCountQuery();
+      const totalRecords = await getTableRowCount(Table.coffee);
       const totalPages = totalRecords / data.limit;
       const coffee: coffee[] = await getCoffeePageQuery(
         offset,

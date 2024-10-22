@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { bean } from "../types/types";
 import { pool } from "./database";
-import { createNewBeanVarietyQuery, getSingleVarietyQuery, getVarietyForBean } from "./varietyQueries";
+import { createNewBeanVarietyQuery } from "./varietyQueries";
 
 const getBeanSQL = "SELECT * FROM `beans` WHERE id = ?";
 const getBeanPageSQL = "SELECT * FROM `beans` ORDER BY ? ? LIMIT ? OFFSET ?";
@@ -12,12 +12,6 @@ const createCoffeeBeanSQL =
 const getCoffeeBeanSQL = `select b.* from coffee_bean cb
 INNER JOIN beans b on cb.beanId = b.id
 where coffeeId = ?`;
-const beanLengthSQL = "select count(id) as total_records from `varieties`";
-
-export const getBeanRowCountQuery = async () => {
-  const [rows] = await pool.query(beanLengthSQL);
-  return JSON.parse(JSON.stringify(rows))[0].total_records;
-};
 
 export const getBeanPageQuery = async (
   offset: number,

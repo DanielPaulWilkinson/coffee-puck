@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { getRoasterRowCountQuery } from "../data/roasterQueries";
 import { getFullCoffees } from "./coffee";
 import { coffee, coffeeType } from "../types/types";
 import { GetTypes } from "./coffeeTypes";
 import { getTypes } from "../data/typeQueries";
+import { getTableRowCount, Table } from "../data/common";
 
 export const getStatistics = async (
   req: Request,
@@ -12,7 +12,7 @@ export const getStatistics = async (
 ) => {
   try {
     const coffee = await getFullCoffees();
-    const roasterCount = await getRoasterRowCountQuery();
+    const roasterCount = await getTableRowCount(Table.roasters);
     const beans = coffee.flatMap((x) => x.beans);
     const brews = coffee.flatMap((x) => x.brews);
     const types = await getTypes();

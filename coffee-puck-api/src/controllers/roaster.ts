@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  getRoasterRowCountQuery,
   getRoasterPageQuery,
   getSingleRoasterQuery,
   createRoasterQuery,
@@ -8,6 +7,7 @@ import {
   createRoasterSocialsQuery,
 } from "../data/roasterQueries";
 import { paginationRequest, roaster } from "../types/types";
+import { getTableRowCount, Table } from "../data/common";
 
 export const GetRoaster = async (
   req: Request,
@@ -32,7 +32,7 @@ export const GetRoasterPage = async (
     if (maybeValid.success) {
       const data = maybeValid.data;
       const offset = data.page * data.limit - data.limit;
-      const totalRecords = await getRoasterRowCountQuery();
+      const totalRecords = await getTableRowCount(Table.roasters);
       const totalPages = totalRecords / data.limit;
       const roasters = await getRoasterPageQuery(
         offset,

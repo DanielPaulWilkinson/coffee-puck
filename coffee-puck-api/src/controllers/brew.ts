@@ -2,10 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import {
   getBrewPageQuery,
   getSingleBrewQuery,
-  getBrewRowCountQuery,
   updateBrewQuery,
 } from "../data/brewQueries";
 import { brew, paginationRequest } from "../types/types";
+import { getTableRowCount, Table } from "../data/common";
 
 export const GetBrew = async (
   req: Request,
@@ -36,7 +36,7 @@ export const GetBrewPage = async (
     if (maybeValid.success) {
       const data = maybeValid.data;
       const offset = data.page * data.limit - data.limit;
-      const totalRecords = await getBrewRowCountQuery();
+      const totalRecords = await getTableRowCount(Table.brew);
       const totalPages = totalRecords / data.limit;
       const brews = await getBrewPageQuery(
         offset,

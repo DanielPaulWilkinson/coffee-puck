@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { brew, coffee, roaster } from '@/data/types';
+import { useSlots } from 'vue';
 
-
+const slots = useSlots();
 type card = {
-    data: coffee[] | roaster[] | null,
+    data: coffee[] | roaster[] | any | null,
     type: "coffee" | "roaster"
 }
 
@@ -19,6 +20,10 @@ const getUrl = (id: number) => {
         }
         else if (props.type === "roaster"){
             return `/manage-roasters?id=${id}`
+        } else {
+            if("product_url" in props.data){
+                return props.data.product_url as string;
+            }
         }
     }
 }

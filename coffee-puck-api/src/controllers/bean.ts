@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  getBeanRowCountQuery,
   createNewCoffeeBeanQuery,
   getAllBeansForCoffeeQuery,
   getBeanQuery,
   getBeanPageQuery,
 } from "../data/beanQueries";
 import { paginationRequest } from "../types/types";
+import { getTableRowCount, Table } from "../data/common";
 
 export const getBean = async (
   req: Request,
@@ -31,7 +31,7 @@ export const getBeanPage = async (
     if (maybeValid.success) {
       const data = maybeValid.data;
       const offset = data.page * data.limit - data.limit;
-      const totalRecords = await getBeanRowCountQuery();
+      const totalRecords = await getTableRowCount(Table.beans);
       const totalPages = totalRecords / data.limit;
       const brews = await getBeanPageQuery(
         offset,

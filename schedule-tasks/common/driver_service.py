@@ -1,3 +1,4 @@
+from datetime import time
 from seleniumwire import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
@@ -5,6 +6,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
+from contextlib import contextmanager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.expected_conditions import \
+    staleness_of
+
 from common.logger import getMyLogger
 
 logger = getMyLogger(__name__)
@@ -67,9 +73,22 @@ def get_element_attribute(driver: webdriver, by: By, path: str, log_term: str, a
     else:
         return log_term
     
-def page_load(driver):
-    element_on_page = EC.presence_of_element_located((By.TAG_NAME, "p"))
-    WebDriverWait(driver, timeout=3).until(element_on_page)
+@contextmanager
+def wait_for_page_load(driver, timeout=10):
+    i = 1
+    while i <= 10:
+        footer = driver.find_element(By.CSS_SELECTOR, "footer")
+        driver.execute_script("arguments[0].scrollIntoView();", footer)
+        print('It has scrolled ' + str(i) + ' times')
+        print('Now waiting 3 seconds before repeating')
+        time.sleep(3)
+        i += 1
+    else:
+        print('The script has finished scrolling to the bottom of the page.')
+
+    old_page = driver.find_element_by_tag_name('html')
+    yield
+    WebDriverWait(driver, timeout).until(staleness_of(old_page))
 
 def create_select(driver, by, path, log_term):
     try:

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { getSingleType, getTypePage, getTypeRowCount, getTypes } from '../data/typeQueries';
+import { getSingleType, getTypePage, getTypes } from '../data/typeQueries';
 import { paginationRequest } from '../types/types';
+import { getTableRowCount, Table } from '../data/common';
 
 export const GetType = async (req: Request, res: Response, next: NextFunction) => {
     try{
@@ -26,7 +27,7 @@ export const GetTypePage = async (req: Request, res: Response, next: NextFunctio
         if (maybeValid.success) {
         const data = maybeValid.data;
         const offset = data.page * data.limit - data.limit;
-        const totalRecords = await getTypeRowCount();
+        const totalRecords = await getTableRowCount(Table.coffee_types);
         const totalPages = totalRecords / data.limit;
         const coffee = await getTypePage(
             offset,

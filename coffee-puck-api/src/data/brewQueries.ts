@@ -6,13 +6,8 @@ const getBrewSQL = "select * from `brew` where id = ?";
 const getBrewForCoffeeSQL = "select * from `brew` where coffeeId = ?";
 const getBrewPageSQL = "SELECT * FROM `brew` ORDER BY ? ? LIMIT ? OFFSET ?";
 const createBrewSQL = `insert into brew (preGrindAroma, postGrindAroma, acidity, sweetness, body, finish, flavour, coffeeId, coffeeTypeId, rating, createdOn, updatedOn) values (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?, ?)`;
-const brewLengthSQL = "select count(id) as total_records from `brew`";
 const updateBrewSQL =
   "UPDATE brew SET preGrindAroma = ?, postGrindAroma = ?, acidity = ?,sweetness = ?,body = ?,`finish` = ?,`flavour` = ? ,coffeeId = ?, coffeeTypeId = ?,rating = ?, updatedOn = ? WHERE id = ?";
-export const getBrewRowCountQuery = async () => {
-  const [rows] = await pool.query(brewLengthSQL);
-  return JSON.parse(JSON.stringify(rows))[0].total_records;
-};
 
 export const getSingleBrewQuery = async (id: string) => {
   const [rows] = await pool.query(getBrewSQL, [Number(id)]);

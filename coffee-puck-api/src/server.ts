@@ -9,6 +9,7 @@ import varietyRoutes from './routes/varieties';
 import beanRoutes from './routes/bean';
 import roasterRoutes from './routes/roaster';
 import statsRoute from './routes/stats';
+import scrapeRoutes from './routes/scrape';
 
 const router = express();
 
@@ -46,6 +47,7 @@ const StartServer = () => {
     router.use('/bean', beanRoutes);
     router.use('/roaster', roasterRoutes);
     router.use('/stats', statsRoute);
+    router.use('/scrape', scrapeRoutes);
 
      /** Health check */
      router.get('/ping', (req, res, next) => {

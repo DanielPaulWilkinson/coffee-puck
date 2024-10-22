@@ -6,12 +6,6 @@ const getRoasterPageSearchSQL =
   "SELECT * FROM `roasters` WHERE name LIKE ? ORDER BY ? ? LIMIT ? OFFSET ?";
 const getRoasterPageSQL =
   "SELECT * FROM `roasters` ORDER BY ? ? LIMIT ? OFFSET ?";
-const getRoasterLengthSQL = "select count(id) as total_records from `roasters`";
-
-export const getRoasterRowCountQuery = async () => {
-  const [rows] = await pool.query(getRoasterLengthSQL);
-  return JSON.parse(JSON.stringify(rows))[0].total_records;
-};
 
 export const getSingleRoasterQuery = async (id: string) => {
   const [rows] = await pool.query(getRoasterSQL, [Number(id)]);

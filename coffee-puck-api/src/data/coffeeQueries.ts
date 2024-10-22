@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { coffee } from "../types/types";
 import { pool } from "./database";
+import { Table } from "./common";
 
 const getCoffeeSQL = "SELECT * FROM `coffee` WHERE id = ?";
 const getAllCoffee = "SELECT * FROM `coffee`"
@@ -12,7 +13,6 @@ const updateCoffeeSQL =
   "UPDATE coffee SET name = ?, isDecaf = ?, rating = ?,roasterId = ?,recipe = ?,`cost` = ?,`size` = ? ,image = ?,updatedOn = ? WHERE id = ?";
 const createCoffeeSQL =
   "INSERT INTO `coffee` (name, isDecaf, rating, roasterId, recipe, cost, size, image, createdOn, updatedOn) values (?,?,?,?,?,?,?,?,?,?)";
-const coffeeLengthSQL = "select count(id) as total_records from `coffee`";
 
 export const getCoffeeQuery = async (id: string) => {
   const [rows] = await pool.query(getCoffeeSQL, [Number(id)]);
@@ -22,11 +22,6 @@ export const getCoffeeQuery = async (id: string) => {
 export const getAllCoffeeQuery = async () => {
   const [rows] = await pool.query(getAllCoffee);
   return z.array(coffee).parse(rows);
-};
-
-export const getCoffeeRowCountQuery = async () => {
-  const [rows] = await pool.query(coffeeLengthSQL);
-  return JSON.parse(JSON.stringify(rows))[0].total_records;
 };
 
 export const getCoffeePageQuery = async (
@@ -87,3 +82,25 @@ export const updateCoffeeQuery = async (coffee: coffee, id: string) => {
   ]);
   return JSON.parse(JSON.stringify(rows)).insertId;
 };
+
+export const getNotes = async () => {
+  const [rows] = await pool.query(`select notes from ${Table.roasters_coffee_scrape_results} where notes != ''`);
+  const notes = z.array(z.object({
+    notes: z.string(),
+  })).parse(rows);
+
+  const uniqueNotes: string[] = []
+
+  notes.forEach(note => {
+    let notes = note.notes.replace(".","").split(",")
+    notes.forEach(no => {
+      uniqueNotes.push(no.trim().toLocaleLowerCase());
+    })
+  })
+
+  return uniqueNotes.filter(onlyUnique);
+}
+
+function onlyUnique(value: any, index: any, array: string | any[]) {
+  return array.indexOf(value) === index;
+}
