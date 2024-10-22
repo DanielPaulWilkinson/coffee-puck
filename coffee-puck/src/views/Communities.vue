@@ -5,23 +5,33 @@ import { onMounted, reactive, watch } from 'vue';
 
 type State = {
     data: coffeeTypePaginationResponse | null;
-    selectedNotes: string[];
+    sortedNotes: { note: string, checked: boolean }[];
+    selectedNotes: string[],
     currentPage: number;
 }
 
 const state = reactive<State>({
     data: null,
+    sortedNotes: [],
     selectedNotes: [],
     currentPage: 1,
 });
 
 onMounted(async () => {
-    state.data = await getScrapeResults(state.currentPage,10,"id","desc",state.selectedNotes);
+    await callData()
+
+    state.data?.notes.forEach(note => {
+        return state.sortedNotes.push({
+            note,
+            checked: false
+        });
+    });
 });
 
-watch(() => [state.currentPage, state.selectedNotes], async () => {
-    callData()
-})
+watch(() => [state.currentPage, state.sortedNotes], async () => {
+    state.selectedNotes = state.sortedNotes.filter(x => x.checked).map(x => x.note);
+    await callData()
+}, { deep: true });
 
 const callData = async () => {
     state.data = await getScrapeResults(state.currentPage, 10, "id", "desc", state.selectedNotes);
@@ -30,10 +40,12 @@ const callData = async () => {
 </script> 
 <template>
     <h1>Communities</h1>
-    <div id="d" class="row">
-            <CheckBox v-for="i in state.data?.notes" :id="i" :model-value="i" :label="i" @uncheck="delete state.selectedNotes[i]; callData()" @check="state.selectedNotes.push(i); callData()"/>
+    <div class="row">
+    <div id="d" class="col-md-2" v-for="note in state.sortedNotes.sort((a, b) => a.note.localeCompare(b.note))">
+            <CheckBox :name="note.note" :id="note.note" :model-value="note.checked" :checked="note.checked" @update:model-value="note.checked = !$event" />
     </div>
-    <div class="card result-card" style="width: 18rem;" v-for="(item, index) in state.data?.data">
+</div>
+    <div class="card result-card" style="width: 18rem;" v-for="(item) in state.data?.data">
         <img :src="item.image" class="card-img-top"></img>
         <div class="card-body">
             <h5 class="card-title">{{ item.name }}</h5>
@@ -52,7 +64,7 @@ const callData = async () => {
             </li>
             <li class="page-item" v-if="state.data?.pagination">
                 <a class="next" href="#" :class="state.currentPage >= state.data.pagination.total_pages ? 'disabled' : ''
-                    " @click.prevent="state.currentPage += 1">Next</a>
+                    " @click.prevent="state.currentPage += 1;">Next</a>
             </li>
         </ul>
     </nav>

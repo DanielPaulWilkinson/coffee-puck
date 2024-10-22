@@ -89,10 +89,14 @@ export const getNotes = async () => {
     notes: z.string(),
   })).parse(rows);
 
-  const uniqueNotes: string[] = []
+  let uniqueNotes: string[] = []
 
   notes.forEach(note => {
-    let notes = note.notes.replace(".","").split(",")
+    let notes = note.notes
+      .replace(".","")
+      .replace("&", ",")
+      .split(",");
+        
     notes.forEach(no => {
       uniqueNotes.push(no.trim().toLocaleLowerCase());
     })
