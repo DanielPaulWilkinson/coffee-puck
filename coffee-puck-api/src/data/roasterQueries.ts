@@ -12,6 +12,12 @@ export const getSingleRoasterQuery = async (id: string) => {
   return rows;
 };
 
+export const getRoastersQuery = async (ids: string[]) => {
+  const sql = `SELECT * FROM roasters where id in (${ids.join(" , ")})`
+  const [rows] = await pool.query(sql);
+  return rows;
+};
+
 export const getRoasterPageQuery = async (
   offset: number,
   limit: number,

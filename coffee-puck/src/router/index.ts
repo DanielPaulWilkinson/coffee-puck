@@ -4,8 +4,9 @@ import ManageCoffee from '../views/ManageCoffee.vue';
 import ManageBrew from '@/views/ManageBrew.vue';
 import ManageRoasters from '@/views/ManageRoasters.vue';
 import ManageVarieties from '@/views/ManageVarieties.vue';
-import Communities from '@/views/Communities.vue';
+import Search from '@/views/Search.vue';
 import Settings from '@/views/Settings.vue';
+import ScrapeManagement from '@/views/ScrapeManagement.vue';
 
 const router = createRouter({
   linkActiveClass: "selected",
@@ -40,12 +41,17 @@ const router = createRouter({
     {
       path: '/communities',
       name: 'communities',
-      component: Communities
+      component: Search
     }, 
     {
       path: '/settings',
       name: 'settings',
       component: Settings
+    },
+    {
+      path: '/manage-scrapes',
+      name: 'manage-scrapes',
+      component: ScrapeManagement,
     }
     
 

@@ -11,7 +11,7 @@ export enum Table {
     coffee_types = 'coffee_types',
     roasters_coffee_scrape = 'roasters_coffee_scrape',
     roasters_coffee_scrape_results = 'roasters_coffee_scrape_results',
-    roasters_coffee_scrape_log = 'rpasters_coffee_scrape_log' 
+    roasters_coffee_scrape_log = 'roasters_coffee_scrape_log' 
 }
 
 export const getTableRowCount = async (table: Table) => {

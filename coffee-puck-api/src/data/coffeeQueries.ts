@@ -2,6 +2,8 @@ import { z } from "zod";
 import { coffee } from "../types/types";
 import { pool } from "./database";
 import { Table } from "./common";
+import { getRoastersQuery } from "./roasterQueries";
+import { configDotenv } from "dotenv";
 
 const getCoffeeSQL = "SELECT * FROM `coffee` WHERE id = ?";
 const getAllCoffee = "SELECT * FROM `coffee`"
@@ -83,18 +85,43 @@ export const updateCoffeeQuery = async (coffee: coffee, id: string) => {
   return JSON.parse(JSON.stringify(rows)).insertId;
 };
 
-export const getNotes = async () => {
-  const [rows] = await pool.query(`select notes from ${Table.roasters_coffee_scrape_results} where notes != ''`);
+
+export const getNoteSQL = (selectedNotes?: string[]): string[] => {
+  let noteSQL: string[] = [];
+
+  selectedNotes?.forEach(note => {
+    noteSQL.push(`AND notes like '%${note}%'`);
+  });
+  
+  return noteSQL;
+}
+
+export const getRoasterSQL = (selectedRoasters?: string[]): string[] => {
+  let roasterSQL: string[] = [];
+
+  selectedRoasters?.forEach(roaster => {
+    roasterSQL.push(`AND roaster = ${roaster}`);
+  });
+
+  return roasterSQL;
+}
+
+export const getNotes = async (selectedNotes?: string[], selectedRoasters?: string[]) => {
+ 
+  const noteSQL = getNoteSQL(selectedNotes);
+  const roasterSQL = getRoasterSQL(selectedRoasters);
+
+  const [rows] = await pool.query(`select notes from ${Table.roasters_coffee_scrape_results} where notes != '' ${noteSQL.join(" ")} and roaster != '' ${roasterSQL.join(" ")}`);
   const notes = z.array(z.object({
     notes: z.string(),
   })).parse(rows);
 
   let uniqueNotes: string[] = []
-
   notes.forEach(note => {
     let notes = note.notes
-      .replace(".","")
-      .replace("&", ",")
+      .replaceAll(".","")
+      .replaceAll("&", ",")
+      .replaceAll("+",",")
       .split(",");
         
     notes.forEach(no => {
@@ -103,6 +130,21 @@ export const getNotes = async () => {
   })
 
   return uniqueNotes.filter(onlyUnique);
+}
+
+export const getRoasters = async (selectedRoasters?: string[], selectedNotes?: string[]) => {
+  const noteSQL = getNoteSQL(selectedNotes);
+  const roasterSQL = getRoasterSQL(selectedRoasters);
+
+  console.log(noteSQL);
+  console.log(roasterSQL);
+  const [rows] = await pool.query(`select distinct roaster from ${Table.roasters_coffee_scrape_results} where roaster != '' ${roasterSQL.join(" ")} and notes != '' ${noteSQL.join(" ")}`);
+
+  const roasters = z.array(z.object({
+    roaster: z.string(),
+  })).parse(rows);
+
+  return await getRoastersQuery(roasters.flatMap(x => x.roaster));
 }
 
 function onlyUnique(value: any, index: any, array: string | any[]) {

@@ -3,6 +3,7 @@ import { computed, onMounted, reactive, watch } from "vue";
 import Text from "../fields/Text.vue";
 import type { brew, coffee, roaster, variety } from "@/data/types";
 import TableActions from "./TableActions.vue";
+import { scrapeLog } from "@/data/scrape";
 
 export type Td = {
     value: string;
@@ -15,7 +16,7 @@ export type Row = {
 
 const props = defineProps<{
     id: string;
-    rows: coffee[] | brew[] | roaster[] | variety[];
+    rows: coffee[] | brew[] | roaster[] | variety[] | scrapeLog[];
     currentPage: number;
     totalPages: number;
     editable?: boolean;

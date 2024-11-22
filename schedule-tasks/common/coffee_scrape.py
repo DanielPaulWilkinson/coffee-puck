@@ -70,7 +70,7 @@ def coffee_scrape(driver, roaster, selectors):
             product_detail_notes="",
             product_info_scrape_date=datetime.datetime.now()
         ))
-
+        print(coffee)
     if roaster[9] == 1:
         coffeeArray = get_product_page_information(driver, roaster, selectors, coffeeArray)
 

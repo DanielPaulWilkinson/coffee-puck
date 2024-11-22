@@ -47,10 +47,10 @@ import { RouterLink } from 'vue-router'
           </li>
         </router-link>
         <br />
-        <router-link to="/settings" active-class="selected">
+        <router-link to="/manage-scrapes" active-class="selected">
           <li class="sidebar-link">
             <font-awesome-icon :icon="['fas', 'star']" />
-            <p>Settings</p>
+            <p>Manage scrape jobs</p>
           </li>
         </router-link>
         <a href="#">

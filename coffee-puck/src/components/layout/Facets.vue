@@ -4,8 +4,8 @@ import { onMounted, reactive } from "vue";
 import Select from "../../components/fields/Select.vue";
 
 const props = defineProps<{
-    tableType: "vertical" | "horizontal" | "card",
-    amount: number | string | null,
+    tableType?: "vertical" | "horizontal" | "card",
+    amount?: number | string | null,
 }>();
 
 const emit = defineEmits<{
@@ -22,12 +22,14 @@ const state = reactive<State>({
 });
 
 onMounted(() => {
-    state.amount = props.amount;
+    if(props.amount){
+        state.amount = props.amount;
+    }
 })
 
 </script>
 <template>
-    <div class="col-3">
+    <div v-if="tableType">
         <p>Table Type:</p>
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <label class="btn btn-secondary" :class="tableType === 'horizontal' ? 'active' : ''"
@@ -44,7 +46,7 @@ onMounted(() => {
             </label>
         </div>
     </div>
-    <div class="col-2">
+    <div v-if="amount">
         <p>Amount:</p>
         <Select id="select" placeholder="hello" v-model="state.amount" :options="[{
                 value: 5,

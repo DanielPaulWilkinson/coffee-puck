@@ -47,13 +47,18 @@ def main():
         total_removed = 0
         total_new = 0
         total_scraped = len(coffees)
+        allCoffee = getAll(db)
 
         for c in coffees:
             if c.product_name == 'unknown' or 'subscription' in c.product_name.lower() or 'selection' in c.product_name.lower() or 'bundle' in c.product_name.lower() or is_duplicate(c, db):
                 total_removed += 1
                 continue
+            if should_remove(c, allCoffee):
+                remove_product(db, c)
+                total_removed += 1
             c = sanitise_coffee(c)
             total_new += 1
+
             insert_coffee(c, db)
         
         end = time.time()
