@@ -75,7 +75,7 @@ function remove() {
       </fieldset>
 
       <div class="card p-5 space-y-4">
-        <div class="grid grid-cols-3 gap-3">
+        <div class="grid grid-cols-3 gap-3 [&>div]:min-w-0">
           <div><label for="dose" class="label">Dose (g)</label><input id="dose" v-model.number="f.dose" type="number" inputmode="decimal" step="0.1" min="0" class="field text-lg font-semibold" /></div>
           <div><label for="yield" class="label">{{ f.method === 'espresso' ? 'Yield (g)' : 'Water (g)' }}</label><input id="yield" v-model.number="f.yield" type="number" inputmode="decimal" step="1" min="0" class="field text-lg font-semibold" /></div>
           <div><label for="time" class="label">Time (s)</label><input id="time" v-model.number="f.time" type="number" inputmode="numeric" min="0" class="field text-lg font-semibold" /></div>

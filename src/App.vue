@@ -14,7 +14,8 @@ const hideNav = computed(() => route.path === '/brew/new' || route.path === '/be
 
 <template>
   <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 btn-primary z-50">Skip to content</a>
-  <div class="min-h-dvh mx-auto max-w-xl lg:max-w-5xl lg:grid lg:grid-cols-[220px_1fr] lg:gap-10 lg:px-8">
+  <div class="min-h-dvh mx-auto w-full"
+    :class="hideNav ? 'max-w-xl' : 'max-w-xl lg:max-w-5xl lg:grid lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-10 lg:px-8'">
     <nav aria-label="Main" v-if="!hideNav"
       class="fixed bottom-0 inset-x-0 z-40 border-t border-espresso/10 bg-paper/95 backdrop-blur pb-[env(safe-area-inset-bottom)]
              lg:static lg:border-0 lg:bg-transparent lg:pt-10">
@@ -31,7 +32,7 @@ const hideNav = computed(() => route.path === '/brew/new' || route.path === '/be
         <li class="hidden lg:block mt-6"><RouterLink to="/brew/new" class="btn-primary w-full">+ New brew</RouterLink></li>
       </ul>
     </nav>
-    <main id="main" class="px-5 pt-8 lg:px-0 lg:pt-10 lg:max-w-2xl w-full" :class="hideNav ? 'pb-10' : 'pb-28'">
+    <main id="main" class="w-full min-w-0 px-5 pt-8 lg:pt-10" :class="hideNav ? 'pb-10' : 'pb-28 lg:px-0 lg:max-w-2xl'">
       <RouterView v-slot="{ Component }">
         <Transition name="fade" mode="out-in"><component :is="Component" :key="route.path" /></Transition>
       </RouterView>
