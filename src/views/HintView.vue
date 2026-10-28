@@ -2,9 +2,13 @@
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 import { state, beanById } from '../lib/store'
-import { METHODS, dialInHint, formatRatio, formatTime, speed } from '../lib/brew'
+import { METHODS, dialInHint, formatRatio, formatTime, speed, bestBrew } from '../lib/brew'
+import { brewsFor } from '../lib/store'
+import SteamCup from '../components/SteamCup.vue'
 import ScoreDots from '../components/ScoreDots.vue'
 const route = useRoute()
+const fresh = computed(() => route.query.fresh === '1')
+const isBest = computed(() => !!brew.value && brewsFor(brew.value.beanId).length > 1 && bestBrew(brewsFor(brew.value.beanId))?.id === brew.value.id)
 const brew = computed(() => state.brews.find((b) => b.id === route.params.id))
 const bean = computed(() => brew.value && beanById(brew.value.beanId))
 const hint = computed(() => brew.value && dialInHint(brew.value))
@@ -18,13 +22,18 @@ const pos = computed(() => {
 
 <template>
   <div v-if="brew && bean && hint && t" class="space-y-6">
+    <div v-if="fresh" class="flex items-center gap-4 pop" role="status">
+      <div class="w-20 h-20 shrink-0"><SteamCup pour /></div>
+      <p class="font-serif text-xl">Brew saved. Here's your nudge.</p>
+    </div>
     <header>
       <p class="eyebrow">Dial-in</p>
       <h1 class="text-3xl mt-1">{{ bean.name }}</h1>
+      <p v-if="isBest" class="inline-flex items-center gap-1 mt-2 px-3 py-1 rounded-full bg-gold-light text-gold text-sm font-semibold"><span aria-hidden="true">★</span> Best recipe for this bean</p>
       <p class="text-muted">{{ t.label }} · {{ new Date(brew.createdAt).toLocaleString('en-GB', { weekday: 'short', hour: '2-digit', minute: '2-digit' }) }}</p>
     </header>
 
-    <section class="rounded-2xl p-6 text-cream" :class="hint.tone === 'good' ? 'bg-[#2F4A35]' : 'bg-espresso'" aria-live="polite">
+    <section class="rounded-2xl p-6 text-cream" :class="hint.tone === 'good' ? 'bg-gradient-to-br from-[#2F4A35] to-[#1E3324]' : 'bg-gradient-to-br from-[#5A1A24] to-espresso'" aria-live="polite">
       <p class="text-sm uppercase tracking-[.14em] opacity-80">{{ hint.tone === 'good' ? 'Keep it' : 'Next time' }}</p>
       <p class="font-serif text-3xl leading-tight mt-2">{{ hint.headline }}</p>
       <p class="mt-3 opacity-90">{{ hint.detail }}</p>
@@ -54,6 +63,7 @@ const pos = computed(() => {
       <RouterLink :to="{ path: '/brew/new', query: { bean: bean.id } }" class="btn-primary">Brew again</RouterLink>
       <RouterLink :to="`/beans/${bean.id}`" class="btn-ghost">See progress</RouterLink>
     </div>
+    <RouterLink :to="`/brew/${brew.id}/edit`" class="btn w-full text-copper underline underline-offset-4">Edit or delete this brew</RouterLink>
   </div>
   <p v-else>Brew not found. <RouterLink to="/" class="underline">Go home</RouterLink></p>
 </template>

@@ -1,38 +1,47 @@
-# ☕ Brew Journal
+<p align="center"><img src="docs/hero.png" alt="Brew Journal: Sour and fast? Grind finer." width="720"></p>
 
-A small, private brew journal for your phone. Log a brew in under 20 seconds, get one plain-English dial-in hint ("Sour and fast? Grind finer."), and watch each bag of beans improve over time.
+# Brew Journal
+
+A private coffee journal for your phone. Log a brew in under 20 seconds, get one plain-English dial-in hint, and watch each bag of beans get better.
+
+It's an installable web app (PWA). It works offline, needs no account, and keeps your data on your device.
 
 <p>
-  <img src="docs/screenshots/01-home.png" width="200" alt="Home screen with last brew and open beans">
-  <img src="docs/screenshots/02-new-brew.png" width="200" alt="New brew form, prefilled from the last brew">
-  <img src="docs/screenshots/03-hint-adjust.png" width="200" alt="Dial-in hint: Sour and fast? Grind finer.">
-  <img src="docs/screenshots/06-bean-detail.png" width="200" alt="Bean detail with taste-over-time chart">
+  <img src="docs/screenshots/01-home.png" width="180" alt="Today screen with the last brew and open beans">
+  <img src="docs/screenshots/02-new-brew.png" width="180" alt="New brew form, prefilled from the last brew">
+  <img src="docs/screenshots/03-hint-saved.png" width="180" alt="Dial-in hint after saving: Sour and fast? Grind finer.">
+  <img src="docs/screenshots/06-bean-detail.png" width="180" alt="Bean detail with a taste-over-time chart and best recipe">
 </p>
 
-## What it does
+## Features
 
-- **New brew**: espresso, V60, AeroPress or French press. Dose, yield, time and grind are prefilled from your last brew of that bean.
-- **Dial-in hint**: ratio, shot time against the method's target, and one nudge based on taste first, then time.
-- **Bean shelf**: roaster, roast date, days since roast (Resting / Peak / Past best), open or finished.
-- **Bean detail**: taste score over time and your best recipe.
-- **History**: every brew by month, with JSON export and import for backups.
-- Installable PWA that works offline.
+- **New brew**: espresso, V60, AeroPress or French press. It fills in your last recipe for that bean, so you only change what you changed.
+- **Dial-in hint**: shows the ratio and your time against the method's target, then gives one nudge. It reads taste first, then time.
+- **Bean shelf**: shows each bean's roaster and days since roasting (Resting, Peak or Past best). Mark a bag finished when it's empty.
+- **Bean detail**: a chart of taste over time and a ★ best-recipe badge.
+- **History**: every brew by month. You can edit or delete any brew or bean.
+- **Backups**: export to JSON, and import by merging or replacing.
+- Installable, with shortcuts (New brew, Bean shelf). Animations respect "reduce motion".
 
 ## Run it
 
 ```bash
 npm install
-npm run dev      # http://localhost:5173  (add ?demo=1 to load sample data)
+npm run dev      # http://localhost:5173  (add ?demo=1 for sample data)
 npm test         # vitest
-npm run build    # type-check + production build to dist/
+npm run build    # type-check + production build into dist/
 ```
 
-Built with Vue 3 (Composition API), TypeScript, Vite, Tailwind CSS and vite-plugin-pwa. No server, no database, no account.
+Built with Vue 3 (Composition API), TypeScript, Vite, Tailwind CSS and vite-plugin-pwa. No server, no database, no third-party scripts or fonts.
 
 ## Privacy
 
-Your data stays on your device, in the browser's local storage. Nothing is sent anywhere, and there are no analytics or third-party scripts. Use **History → Export backup** to keep a copy, since clearing browser data will delete your journal.
+Your data stays on your device, in your browser's local storage. There's no tracking. See [public/privacy.html](public/privacy.html).
 
-## Deploying
+## Docs
 
-`.github/workflows/pages.yml` can publish to GitHub Pages. It only runs when triggered by hand, and only after Pages is enabled in the repo settings.
+- [User guide](docs/USER_GUIDE.md)
+- [Brewing guide](docs/BREWING_GUIDE.md)
+- [Deploying to GitHub Pages](docs/DEPLOY.md)
+- [Contributing](docs/CONTRIBUTING.md)
+- [Changelog](docs/CHANGELOG.md)

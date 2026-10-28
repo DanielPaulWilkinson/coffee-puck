@@ -43,3 +43,9 @@ export function importJson(text: string): JournalData {
 }
 
 export const uid = () => Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4)
+
+/** Merge a backup into existing data. Items with the same id are taken from the incoming backup. */
+export function mergeJournal(current: JournalData, incoming: JournalData): JournalData {
+  const byId = <T extends { id: string }>(a: T[], b: T[]) => [...new Map([...a, ...b].map((x) => [x.id, x])).values()]
+  return { version: 1, beans: byId(current.beans, incoming.beans), brews: byId(current.brews, incoming.brews) }
+}

@@ -76,3 +76,8 @@ export function restLabel(days: number): string {
   if (days <= 30) return 'Peak'
   return 'Past best'
 }
+
+/** Highest score wins; ties go to the most recent brew. */
+export function bestBrew<T extends { score: number; createdAt: string }>(brews: T[]): T | undefined {
+  return [...brews].sort((a, b) => b.score - a.score || b.createdAt.localeCompare(a.createdAt))[0]
+}

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { state, sortedBrews, replaceAll } from '../lib/store'
-import { exportJson, importJson } from '../lib/storage'
+import { exportJson, importJson, mergeJournal } from '../lib/storage'
 import BrewRow from '../components/BrewRow.vue'
 const groups = computed(() => {
   const m = new Map<string, ReturnType<typeof sortedBrews>>()
@@ -13,6 +13,7 @@ const groups = computed(() => {
 })
 const avg = computed(() => state.brews.length ? (state.brews.reduce((s, b) => s + b.score, 0) / state.brews.length).toFixed(1) : '–')
 const msg = ref('')
+const mode = ref<'merge' | 'replace'>('merge')
 function doExport() {
   const url = URL.createObjectURL(new Blob([exportJson(state)], { type: 'application/json' }))
   const a = Object.assign(document.createElement('a'), { href: url, download: `brew-journal-${new Date().toISOString().slice(0, 10)}.json` })
@@ -24,8 +25,14 @@ async function doImport(e: Event) {
   if (!file) return
   try {
     const d = importJson(await file.text())
-    if (!confirm(`Replace your journal with ${d.brews.length} brews and ${d.beans.length} beans from this backup?`)) return
-    replaceAll(d); msg.value = 'Backup restored.'
+    if (mode.value === 'replace') {
+      if (!confirm(`Replace your journal with ${d.brews.length} brews and ${d.beans.length} beans from this backup?`)) return
+      replaceAll(d); msg.value = 'Backup restored.'
+    } else {
+      const before = state.brews.length
+      replaceAll(mergeJournal(state, d)); msg.value = `Merged. ${state.brews.length - before} new brews added.`
+    }
+    ;(e.target as HTMLInputElement).value = ''
   } catch (err) { msg.value = (err as Error).message }
 }
 </script>
@@ -40,11 +47,17 @@ async function doImport(e: Event) {
     <section class="card p-5 space-y-3" aria-labelledby="bk-h">
       <h2 id="bk-h" class="text-xl">Your data</h2>
       <p class="text-sm text-muted">Everything lives on this device only. Download a backup now and then.</p>
+      <fieldset class="flex flex-wrap gap-x-5 text-sm">
+        <legend class="sr-only">When importing</legend>
+        <label class="inline-flex items-center gap-2 min-h-[44px]"><input type="radio" value="merge" v-model="mode" class="w-5 h-5 accent-[#7A2430]" /> Merge with my journal</label>
+        <label class="inline-flex items-center gap-2 min-h-[44px]"><input type="radio" value="replace" v-model="mode" class="w-5 h-5 accent-[#7A2430]" /> Replace everything</label>
+      </fieldset>
       <div class="flex flex-wrap gap-2">
         <button type="button" class="btn-ghost" @click="doExport">Export backup</button>
         <label class="btn-ghost cursor-pointer focus-within:ring-2 focus-within:ring-copper">Import backup<input type="file" accept="application/json" class="sr-only" @change="doImport" /></label>
       </div>
       <p class="text-sm" role="status">{{ msg }}</p>
+      <a href="./privacy.html" class="text-sm font-semibold text-copper underline underline-offset-4 inline-flex items-center min-h-[44px]">Privacy policy</a>
     </section>
   </div>
 </template>

@@ -4,6 +4,8 @@ import { RouterLink } from 'vue-router'
 import { state, lastBrew, beanById } from '../lib/store'
 import { METHODS, formatRatio, formatTime, dialInHint, daysSince, restLabel } from '../lib/brew'
 import ScoreDots from '../components/ScoreDots.vue'
+import Crest from '../components/Crest.vue'
+import AutumnCup from '../components/AutumnCup.vue'
 const last = computed(() => lastBrew())
 const bean = computed(() => last.value && beanById(last.value.beanId))
 const hint = computed(() => last.value && dialInHint(last.value))
@@ -15,13 +17,17 @@ const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'nu
 
 <template>
   <div class="space-y-8">
-    <header>
-      <p class="eyebrow">{{ today }}</p>
-      <h1 class="text-4xl mt-1">{{ greeting }}.</h1>
+    <header class="flex items-start justify-between gap-4">
+      <div>
+        <p class="eyebrow">{{ today }}</p>
+        <h1 class="text-4xl mt-1">{{ greeting }}.</h1>
+        <div class="rule"></div>
+      </div>
+      <Crest :size="52" class="lg:hidden" />
     </header>
 
     <section v-if="!state.beans.length" class="card p-6 text-center space-y-4">
-      <div class="mx-auto w-16 h-16 rounded-full bg-copper-light grid place-items-center text-3xl" aria-hidden="true">☕</div>
+      <AutumnCup class="mx-auto w-40 h-40" />
       <h2 class="text-2xl">Start with a bag of beans</h2>
       <p class="text-muted">Add what's on your counter, then log your first brew. Everything stays on this device.</p>
       <RouterLink to="/beans/new" class="btn-primary">Add your first bean</RouterLink>

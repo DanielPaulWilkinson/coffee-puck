@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue'
 import { useRouter, useRoute, RouterLink } from 'vue-router'
-import { state, lastBrew, addBrew } from '../lib/store'
+import { state, lastBrew, addBrew, updateBrew, deleteBrew } from '../lib/store'
 import { METHODS, formatRatio, speed } from '../lib/brew'
 import type { Method, Note } from '../lib/types'
 
 const router = useRouter()
 const route = useRoute()
-const open = computed(() => state.beans.filter((b) => !b.finished))
+const editing = state.brews.find((b) => b.id === route.params.id)
+const open = computed(() => state.beans.filter((b) => !b.finished || b.id === editing?.beanId))
 const initialBean = (route.query.bean as string) || lastBrew()?.beanId || open.value[0]?.id || ''
 const f = reactive({ beanId: initialBean, method: 'espresso' as Method, dose: 18, yield: 36, time: 28, grind: '', temp: undefined as number | undefined, score: 3, notes: [] as Note[] })
 
@@ -16,9 +17,10 @@ function prefill(beanId: string) {
   if (prev) Object.assign(f, { method: prev.method, dose: prev.dose, yield: prev.yield, time: prev.time, grind: prev.grind, temp: prev.temp })
   f.score = 3; f.notes = []
 }
-prefill(f.beanId)
-watch(() => f.beanId, prefill)
-const prefilled = computed(() => !!lastBrew(f.beanId))
+if (editing) Object.assign(f, { ...editing, notes: [...editing.notes] })
+else prefill(f.beanId)
+watch(() => f.beanId, (id) => { if (!editing) prefill(id) })
+const prefilled = computed(() => !editing && !!lastBrew(f.beanId))
 
 function setMethod(m: Method) {
   if (m === f.method) return
@@ -33,16 +35,21 @@ const scoreWords = ['', 'Undrinkable', 'Meh', 'Fine', 'Good', 'Superb']
 
 function submit() {
   if (!f.beanId) return
-  const brew = addBrew({ ...f, notes: [...f.notes] })
-  router.push(`/brew/${brew.id}`)
+  const data = { beanId: f.beanId, method: f.method, dose: f.dose, yield: f.yield, time: f.time, grind: f.grind, temp: f.temp, score: f.score, notes: [...f.notes] }
+  if (editing) { updateBrew(editing.id, data); router.push(`/brew/${editing.id}`); return }
+  const brew = addBrew(data)
+  router.push({ path: `/brew/${brew.id}`, query: { fresh: '1' } })
+}
+function remove() {
+  if (editing && confirm('Delete this brew? This cannot be undone.')) { deleteBrew(editing.id); router.push('/history') }
 }
 </script>
 
 <template>
   <form @submit.prevent="submit" class="space-y-7" novalidate>
     <header class="flex items-center justify-between">
-      <h1 class="text-3xl">New brew</h1>
-      <RouterLink to="/" class="btn-ghost px-4">Cancel</RouterLink>
+      <h1 class="text-3xl">{{ editing ? 'Edit brew' : 'New brew' }}</h1>
+      <RouterLink :to="editing ? `/brew/${editing.id}` : '/'" class="btn-ghost px-4">Cancel</RouterLink>
     </header>
 
     <div v-if="!open.length" class="card p-5">
@@ -101,7 +108,8 @@ function submit() {
         </div>
       </fieldset>
 
-      <button type="submit" class="btn-primary w-full h-14 text-lg">Save and get a hint</button>
+      <button type="submit" class="btn-primary w-full h-14 text-lg">{{ editing ? 'Save changes' : 'Save and get a hint' }}</button>
+      <button v-if="editing" type="button" @click="remove" class="btn w-full text-copper underline underline-offset-4">Delete this brew</button>
     </template>
   </form>
 </template>
